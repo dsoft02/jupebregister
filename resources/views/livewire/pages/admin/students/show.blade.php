@@ -50,24 +50,12 @@ new #[Layout('layouts.app')] class extends Component {
                     <dd class="font-mono font-semibold text-slate-800">{{ $student->foundation_number }}</dd>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <dt class="text-slate-500">JUPEB No.</dt>
-                    <dd class="font-mono font-semibold text-slate-800">{{ $student->jupeb_number ?? '—' }}</dd>
-                </div>
-                <div class="flex justify-between gap-4">
                     <dt class="text-slate-500">Examination No.</dt>
-                    <dd class="font-mono font-semibold text-slate-800">{{ $student->examination_number ?? '—' }}</dd>
+                    <dd class="font-mono font-semibold text-slate-800">{{ $student->examination_number }}</dd>
                 </div>
                 <div class="flex justify-between gap-4">
                     <dt class="text-slate-500">Session</dt>
                     <dd class="font-semibold text-slate-800">{{ $student->session }}</dd>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <dt class="text-slate-500">Phone</dt>
-                    <dd class="font-semibold text-slate-800">{{ $student->phone ?? '—' }}</dd>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <dt class="text-slate-500">Email</dt>
-                    <dd class="font-semibold text-slate-800">{{ $student->email ?? '—' }}</dd>
                 </div>
                 <div class="flex justify-between gap-4">
                     <dt class="text-slate-500">Registered</dt>

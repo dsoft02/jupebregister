@@ -23,8 +23,6 @@ new #[Layout('layouts.app')] class extends Component {
 
     public string $foundation_number = '';
 
-    public ?string $jupeb_number = null;
-
     public ?string $examination_number = null;
 
     public ?int $subject_one_id = null;
@@ -34,10 +32,6 @@ new #[Layout('layouts.app')] class extends Component {
     public ?int $subject_three_id = null;
 
     public $passport = null;
-
-    public ?string $phone = null;
-
-    public ?string $email = null;
 
     public string $session = '';
 
@@ -50,13 +44,10 @@ new #[Layout('layouts.app')] class extends Component {
         $this->first_name = $student->first_name;
         $this->middle_name = $student->middle_name ?? '';
         $this->foundation_number = $student->foundation_number;
-        $this->jupeb_number = $student->jupeb_number;
         $this->examination_number = $student->examination_number;
         $this->subject_one_id = $student->subject_one_id;
         $this->subject_two_id = $student->subject_two_id;
         $this->subject_three_id = $student->subject_three_id;
-        $this->phone = $student->phone;
-        $this->email = $student->email;
         $this->session = $student->session;
         $this->status = $student->status->value;
     }
@@ -68,14 +59,11 @@ new #[Layout('layouts.app')] class extends Component {
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
             'foundation_number' => ['required', 'string', 'max:50', 'unique:students,foundation_number,'.$this->student->id],
-            'jupeb_number' => ['nullable', 'string', 'max:50', 'unique:students,jupeb_number,'.$this->student->id],
-            'examination_number' => ['nullable', 'string', 'max:50', 'unique:students,examination_number,'.$this->student->id],
+            'examination_number' => ['required', 'string', 'max:50', 'unique:students,examination_number,'.$this->student->id],
             'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id', 'different:subject_one_id'],
             'subject_three_id' => ['required', 'exists:subjects,id', 'different:subject_one_id', 'different:subject_two_id'],
             'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:255'],
             'session' => ['required', 'string', 'max:20'],
             'status' => ['required', 'in:pending,approved,rejected'],
         ];
@@ -145,19 +133,14 @@ new #[Layout('layouts.app')] class extends Component {
 
         <div>
             <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Registration Numbers</h3>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label for="foundation_number" class="label">Foundation Number <span class="text-red-500">*</span></label>
                     <input type="text" id="foundation_number" wire:model="foundation_number" class="input">
                     <x-input-error :messages="$errors->get('foundation_number')" class="mt-1" />
                 </div>
                 <div>
-                    <label for="jupeb_number" class="label">JUPEB Number</label>
-                    <input type="text" id="jupeb_number" wire:model="jupeb_number" class="input">
-                    <x-input-error :messages="$errors->get('jupeb_number')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="examination_number" class="label">Examination Number</label>
+                    <label for="examination_number" class="label">Examination Number <span class="text-red-500">*</span></label>
                     <input type="text" id="examination_number" wire:model="examination_number" class="input">
                     <x-input-error :messages="$errors->get('examination_number')" class="mt-1" />
                 </div>
@@ -205,22 +188,6 @@ new #[Layout('layouts.app')] class extends Component {
                 <label for="session" class="label">Academic Session <span class="text-red-500">*</span></label>
                 <input type="text" id="session" wire:model="session" class="input w-48">
                 <x-input-error :messages="$errors->get('session')" class="mt-1" />
-            </div>
-        </div>
-
-        <div>
-            <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Contact</h3>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                    <label for="phone" class="label">Phone</label>
-                    <input type="text" id="phone" wire:model="phone" class="input">
-                    <x-input-error :messages="$errors->get('phone')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="email" class="label">Email</label>
-                    <input type="email" id="email" wire:model="email" class="input">
-                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
-                </div>
             </div>
         </div>
 

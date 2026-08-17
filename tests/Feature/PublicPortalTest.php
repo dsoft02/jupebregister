@@ -8,6 +8,7 @@ use App\Models\Result;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -22,6 +23,11 @@ class PublicPortalTest extends TestCase
         $this->seed();
     }
 
+    private function fakePassport(): UploadedFile
+    {
+        return UploadedFile::fake()->image('passport.jpg', 200, 200)->size(100);
+    }
+
     public function test_public_registration_creates_pending_student(): void
     {
         $subjects = Subject::active()->take(3)->pluck('id')->toArray();
@@ -31,13 +37,11 @@ class PublicPortalTest extends TestCase
             'first_name' => 'Grace',
             'middle_name' => 'Ade',
             'foundation_number' => 'PAAU/FS/PUB/001',
-            'jupeb_number' => '23J/9001',
             'examination_number' => 'PAAU-EXM-PUB-001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
-            'phone' => '+2348000000000',
-            'email' => 'grace@example.com',
+            'passport' => $this->fakePassport(),
         ])->assertRedirect();
 
         $student = Student::where('foundation_number', 'PAAU/FS/PUB/001')->first();
@@ -58,28 +62,12 @@ class PublicPortalTest extends TestCase
             'surname' => 'Duplicate',
             'first_name' => 'Student',
             'foundation_number' => $existing->foundation_number,
+            'examination_number' => 'PAAU-EXM-DUP-001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
-            'phone' => '+2348000000000',
+            'passport' => $this->fakePassport(),
         ])->assertSessionHasErrors('foundation_number');
-    }
-
-    public function test_duplicate_jupeb_number_is_rejected(): void
-    {
-        $existing = Student::whereNotNull('jupeb_number')->first();
-        $subjects = Subject::active()->take(3)->pluck('id')->toArray();
-
-        $this->post(route('register.store'), [
-            'surname' => 'Duplicate',
-            'first_name' => 'Student',
-            'foundation_number' => 'PAAU/FS/PUB/002',
-            'jupeb_number' => $existing->jupeb_number,
-            'subject_one_id' => $subjects[0],
-            'subject_two_id' => $subjects[1],
-            'subject_three_id' => $subjects[2],
-            'phone' => '+2348000000000',
-        ])->assertSessionHasErrors('jupeb_number');
     }
 
     public function test_passport_upload_is_validated(): void
@@ -90,11 +78,11 @@ class PublicPortalTest extends TestCase
             'surname' => 'Bad',
             'first_name' => 'Upload',
             'foundation_number' => 'PAAU/FS/PUB/003',
+            'examination_number' => 'PAAU-EXM-PUB-003',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
-            'phone' => '+2348000000000',
-            'passport' => \Illuminate\Http\UploadedFile::fake()->create('doc.txt', 10),
+            'passport' => UploadedFile::fake()->create('doc.txt', 10),
         ])->assertSessionHasErrors('passport');
     }
 
@@ -103,13 +91,11 @@ class PublicPortalTest extends TestCase
         $published = Result::where('status', ResultStatus::Published)->first();
         $draft = Result::where('status', ResultStatus::Draft)->first();
 
-        // Published result must verify.
         Livewire::test('pages.verify')
             ->set('query', $published->student->foundation_number)
             ->call('verify')
             ->assertSet('verifiedStudentId', $published->student_id);
 
-        // Draft (unpublished) result must not verify.
         Livewire::test('pages.verify')
             ->set('query', $draft->student->foundation_number)
             ->call('verify')

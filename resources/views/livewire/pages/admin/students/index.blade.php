@@ -183,7 +183,7 @@ new #[Layout('layouts.app')] class extends Component {
                                     @endif
                                     <div>
                                         <p class="font-semibold text-slate-800">{{ $student->fullName() }}</p>
-                                        <p class="text-xs text-slate-400">{{ $student->email ?? 'No email' }}</p>
+                                        <p class="text-xs text-slate-400">{{ $student->foundation_number }}</p>
                                     </div>
                                 </div>
                             </td>

@@ -26,7 +26,7 @@ new #[Layout('layouts.public')] class extends Component {
         $query = trim($this->query);
 
         $student = Student::where('foundation_number', $query)
-            ->orWhere('jupeb_number', $query)
+            ->orWhere('examination_number', $query)
             ->first();
 
         if (! $student) {

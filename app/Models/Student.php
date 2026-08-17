@@ -18,14 +18,11 @@ class Student extends Model
         'first_name',
         'middle_name',
         'foundation_number',
-        'jupeb_number',
         'examination_number',
         'subject_one_id',
         'subject_two_id',
         'subject_three_id',
         'passport',
-        'phone',
-        'email',
         'session',
         'status',
         'registered_at',
@@ -135,9 +132,7 @@ class Student extends Model
                 ->orWhere('first_name', 'like', "%{$term}%")
                 ->orWhere('middle_name', 'like', "%{$term}%")
                 ->orWhere('foundation_number', 'like', "%{$term}%")
-                ->orWhere('jupeb_number', 'like', "%{$term}%")
-                ->orWhere('examination_number', 'like', "%{$term}%")
-                ->orWhere('email', 'like', "%{$term}%");
+                ->orWhere('examination_number', 'like', "%{$term}%");
         });
     }
 }

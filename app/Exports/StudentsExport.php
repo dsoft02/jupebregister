@@ -36,15 +36,12 @@ class StudentsExport implements FromCollection, WithHeadings, ShouldAutoSize
                 'first_name' => $student->first_name,
                 'middle_name' => $student->middle_name,
                 'foundation_number' => $student->foundation_number,
-                'jupeb_number' => $student->jupeb_number,
                 'examination_number' => $student->examination_number,
                 'subject_one' => $student->subjectOne?->name,
                 'subject_two' => $student->subjectTwo?->name,
                 'subject_three' => $student->subjectThree?->name,
                 'session' => $student->session,
                 'status' => $student->status->label(),
-                'phone' => $student->phone,
-                'email' => $student->email,
             ]);
     }
 
@@ -55,15 +52,12 @@ class StudentsExport implements FromCollection, WithHeadings, ShouldAutoSize
             'first_name',
             'middle_name',
             'foundation_number',
-            'jupeb_number',
             'examination_number',
             'subject_one',
             'subject_two',
             'subject_three',
             'session',
             'status',
-            'phone',
-            'email',
         ];
     }
 }

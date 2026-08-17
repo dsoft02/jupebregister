@@ -78,6 +78,7 @@ class AdminWorkflowTest extends TestCase
             'surname' => 'Test',
             'first_name' => 'Student',
             'foundation_number' => 'PAAU/FS/TEST/001',
+            'examination_number' => 'PAAU/EXM/TEST/001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],

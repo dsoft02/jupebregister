@@ -30,16 +30,16 @@
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div>
-                        <label for="surname" class="label">Surname <span class="text-red-500">*</span></label>
-                        <input type="text" id="surname" name="surname" value="{{ old('surname') }}" class="input" required>
-                    </div>
-                    <div>
                         <label for="first_name" class="label">First Name <span class="text-red-500">*</span></label>
                         <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="input" required>
                     </div>
                     <div>
                         <label for="middle_name" class="label">Middle Name</label>
                         <input type="text" id="middle_name" name="middle_name" value="{{ old('middle_name') }}" class="input">
+                    </div>
+                    <div>
+                        <label for="surname" class="label">Surname <span class="text-red-500">*</span></label>
+                        <input type="text" id="surname" name="surname" value="{{ old('surname') }}" class="input" required>
                     </div>
                 </div>
             </div>
@@ -48,27 +48,23 @@
                 <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
                     Registration Numbers
                 </h2>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label for="foundation_number" class="label">Foundation Number <span class="text-red-500">*</span></label>
                         <input type="text" id="foundation_number" name="foundation_number" value="{{ old('foundation_number') }}" class="input" placeholder="e.g. PAAU/FS/001" required>
                     </div>
                     <div>
-                        <label for="jupeb_number" class="label">JUPEB Number</label>
-                        <input type="text" id="jupeb_number" name="jupeb_number" value="{{ old('jupeb_number') }}" class="input" placeholder="e.g. 23J/1234">
-                    </div>
-                    <div>
-                        <label for="examination_number" class="label">Examination Number</label>
-                        <input type="text" id="examination_number" name="examination_number" value="{{ old('examination_number') }}" class="input" placeholder="Examination number">
+                        <label for="examination_number" class="label">Examination Number <span class="text-red-500">*</span></label>
+                        <input type="text" id="examination_number" name="examination_number" value="{{ old('examination_number') }}" class="input" placeholder="e.g. EXM/001" required>
                     </div>
                 </div>
             </div>
 
             <div>
                 <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    Subjects &amp; Contact
+                    Subjects
                 </h2>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div>
                         <label for="subject_one_id" class="label">Subject 1 <span class="text-red-500">*</span></label>
                         <select id="subject_one_id" name="subject_one_id" class="input" required>
@@ -102,20 +98,12 @@
                             @endforeach
                         </select>
                     </div>
-                    <div>
-                        <label for="phone" class="label">Phone <span class="text-red-500">*</span></label>
-                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}" class="input" placeholder="+234 800 000 0000" required>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="email" class="label">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" class="input" placeholder="student@example.com">
-                    </div>
                 </div>
             </div>
 
             <div>
                 <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    Passport Photo
+                    Passport Photo <span class="text-red-500">*</span>
                 </h2>
                 <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400" id="passport-dropzone">
                     <div id="passport-empty">
@@ -123,7 +111,7 @@
                         <p class="mt-3 text-sm font-medium text-slate-700">Drag &amp; drop a passport photo here, or</p>
                         <label class="btn-secondary mt-3 cursor-pointer">
                             Browse Files
-                            <input type="file" id="passport" name="passport" accept="image/jpeg,image/png,image/webp" class="sr-only">
+                            <input type="file" id="passport" name="passport" accept="image/jpeg,image/png,image/webp" class="sr-only" required>
                         </label>
                         <p class="mt-2 text-xs text-slate-400">JPG, PNG or WebP &middot; maximum 500KB</p>
                     </div>

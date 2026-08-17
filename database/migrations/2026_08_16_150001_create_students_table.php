@@ -14,14 +14,11 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('foundation_number')->unique();
-            $table->string('jupeb_number')->nullable()->unique();
-            $table->string('examination_number')->nullable()->unique();
+            $table->string('examination_number')->unique();
             $table->foreignId('subject_one_id')->nullable()->constrained('subjects')->cascadeOnDelete();
             $table->foreignId('subject_two_id')->nullable()->constrained('subjects')->cascadeOnDelete();
             $table->foreignId('subject_three_id')->nullable()->constrained('subjects')->cascadeOnDelete();
             $table->string('passport')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
             $table->string('session')->default('2025/2026');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->index();
             $table->timestamp('registered_at')->nullable();

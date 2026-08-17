@@ -21,8 +21,6 @@ new #[Layout('layouts.app')] class extends Component {
 
     public string $foundation_number = '';
 
-    public ?string $jupeb_number = null;
-
     public ?string $examination_number = null;
 
     public ?int $subject_one_id = null;
@@ -32,10 +30,6 @@ new #[Layout('layouts.app')] class extends Component {
     public ?int $subject_three_id = null;
 
     public $passport = null;
-
-    public ?string $phone = null;
-
-    public ?string $email = null;
 
     public string $session = '';
 
@@ -53,14 +47,11 @@ new #[Layout('layouts.app')] class extends Component {
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
             'foundation_number' => ['required', 'string', 'max:50', 'unique:students,foundation_number'],
-            'jupeb_number' => ['nullable', 'string', 'max:50', 'unique:students,jupeb_number'],
-            'examination_number' => ['nullable', 'string', 'max:50', 'unique:students,examination_number'],
+            'examination_number' => ['required', 'string', 'max:50', 'unique:students,examination_number'],
             'subject_one_id' => ['required', 'exists:subjects,id', Rule::unique('subjects', 'id')->ignore($this->subject_two_id)->whereNull('deleted_at'), Rule::unique('subjects', 'id')->ignore($this->subject_three_id)->whereNull('deleted_at')],
             'subject_two_id' => ['required', 'exists:subjects,id', 'different:subject_one_id'],
             'subject_three_id' => ['required', 'exists:subjects,id', 'different:subject_one_id', 'different:subject_two_id'],
-            'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'passport' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'session' => ['required', 'string', 'max:20'],
             'status' => ['required', 'in:pending,approved,rejected'],
         ];
@@ -122,20 +113,15 @@ new #[Layout('layouts.app')] class extends Component {
 
         <div>
             <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Registration Numbers</h3>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label for="foundation_number" class="label">Foundation Number <span class="text-red-500">*</span></label>
                     <input type="text" id="foundation_number" wire:model="foundation_number" class="input" placeholder="e.g. PAAU/FS/001">
                     <x-input-error :messages="$errors->get('foundation_number')" class="mt-1" />
                 </div>
                 <div>
-                    <label for="jupeb_number" class="label">JUPEB Number</label>
-                    <input type="text" id="jupeb_number" wire:model="jupeb_number" class="input" placeholder="e.g. 23J/1234">
-                    <x-input-error :messages="$errors->get('jupeb_number')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="examination_number" class="label">Examination Number</label>
-                    <input type="text" id="examination_number" wire:model="examination_number" class="input" placeholder="Examination number">
+                    <label for="examination_number" class="label">Examination Number <span class="text-red-500">*</span></label>
+                    <input type="text" id="examination_number" wire:model="examination_number" class="input" placeholder="e.g. PAAU/EXM/001">
                     <x-input-error :messages="$errors->get('examination_number')" class="mt-1" />
                 </div>
             </div>
@@ -183,23 +169,7 @@ new #[Layout('layouts.app')] class extends Component {
         </div>
 
         <div>
-            <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Contact</h3>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                    <label for="phone" class="label">Phone</label>
-                    <input type="text" id="phone" wire:model="phone" class="input" placeholder="+234…">
-                    <x-input-error :messages="$errors->get('phone')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="email" class="label">Email</label>
-                    <input type="email" id="email" wire:model="email" class="input" placeholder="student@example.com">
-                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Passport Photo</h3>
+            <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Passport Photo <span class="text-red-500">*</span></h3>
             <div
                 x-data="{ uploading: false, name: null }"
                 x-on:livewire-upload-start="uploading = true"

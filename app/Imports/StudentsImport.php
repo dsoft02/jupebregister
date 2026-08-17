@@ -54,7 +54,6 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation, Sk
                 'first_name' => Str::title($row['first_name']),
                 'middle_name' => isset($row['middle_name']) ? Str::title($row['middle_name']) : null,
                 'foundation_number' => trim($row['foundation_number']),
-                'jupeb_number' => isset($row['jupeb_number']) ? trim($row['jupeb_number']) : null,
                 'examination_number' => isset($row['examination_number']) ? trim($row['examination_number']) : null,
                 'subject_one_id' => $subjectOne->id,
                 'subject_two_id' => $subjectTwo->id,
