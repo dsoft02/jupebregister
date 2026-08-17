@@ -38,25 +38,29 @@ new #[Layout('layouts.guest')] class extends Component
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="login" class="space-y-5">
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="mt-1.5" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+        <div class="space-y-2">
+            <label for="email" class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                <i data-lucide="user-round" class="h-4 w-4 text-slate-400"></i>
+                Email address
+            </label>
+            <x-text-input wire:model="form.email" id="email" type="email" name="email" placeholder="admin@paau.edu.ng" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('form.email')" />
         </div>
 
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input wire:model="form.password" id="password" class="mt-1.5" type="password" name="password" required autocomplete="current-password" />
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+        <div class="space-y-2">
+            <label for="password" class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                <i data-lucide="lock" class="h-4 w-4 text-slate-400"></i>
+                Password
+            </label>
+            <x-text-input wire:model="form.password" id="password" type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+            <x-input-error :messages="$errors->get('form.password')" />
         </div>
 
-        <div class="flex items-center gap-2">
-            <input wire:model="form.remember" id="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500" name="remember">
-            <label for="remember" class="text-sm text-slate-600">{{ __('Remember me') }}</label>
-        </div>
-
-        <x-primary-button>
-            {{ __('Log in') }}
-        </x-primary-button>
+        <button
+            type="submit"
+            class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary-700 px-5 py-2.5 text-base font-semibold text-white shadow-soft transition-all duration-200 hover:bg-primary-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+        >
+            Sign in to Dashboard
+        </button>
     </form>
 </div>
