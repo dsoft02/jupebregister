@@ -128,7 +128,7 @@
                         <p class="mt-2 text-xs text-slate-400">JPG, PNG or WebP &middot; maximum 500KB</p>
                     </div>
                     <div id="passport-preview" class="hidden">
-                        <img id="passport-img" src="" alt="Passport preview" class="mx-auto h-36 w-36 rounded-full object-cover ring-4 ring-white shadow-md">
+                        <img id="passport-img" src="" alt="Passport preview" class="mx-auto h-36 w-36 rounded-xl object-cover ring-4 ring-white shadow-md">
                         <p id="passport-name" class="mt-3 text-sm font-medium text-slate-700"></p>
                         <p id="passport-size" class="text-xs text-slate-400"></p>
                         <button type="button" id="passport-remove" class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700">

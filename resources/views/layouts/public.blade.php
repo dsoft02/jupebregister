@@ -37,6 +37,17 @@
                     </span>
                 </a>
                 <nav class="flex items-center gap-2 sm:gap-3">
+                    @auth
+                        @hasanyrole('super_admin|programme_officer|director')
+                            <a
+                                href="{{ route('admin.dashboard') }}"
+                                class="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 sm:inline-flex"
+                            >
+                                <i data-lucide="layout-dashboard" class="mr-1.5 h-4 w-4"></i>
+                                Dashboard
+                            </a>
+                        @endhasanyrole
+                    @endauth
                     <a
                         href="{{ route('register') }}"
                         class="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 sm:inline-flex"
