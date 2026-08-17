@@ -30,9 +30,6 @@ class StatementOfResultService
             'result' => $result,
             'student' => $student,
             'settings' => $this->settings,
-            'letterhead' => $this->settings->fileAsDataUri('letterhead_image'),
-            'stamp' => $this->settings->fileAsDataUri('official_stamp'),
-            'signature' => $this->settings->fileAsDataUri('director_signature'),
             'passport' => $passport,
             'issueDate' => $this->issueDate(),
         ])

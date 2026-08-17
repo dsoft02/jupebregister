@@ -12,6 +12,8 @@ new #[Layout('layouts.app')] class extends Component {
 
     public $letterhead_image;
 
+    public $watermark_image;
+
     public $official_stamp;
 
     public $director_signature;
@@ -33,6 +35,7 @@ new #[Layout('layouts.app')] class extends Component {
     {
         return [
             'letterhead_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'watermark_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'official_stamp' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'director_signature' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'director_name' => ['nullable', 'string', 'max:255'],
@@ -55,6 +58,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         foreach ([
             'letterhead_image' => 'settings/letterhead',
+            'watermark_image' => 'settings/watermark',
             'official_stamp' => 'settings/stamp',
             'director_signature' => 'settings/signature',
         ] as $key => $folder) {
@@ -84,6 +88,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         return [
             'letterhead_image' => $settings->fileUrl('letterhead_image'),
+            'watermark_image' => $settings->fileUrl('watermark_image'),
             'official_stamp' => $settings->fileUrl('official_stamp'),
             'director_signature' => $settings->fileUrl('director_signature'),
         ];
@@ -112,10 +117,11 @@ new #[Layout('layouts.app')] class extends Component {
                     The letterhead replaces the printed header — the PDF renders only dynamic student data over it.
                 </p>
             </div>
-            <div class="grid grid-cols-1 gap-6 p-6 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 xl:grid-cols-4">
                 @php
                     $uploadFields = [
                         ['key' => 'letterhead_image', 'label' => 'Letterhead Image', 'help' => 'Full-page official letterhead with header, logos and watermark. Recommended 1240×1754 (A4).'],
+                        ['key' => 'watermark_image', 'label' => 'Watermark', 'help' => 'Watermark image displayed behind the content on the result slip.'],
                         ['key' => 'official_stamp', 'label' => 'Official Stamp', 'help' => 'Official school stamp image (PNG with transparency works best).'],
                         ['key' => 'director_signature', 'label' => 'Director Signature', 'help' => 'Scanned signature of the Director.'],
                     ];
