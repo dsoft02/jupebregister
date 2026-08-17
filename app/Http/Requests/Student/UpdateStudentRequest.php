@@ -26,7 +26,7 @@ class UpdateStudentRequest extends FormRequest
             'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id'],
             'subject_three_id' => ['required', 'exists:subjects,id'],
-            'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:500'],
             'phone' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
             'session' => ['nullable', 'string', 'max:20'],

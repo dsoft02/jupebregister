@@ -24,7 +24,7 @@ class PublicRegistrationRequest extends FormRequest
             'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id'],
             'subject_three_id' => ['required', 'exists:subjects,id'],
-            'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'passport' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:500'],
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
         ];
@@ -37,7 +37,7 @@ class PublicRegistrationRequest extends FormRequest
             'jupeb_number.unique' => 'This JUPEB Number has already been registered.',
             'examination_number.unique' => 'This Examination Number has already been registered.',
             'passport.image' => 'The passport photo must be an image.',
-            'passport.max' => 'The passport photo may not be larger than 2MB.',
+            'passport.max' => 'The passport photo may not be larger than 500KB.',
         ];
     }
 }

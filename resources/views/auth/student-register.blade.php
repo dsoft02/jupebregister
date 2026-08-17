@@ -25,8 +25,7 @@
             @csrf
 
             <div>
-                <h2 class="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-700 text-xs text-white">1</span>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
                     Personal Information
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -46,8 +45,7 @@
             </div>
 
             <div>
-                <h2 class="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-700 text-xs text-white">2</span>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
                     Registration Numbers
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -67,8 +65,7 @@
             </div>
 
             <div>
-                <h2 class="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-700 text-xs text-white">3</span>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
                     Subjects &amp; Contact
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -99,7 +96,7 @@
                         <select id="subject_three_id" name="subject_three_id" class="input" required>
                             <option value="">Select third subject</option>
                             @foreach ($subjects as $subject)
-                                <option value="{{ $subject->id }}" @selected(old('subject_three_id') == $subject->id)>
+                                <option value="{{ $subject->id }}" @selected(old('subject_three_id') == $subject->id)">
                                     {{ $subject->name }}
                                 </option>
                             @endforeach
@@ -117,18 +114,29 @@
             </div>
 
             <div>
-                <h2 class="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-700 text-xs text-white">4</span>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">
                     Passport Photo
                 </h2>
-                <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                    <p class="mt-3 text-sm font-medium text-slate-700">Drag &amp; drop a passport photo here, or</p>
-                    <label class="btn-secondary mt-3 cursor-pointer">
-                        Browse Files
-                        <input type="file" id="passport" name="passport" accept="image/*" class="sr-only">
-                    </label>
-                    <p class="mt-2 text-xs text-slate-400">JPG, PNG or WebP &middot; maximum 2MB</p>
+                <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400" id="passport-dropzone">
+                    <div id="passport-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                        <p class="mt-3 text-sm font-medium text-slate-700">Drag &amp; drop a passport photo here, or</p>
+                        <label class="btn-secondary mt-3 cursor-pointer">
+                            Browse Files
+                            <input type="file" id="passport" name="passport" accept="image/jpeg,image/png,image/webp" class="sr-only">
+                        </label>
+                        <p class="mt-2 text-xs text-slate-400">JPG, PNG or WebP &middot; maximum 500KB</p>
+                    </div>
+                    <div id="passport-preview" class="hidden">
+                        <img id="passport-img" src="" alt="Passport preview" class="mx-auto h-36 w-36 rounded-full object-cover ring-4 ring-white shadow-md">
+                        <p id="passport-name" class="mt-3 text-sm font-medium text-slate-700"></p>
+                        <p id="passport-size" class="text-xs text-slate-400"></p>
+                        <button type="button" id="passport-remove" class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Remove
+                        </button>
+                    </div>
+                    <p id="passport-error" class="hidden mt-2 text-xs font-medium text-red-600"></p>
                 </div>
             </div>
 
@@ -143,4 +151,68 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const input    = document.getElementById('passport');
+            const dropzone = document.getElementById('passport-dropzone');
+            const empty    = document.getElementById('passport-empty');
+            const preview  = document.getElementById('passport-preview');
+            const img      = document.getElementById('passport-img');
+            const nameEl   = document.getElementById('passport-name');
+            const sizeEl   = document.getElementById('passport-size');
+            const errorEl  = document.getElementById('passport-error');
+            const removeBtn = document.getElementById('passport-remove');
+            const MAX_BYTES = 500 * 1024;
+
+            function formatSize(bytes) {
+                return bytes < 1024 ? bytes + ' B'
+                     : bytes < 1048576 ? (bytes / 1024).toFixed(1) + ' KB'
+                     : (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            function showPreview(file) {
+                errorEl.classList.add('hidden');
+
+                if (file.size > MAX_BYTES) {
+                    errorEl.textContent = 'File is ' + formatSize(file.size) + '. Maximum allowed is 500KB.';
+                    errorEl.classList.remove('hidden');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                    nameEl.textContent = file.name;
+                    sizeEl.textContent = formatSize(file.size);
+                    empty.classList.add('hidden');
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            input.addEventListener('change', (e) => {
+                if (e.target.files.length) showPreview(e.target.files[0]);
+            });
+
+            dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-primary-400', 'bg-primary-50'); });
+            dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('border-primary-400', 'bg-primary-50'); });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('border-primary-400', 'bg-primary-50');
+                if (e.dataTransfer.files.length) {
+                    input.files = e.dataTransfer.files;
+                    showPreview(e.dataTransfer.files[0]);
+                }
+            });
+
+            removeBtn.addEventListener('click', () => {
+                input.value = '';
+                img.src = '';
+                preview.classList.add('hidden');
+                empty.classList.remove('hidden');
+            });
+        });
+    </script>
 </x-public-layout>
