@@ -131,32 +131,38 @@ new #[Layout('layouts.app')] class extends Component {
             <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Academics</h3>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
-                    <x-searchable-select
-                        model="subject_one_id"
+                    <x-vanilla-searchable-select
+                        name="subject_one_id"
+                        wireModel="subject_one_id"
                         label="Subject 1"
                         :options="$this->subjects"
                         placeholder="Select first subject…"
-                        required
+                        :required="true"
+                        group="subjects"
                     />
                     <x-input-error :messages="$errors->get('subject_one_id')" class="mt-1" />
                 </div>
                 <div>
-                    <x-searchable-select
-                        model="subject_two_id"
+                    <x-vanilla-searchable-select
+                        name="subject_two_id"
+                        wireModel="subject_two_id"
                         label="Subject 2"
                         :options="$this->subjects"
                         placeholder="Select second subject…"
-                        required
+                        :required="true"
+                        group="subjects"
                     />
                     <x-input-error :messages="$errors->get('subject_two_id')" class="mt-1" />
                 </div>
                 <div>
-                    <x-searchable-select
-                        model="subject_three_id"
+                    <x-vanilla-searchable-select
+                        name="subject_three_id"
+                        wireModel="subject_three_id"
                         label="Subject 3"
                         :options="$this->subjects"
                         placeholder="Select third subject…"
-                        required
+                        :required="true"
+                        group="subjects"
                     />
                     <x-input-error :messages="$errors->get('subject_three_id')" class="mt-1" />
                 </div>

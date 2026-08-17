@@ -27,6 +27,21 @@ class PublicRegistrationRequest extends FormRequest
         ];
     }
 
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $subjects = array_filter([
+                $this->subject_one_id,
+                $this->subject_two_id,
+                $this->subject_three_id,
+            ]);
+
+            if (count($subjects) !== count(array_unique($subjects))) {
+                $validator->errors()->add('subjects', 'Each subject must be unique. Please select three different subjects.');
+            }
+        });
+    }
+
     public function messages(): array
     {
         return [

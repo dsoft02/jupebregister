@@ -39,7 +39,7 @@
                     <p class="font-semibold">What happens next?</p>
                     <p class="mt-1">
                         The Programme Officer will review your registration and publish your result.
-                        Once published, you can verify it online using your Foundation or JUPEB number.
+                        Once published, you can verify it online using your Foundation number.
                     </p>
                 </div>
 

@@ -66,37 +66,34 @@
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div>
-                        <label for="subject_one_id" class="label">Subject 1 <span class="text-red-500">*</span></label>
-                        <select id="subject_one_id" name="subject_one_id" class="input" required>
-                            <option value="">Select first subject</option>
-                            @foreach ($subjects as $subject)
-                                <option value="{{ $subject->id }}" @selected(old('subject_one_id') == $subject->id)>
-                                    {{ $subject->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-vanilla-searchable-select
+                            name="subject_one_id"
+                            label="Subject 1"
+                            placeholder="Select first subject"
+                            :options="$subjects->pluck('name', 'id')->toArray()"
+                            :required="true"
+                            group="subjects"
+                        />
                     </div>
                     <div>
-                        <label for="subject_two_id" class="label">Subject 2 <span class="text-red-500">*</span></label>
-                        <select id="subject_two_id" name="subject_two_id" class="input" required>
-                            <option value="">Select second subject</option>
-                            @foreach ($subjects as $subject)
-                                <option value="{{ $subject->id }}" @selected(old('subject_two_id') == $subject->id)>
-                                    {{ $subject->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-vanilla-searchable-select
+                            name="subject_two_id"
+                            label="Subject 2"
+                            placeholder="Select second subject"
+                            :options="$subjects->pluck('name', 'id')->toArray()"
+                            :required="true"
+                            group="subjects"
+                        />
                     </div>
                     <div>
-                        <label for="subject_three_id" class="label">Subject 3 <span class="text-red-500">*</span></label>
-                        <select id="subject_three_id" name="subject_three_id" class="input" required>
-                            <option value="">Select third subject</option>
-                            @foreach ($subjects as $subject)
-                                <option value="{{ $subject->id }}" @selected(old('subject_three_id') == $subject->id)">
-                                    {{ $subject->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-vanilla-searchable-select
+                            name="subject_three_id"
+                            label="Subject 3"
+                            placeholder="Select third subject"
+                            :options="$subjects->pluck('name', 'id')->toArray()"
+                            :required="true"
+                            group="subjects"
+                        />
                     </div>
                 </div>
             </div>
