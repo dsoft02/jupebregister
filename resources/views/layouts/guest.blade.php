@@ -20,7 +20,7 @@
     </head>
     <body class="h-screen overflow-hidden font-sans antialiased">
 
-        <div class="grid h-screen lg:grid-cols-2">
+        <div class="grid h-screen lg:grid-cols-[1.2fr_0.8fr]">
 
             {{-- ─── Left branding panel ─────────────────────────── --}}
             <div
@@ -59,18 +59,6 @@
             {{-- ─── Right authentication panel ──────────────────── --}}
             <div class="flex flex-col bg-white px-5 py-6 sm:px-12">
 
-                {{-- Mobile back link --}}
-                <div class="lg:hidden">
-                    <a
-                        href="{{ route('home') }}"
-                        class="group inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
-                        wire:navigate
-                    >
-                        <i data-lucide="arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-0.5"></i>
-                        Back to Homepage
-                    </a>
-                </div>
-
                 {{-- Centered form area --}}
                 <div class="flex flex-1 flex-col items-center justify-center">
                     <div class="w-full max-w-sm">
@@ -101,6 +89,18 @@
                             Having trouble signing in? Contact the Office of the Director.
                         </p>
                     </div>
+                </div>
+
+                {{-- Mobile back link (bottom) --}}
+                <div class="shrink-0 pb-4 text-center lg:hidden">
+                    <a
+                        href="{{ route('home') }}"
+                        class="group inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
+                        wire:navigate
+                    >
+                        <i data-lucide="arrow-left" class="h-4 w-4 transition-transform group-hover:-translate-x-0.5"></i>
+                        Back to Homepage
+                    </a>
                 </div>
             </div>
 
