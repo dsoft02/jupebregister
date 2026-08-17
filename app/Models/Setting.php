@@ -33,9 +33,6 @@ class Setting extends Model
     {
         return [
             'director_name',
-            'director_credentials',
-            'vice_chancellor_name',
-            'vice_chancellor_credentials',
             'issue_date',
             'current_session',
         ];

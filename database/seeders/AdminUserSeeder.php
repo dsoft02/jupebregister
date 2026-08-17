@@ -52,10 +52,7 @@ class AdminUserSeeder extends Seeder
 
         app(SettingsService::class)->set([
             'current_session' => '2025/2026',
-            'director_name' => 'Prof. Adamu G. Ibrahim',
-            'director_credentials' => 'Director, PAAU Foundation School',
-            'vice_chancellor_name' => 'Prof. Suleiman O. Abdul',
-            'vice_chancellor_credentials' => 'Vice Chancellor, Prince Abubakar Audu University, Anyigba',
+            'director_name' => 'Idris Ahmed Sani (PhD.)',
             'issue_date' => null,
         ]);
     }

@@ -18,12 +18,6 @@ new #[Layout('layouts.app')] class extends Component {
 
     public ?string $director_name = null;
 
-    public ?string $director_credentials = null;
-
-    public ?string $vice_chancellor_name = null;
-
-    public ?string $vice_chancellor_credentials = null;
-
     public ?string $issue_date = null;
 
     public ?string $current_session = null;
@@ -31,9 +25,6 @@ new #[Layout('layouts.app')] class extends Component {
     public function mount(SettingsService $settings): void
     {
         $this->director_name = $settings->get('director_name');
-        $this->director_credentials = $settings->get('director_credentials');
-        $this->vice_chancellor_name = $settings->get('vice_chancellor_name');
-        $this->vice_chancellor_credentials = $settings->get('vice_chancellor_credentials');
         $this->issue_date = $settings->get('issue_date');
         $this->current_session = $settings->get('current_session');
     }
@@ -45,9 +36,6 @@ new #[Layout('layouts.app')] class extends Component {
             'official_stamp' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'director_signature' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'director_name' => ['nullable', 'string', 'max:255'],
-            'director_credentials' => ['nullable', 'string', 'max:255'],
-            'vice_chancellor_name' => ['nullable', 'string', 'max:255'],
-            'vice_chancellor_credentials' => ['nullable', 'string', 'max:255'],
             'issue_date' => ['nullable', 'date'],
             'current_session' => ['nullable', 'string', 'max:20'],
         ];
@@ -59,9 +47,6 @@ new #[Layout('layouts.app')] class extends Component {
 
         $textValues = $this->only([
             'director_name',
-            'director_credentials',
-            'vice_chancellor_name',
-            'vice_chancellor_credentials',
             'issue_date',
             'current_session',
         ]);
@@ -172,21 +157,6 @@ new #[Layout('layouts.app')] class extends Component {
                     <label for="director_name" class="label">Director Name</label>
                     <input type="text" id="director_name" wire:model="director_name" class="input" placeholder="e.g. Prof. John A. Smith">
                     <x-input-error :messages="$errors->get('director_name')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="director_credentials" class="label">Director Credentials</label>
-                    <input type="text" id="director_credentials" wire:model="director_credentials" class="input" placeholder="e.g. Director, PAAU Foundation School">
-                    <x-input-error :messages="$errors->get('director_credentials')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="vice_chancellor_name" class="label">Vice Chancellor Name</label>
-                    <input type="text" id="vice_chancellor_name" wire:model="vice_chancellor_name" class="input" placeholder="Vice Chancellor">
-                    <x-input-error :messages="$errors->get('vice_chancellor_name')" class="mt-1" />
-                </div>
-                <div>
-                    <label for="vice_chancellor_credentials" class="label">Vice Chancellor Credentials</label>
-                    <input type="text" id="vice_chancellor_credentials" wire:model="vice_chancellor_credentials" class="input" placeholder="Vice Chancellor, PAAU">
-                    <x-input-error :messages="$errors->get('vice_chancellor_credentials')" class="mt-1" />
                 </div>
                 <div>
                     <label for="issue_date" class="label">Default Issue Date</label>

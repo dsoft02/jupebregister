@@ -151,13 +151,6 @@
             padding-top: 1.2mm;
         }
 
-        .vice-chancellor {
-            font-size: 8pt;
-            color: #475569;
-            margin-top: 10mm;
-            text-align: center;
-        }
-
         .footer {
             position: absolute;
             bottom: 8mm;
@@ -252,15 +245,7 @@
                     <div class="signature-img"><img src="{{ $signature }}" alt="Director Signature"></div>
                 @endif
                 <div class="signature-name">{{ $settings->get('director_name', 'Director') }}</div>
-                <div>{{ $settings->get('director_credentials') }}</div>
             </div>
-        </div>
-
-        <div class="vice-chancellor">
-            {{ $settings->get('vice_chancellor_name') }}
-            @if ($settings->get('vice_chancellor_credentials'))
-                <br>{{ $settings->get('vice_chancellor_credentials') }}
-            @endif
         </div>
     </div>
 
