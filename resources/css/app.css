@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+
+@theme {
+    --font-sans: 'Inter', 'Figtree', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+    /* Primary — University Green #0A8A4B */
+    --color-primary-50: #f0faf4;
+    --color-primary-100: #d9f2e3;
+    --color-primary-200: #b5e5ca;
+    --color-primary-300: #82d3a9;
+    --color-primary-400: #4dba85;
+    --color-primary-500: #29a068;
+    --color-primary-600: #1c8353;
+    --color-primary-700: #0a8a4b;
+    --color-primary-800: #0a6e3c;
+    --color-primary-900: #0a5a32;
+    --color-primary-950: #03331c;
+
+    /* Secondary — JUPEB Blue #006BB6 */
+    --color-secondary-50: #eff6ff;
+    --color-secondary-100: #dbeafe;
+    --color-secondary-200: #bfdbfe;
+    --color-secondary-300: #93c5fd;
+    --color-secondary-400: #60a5fa;
+    --color-secondary-500: #3b82f6;
+    --color-secondary-600: #1a6de0;
+    --color-secondary-700: #006bb6;
+    --color-secondary-800: #005896;
+    --color-secondary-900: #004a7c;
+    --color-secondary-950: #002f51;
+
+    /* Accent — Script Green #2CB673 */
+    --color-accent-50: #f0fdf6;
+    --color-accent-100: #dcfce9;
+    --color-accent-200: #bbf7d4;
+    --color-accent-300: #86efac;
+    --color-accent-400: #57e08b;
+    --color-accent-500: #2cb673;
+    --color-accent-600: #229d61;
+    --color-accent-700: #1d7d4f;
+    --color-accent-800: #1c6341;
+    --color-accent-900: #195137;
+    --color-accent-950: #0a2e1f;
+}
+
+@layer base {
+    body {
+        @apply bg-[#F8FAFC] text-[#1F2937] antialiased;
+    }
+
+    ::selection {
+        @apply bg-primary-700 text-white;
+    }
+}
+
+@layer components {
+    .card {
+        @apply rounded-2xl border border-[#E5E7EB] bg-white shadow-sm;
+    }
+
+    .card-header {
+        @apply border-b border-[#E5E7EB] px-6 py-4;
+    }
+
+    .stat-icon {
+        @apply flex h-12 w-12 items-center justify-center rounded-xl text-white;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed bg-primary-700 text-white hover:bg-primary-800 focus:ring-primary-500;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed bg-secondary-700 text-white hover:bg-secondary-800 focus:ring-secondary-500;
+    }
+
+    .btn-accent {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-400;
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-400;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    }
+
+    .input {
+        @apply block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500;
+    }
+
+    .label {
+        @apply mb-1 block text-sm font-medium text-slate-700;
+    }
+
+    .badge {
+        @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    }
+
+    .th {
+        @apply sticky top-0 z-10 bg-slate-50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500;
+    }
+
+    .td {
+        @apply px-4 py-3 text-sm text-[#1F2937];
+    }
+}
+
+/* ─── Brand Design Tokens ─────────────────────────────── */
+
+@theme {
+    --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-green: #0a8a4b;
+    --color-brand-blue: #006bb6;
+    --color-brand-accent: #2cb673;
+}
+
+/* ─── Gradient & Shadow Utilities ─────────────────────── */
+
+@utility text-gradient-brand {
+    background-image: linear-gradient(120deg, var(--color-brand-green), var(--color-brand-blue));
+    background-clip: text;
+    color: transparent;
+}
+
+@utility bg-gradient-brand {
+    background-image: linear-gradient(120deg, var(--color-brand-green), var(--color-brand-blue));
+}
+
+@utility bg-gradient-soft {
+    background-image: linear-gradient(160deg, #fcfdfc, #f5f7fb);
+}
+
+@utility shadow-soft {
+    box-shadow: 0 1px 2px rgba(77, 89, 107, 0.04), 0 12px 32px -12px rgba(77, 89, 107, 0.12);
+}
+
+@utility shadow-lift {
+    box-shadow: 0 20px 48px -18px rgba(10, 138, 75, 0.35);
+}

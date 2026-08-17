@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+
+class Setting extends Model
+{
+    protected $fillable = ['key', 'value'];
+
+    protected function casts(): array
+    {
+        return [
+            'value' => 'string',
+        ];
+    }
+
+    /**
+     * A small map of the keys the application manages. Keys that point to
+     * uploaded files are persisted as storage paths, everything else as text.
+     */
+    public static function fileKeys(): array
+    {
+        return [
+            'letterhead_image',
+            'official_stamp',
+            'director_signature',
+        ];
+    }
+
+    public static function textKeys(): array
+    {
+        return [
+            'director_name',
+            'director_credentials',
+            'vice_chancellor_name',
+            'vice_chancellor_credentials',
+            'issue_date',
+            'current_session',
+        ];
+    }
+
+    public static function allKeys(): array
+    {
+        return array_merge(self::fileKeys(), self::textKeys());
+    }
+}
