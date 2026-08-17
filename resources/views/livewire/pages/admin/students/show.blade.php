@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StudentStatus;
 use App\Models\Student;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -11,6 +12,28 @@ new #[Layout('layouts.app')] class extends Component {
     {
         $this->student = $student->load('subjectOne', 'subjectTwo', 'subjectThree', 'result');
     }
+
+    public function approveStudent(): void
+    {
+        $this->authorize('update', $this->student);
+
+        $this->student->update(['status' => StudentStatus::Approved]);
+
+        $this->student->refresh();
+
+        session()->flash('status', "Student {$this->student->fullName()} approved.");
+    }
+
+    public function rejectStudent(): void
+    {
+        $this->authorize('update', $this->student);
+
+        $this->student->update(['status' => StudentStatus::Rejected]);
+
+        $this->student->refresh();
+
+        session()->flash('status', "Student {$this->student->fullName()} rejected.");
+    }
 };
 
 ?>
@@ -21,10 +44,15 @@ new #[Layout('layouts.app')] class extends Component {
         eyebrow="Student Management"
         :description="$student->fullName().' ('.$student->foundation_number.')'">
         <a href="{{ route('admin.students.index') }}" class="btn-outline">&larr; Back</a>
-        <a href="{{ route('admin.students.edit', $student) }}" class="btn-secondary">Edit Student</a>
-        <a href="{{ route('admin.results.entry', $student) }}" class="btn-accent">Enter Result</a>
-        @if ($student->result)
-            <a href="{{ route('admin.results.pdf', $student->result) }}" target="_blank" class="btn-primary">Generate PDF</a>
+        @if ($student->status->value === 'pending')
+            <button wire:click="rejectStudent" class="btn-outline border-red-300 text-red-700 hover:bg-red-50">Reject</button>
+            <button wire:click="approveStudent" class="btn-primary bg-green-600 hover:bg-green-700">Approve</button>
+        @else
+            <a href="{{ route('admin.students.edit', $student) }}" class="btn-secondary">Edit Student</a>
+            <a href="{{ route('admin.results.entry', $student) }}" class="btn-accent">Enter Result</a>
+            @if ($student->result)
+                <a href="{{ route('admin.results.pdf', $student->result) }}" target="_blank" class="btn-primary">Generate PDF</a>
+            @endif
         @endif
     </x-admin.page-header>
 

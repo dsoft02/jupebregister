@@ -14,7 +14,7 @@
 @endphp
 
 <a href="{{ $href }}" @if(! in_array($icon, ['shield']) && str_contains($href, 'verify')) target="_blank" @endif
-    {{ $attributes->merge(['class' => 'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ' . ($active ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-[#6B7280] hover:bg-primary-50 hover:text-primary-700')]) }}>
+    {{ $attributes->merge(['class' => 'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ' . ($active ? 'bg-white/10 text-white font-semibold' : 'text-slate-400 hover:bg-white/5 hover:text-white')]) }}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 shrink-0">
         {!! $icons[$icon] ?? $icons['dashboard'] !!}
     </svg>

@@ -36,4 +36,9 @@ class ResultPolicy
     {
         return $user->can('results.enter');
     }
+
+    public function export(User $user): bool
+    {
+        return $user->can('results.export');
+    }
 }

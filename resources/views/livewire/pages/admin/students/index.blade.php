@@ -62,6 +62,24 @@ new #[Layout('layouts.app')] class extends Component {
         session()->flash('status', "Student {$name} deleted.");
     }
 
+    public function approveStudent(Student $student): void
+    {
+        $this->authorize('update', $student);
+
+        $student->update(['status' => StudentStatus::Approved]);
+
+        session()->flash('status', "Student {$student->fullName()} approved.");
+    }
+
+    public function rejectStudent(Student $student): void
+    {
+        $this->authorize('update', $student);
+
+        $student->update(['status' => StudentStatus::Rejected]);
+
+        session()->flash('status', "Student {$student->fullName()} rejected.");
+    }
+
     #[Computed]
     public function students()
     {
@@ -195,6 +213,16 @@ new #[Layout('layouts.app')] class extends Component {
                             </td>
                             <td class="td text-right">
                                 <div class="flex items-center justify-end gap-1">
+                                    @if ($student->status->value === 'pending')
+                                        <button wire:click="approveStudent({{ $student->id }})" title="Approve"
+                                            class="rounded-lg p-2 text-slate-500 transition hover:bg-green-50 hover:text-green-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        </button>
+                                        <button wire:click="rejectStudent({{ $student->id }})" title="Reject"
+                                            class="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('admin.students.show', $student) }}" title="View"
                                         class="rounded-lg p-2 text-slate-500 transition hover:bg-secondary-50 hover:text-secondary-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -213,7 +241,12 @@ new #[Layout('layouts.app')] class extends Component {
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                                         </a>
                                     @endif
-                                    <button wire:click="deleteStudent({{ $student->id }})" wire:confirm="Delete {{ $student->fullName() }}? This cannot be undone." title="Delete"
+                                    <button x-on:click="$store.confirmModal.show({
+                                        title: 'Delete Student',
+                                        message: 'Delete {{ addslashes($student->fullName()) }}? This cannot be undone.',
+                                        confirmText: 'Delete',
+                                        onConfirm: () => @this.call('deleteStudent', {{ $student->id }})
+                                    })" title="Delete"
                                         class="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                                     </button>

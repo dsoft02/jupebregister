@@ -18,15 +18,15 @@
     <body class="h-full font-sans antialiased">
         <div class="min-h-full">
             <!-- Sidebar -->
-            <aside class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-[#E5E7EB] bg-white">
+            <aside class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-white/10 bg-slate-900">
                 <!-- Brand -->
-                <div class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-5">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-700 text-white">
+                <div class="flex h-16 shrink-0 items-center gap-3 border-b border-white/10 px-5">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                     </div>
                     <div class="min-w-0">
-                        <p class="truncate text-sm font-bold text-primary-700">PAAU Foundation</p>
-                        <p class="truncate text-[11px] text-[#6B7280]">JUPEB Result System</p>
+                        <p class="truncate text-sm font-bold text-white">PAAU Foundation</p>
+                        <p class="truncate text-[11px] text-slate-400">JUPEB Result System</p>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@
                         Results
                     </x-admin.nav-link>
 
-                    <x-admin.nav-link href="{{ route('admin.import-export.create') }}" :active="request()->routeIs('admin.import-export.*') || request()->routeIs('admin.import.*') || request()->routeIs('admin.export')" icon="exchange">
+                    <x-admin.nav-link href="{{ route('admin.import-export.create') }}" :active="request()->routeIs('admin.import-export.*') || request()->routeIs('admin.import.*') || request()->routeIs('admin.export') || request()->routeIs('admin.results.import') || request()->routeIs('admin.results.export')" icon="exchange">
                         Import &amp; Export
                     </x-admin.nav-link>
 
@@ -68,7 +68,7 @@
                 </nav>
 
                 <!-- User -->
-                <div class="border-t border-[#E5E7EB] p-4">
+                <div class="border-t border-white/10 p-4">
                     <livewire:layout.user-menu />
                 </div>
             </aside>
@@ -82,6 +82,14 @@
                 </main>
             </div>
         </div>
+
+        <script>
+            window.__confirm = function(options) {
+                window.dispatchEvent(new CustomEvent('open-confirm', { detail: options }));
+            };
+        </script>
+
+        <x-admin.confirm-modal />
 
         @livewireScripts
     </body>

@@ -80,6 +80,13 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         Route::get('export/{format}', [ImportExportController::class, 'export'])
             ->name('export');
 
+        // Results Import & Export
+        Route::post('results/import', [ImportExportController::class, 'importResults'])
+            ->name('results.import');
+
+        Route::get('results/export/{format}', [ImportExportController::class, 'exportResults'])
+            ->name('results.export');
+
         // Settings
         Volt::route('settings', 'pages.admin.settings')
             ->name('settings');
