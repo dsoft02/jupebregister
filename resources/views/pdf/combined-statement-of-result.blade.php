@@ -150,48 +150,75 @@
             font-weight:bold;
         }
 
-        .key{
-            margin-top:16px;
-            font-size:13px;
-            font-weight:bold;
-            line-height:1.55;
-        }
+        /* ── Bottom three-column section ───────────────────── */
 
-        table.footer{
+        .bottom-section{
             width:100%;
             border-collapse:collapse;
-            margin-top:10px;
+            margin-top:16px;
         }
 
-        .footer td{
+        .bottom-section td{
             vertical-align:bottom;
+        }
+
+        .key-cell{
+            width:35%;
+            padding-right:15px;
+        }
+
+        .stamp-cell{
+            width:45%;
+            text-align:center;
+        }
+
+        .notice-cell{
+            width:20%;
+            text-align:right;
+        }
+
+        .key-title{
+            font-size:14px;
+            font-weight:bold;
+            margin-bottom:6px;
+        }
+
+        .key-text{
+            font-size:14px;
+            font-weight:bold;
+            line-height:2;
         }
 
         .stamp-wrap{
             position:relative;
-            width:330px;
-            height:95px;
+            width:420px;
+            height:120px;
+            margin:0 auto;
         }
 
         .stamp{
             position:absolute;
             left:0;
-            bottom:0;
-            width:150px;
+            top:5px;
+            width:135px;
         }
 
         .signature{
             position:absolute;
-            left:160px;
-            bottom:22px;
-            width:120px;
+            left:145px;
+            top:28px;
+            width:115px;
         }
 
         .director{
             position:absolute;
-            left:160px;
-            bottom:0;
+            left:145px;
+            top:60px;
+            width:200px;
+            text-align:left;
             font-size:16px;
+            font-weight:bold;
+            line-height:18px;
         }
 
         .director span{
@@ -200,13 +227,14 @@
         }
 
         .notice{
-            border:1px solid #666;
+            border:1px solid #777;
             border-radius:8px;
             padding:12px;
-            width:180px;
+            width:170px;
+            margin-left:auto;
             text-align:center;
             font-size:12px;
-            line-height:1.5;
+            line-height:1.45;
         }
     </style>
 
@@ -378,25 +406,24 @@
 
         </table>
 
-        <div class="key">
-
-            Key to Grade:
-
-            A = 70–100 (5 Points); B = 60–69 (4 Points); C = 50–59 (3 Points); D = 45–49 (2 Points)
-
-            E = 40–45 (1 Point); F(Fail) = 0–39 (0 Point)
-
-            X = Absent; Q = Cancelled; W = Withheld
-
-            One Point added if all 3 subjects passed.
-
-        </div>
-
-        <table class="footer">
+        <table class="bottom-section">
 
             <tr>
 
-                <td width="70%">
+                <td class="key-cell">
+
+                    <div class="key-title">Key to Grade:</div>
+
+                    <div class="key-text">
+                        A = 70–100 (5 Points); B = 60–69 (4 Points); C = 50–59 (3 Points)<br>
+                        D = 45–49 (2 Points); E = 40–45 (1 Point); F(Fail) = 0–39 (0 Point)<br>
+                        X = Absent; Q = Cancelled; W = Withheld<br>
+                        One Point added if all 3 subjects passed.
+                    </div>
+
+                </td>
+
+                <td class="stamp-cell">
 
                     <div class="stamp-wrap">
 
@@ -405,25 +432,18 @@
                         <img src="{{ $signature }}" class="signature">
 
                         <div class="director">
-
                             {{ $directorName }}
-
                             <span>Programme Director</span>
-
                         </div>
 
                     </div>
 
                 </td>
 
-                <td width="30%" align="right">
+                <td class="notice-cell">
 
                     <div class="notice">
-
-                        Any alteration or erasure
-
-                        renders this result slip invalid
-
+                        Any alteration or erasure renders this result slip invalid
                     </div>
 
                 </td>
