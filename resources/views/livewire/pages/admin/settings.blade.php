@@ -12,6 +12,8 @@ new #[Layout('layouts.app')] class extends Component {
 
     public $letterhead_image;
 
+    public $letterhead_landscape;
+
     public $watermark_image;
 
     public $official_stamp;
@@ -35,6 +37,7 @@ new #[Layout('layouts.app')] class extends Component {
     {
         return [
             'letterhead_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'letterhead_landscape' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'watermark_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'official_stamp' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'director_signature' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
@@ -58,6 +61,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         foreach ([
             'letterhead_image' => 'settings/letterhead',
+            'letterhead_landscape' => 'settings/letterhead-landscape',
             'watermark_image' => 'settings/watermark',
             'official_stamp' => 'settings/stamp',
             'director_signature' => 'settings/signature',
@@ -88,6 +92,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         return [
             'letterhead_image' => $settings->fileUrl('letterhead_image'),
+            'letterhead_landscape' => $settings->fileUrl('letterhead_landscape'),
             'watermark_image' => $settings->fileUrl('watermark_image'),
             'official_stamp' => $settings->fileUrl('official_stamp'),
             'director_signature' => $settings->fileUrl('director_signature'),
@@ -120,7 +125,8 @@ new #[Layout('layouts.app')] class extends Component {
             <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 xl:grid-cols-4">
                 @php
                     $uploadFields = [
-                        ['key' => 'letterhead_image', 'label' => 'Letterhead Image', 'help' => 'Full-page official letterhead with header, logos and watermark. Recommended 1240×1754 (A4).'],
+                        ['key' => 'letterhead_image', 'label' => 'Letterhead Image (Portrait)', 'help' => 'Full-page official letterhead for single-statement PDFs. Recommended 1240×1754 (A4 portrait).'],
+                        ['key' => 'letterhead_landscape', 'label' => 'Letterhead Image (Landscape)', 'help' => 'Full-page official letterhead for combined statement PDFs. Recommended 1754×1240 (A4 landscape).'],
                         ['key' => 'watermark_image', 'label' => 'Watermark', 'help' => 'Watermark image displayed behind the content on the result slip.'],
                         ['key' => 'official_stamp', 'label' => 'Official Stamp', 'help' => 'Official school stamp image (PNG with transparency works best).'],
                         ['key' => 'director_signature', 'label' => 'Director Signature', 'help' => 'Scanned signature of the Director.'],

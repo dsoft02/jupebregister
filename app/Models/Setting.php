@@ -24,6 +24,7 @@ class Setting extends Model
     {
         return [
             'letterhead_image',
+            'letterhead_landscape',
             'watermark_image',
             'official_stamp',
             'director_signature',
