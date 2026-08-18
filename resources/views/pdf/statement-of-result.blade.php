@@ -94,16 +94,18 @@
         .header-right {
             position: absolute;
             top: -40px;
-            right: 18px;
+            right: 10px;
             text-align: right;
         }
 
         .header-date {
+            display: block;
             font-family: Arial, sans-serif;
             font-size: 14px;
             font-weight: bold;
             color: #000;
             text-align: right;
+            margin-bottom: 4px;
         }
 
         .passport-photo {
@@ -112,7 +114,8 @@
             object-fit: cover;
             border: 0.5px solid #ccc;
             display: block;
-            margin-top: 1px;
+            margin-left: auto;
+            margin-right: 0;
         }
 
         .passport-placeholder {
@@ -125,7 +128,8 @@
             font-size: 9px;
             color: #94a3b8;
             font-family: Arial, sans-serif;
-            margin-top: 1px;
+            margin-left: auto;
+            margin-right: 0;
         }
 
         /* ── Name / info block ─────────────────────────────── */
@@ -181,12 +185,17 @@
             font-size: 18px;
             text-decoration: underline;
             text-align: left;
-            padding: 0 0 4px 0;
+            padding: 0 0 8px 0;
         }
 
-        .subject-table th.grade-col,
+        .subject-table th.grade-col {
+            text-align: center;
+            width: 205px;
+        }
+
         .subject-table th.point-col {
             text-align: center;
+            width: 170px;
         }
 
         .subject-table td {
@@ -202,10 +211,12 @@
         .subject-table td.grade-cell {
             width: 205px;
             padding-right: 8px;
+            text-align: center;
         }
 
         .subject-table td.point-cell {
             width: 170px;
+            text-align: center;
         }
 
         .subject-table .subject-box {
@@ -233,10 +244,17 @@
             font-size: 16px;
             font-weight: bold;
             padding: 0;
+            display: inline-block;
         }
 
         .subject-table .total-row td {
             padding-top: 4px;
+        }
+
+        .subject-table .total-row .grade-box,
+        .subject-table .total-row .point-box {
+            width: 100px;
+            display: inline-block;
         }
 
         /* ── Grade point summary ───────────────────────────── */
@@ -280,11 +298,9 @@
 
         .footer-left{
             width:45%;
-            background: yellow;
         }
 
         .footer-right{
-            background: red;
             width:55%;
             text-align:right;
             font-family:Arial,sans-serif;
@@ -384,7 +400,7 @@
             <table class="subject-table">
                 <thead>
                 <tr>
-                    <th>SUBJECT</th>
+                    <th class="subject-col">SUBJECT</th>
                     <th class="grade-col">GRADE LETTER</th>
                     <th class="point-col">GRADE POINT</th>
                 </tr>
@@ -405,10 +421,10 @@
                 @endforeach
                 <tr class="total-row">
                     <td></td>
-                    <td>
+                    <td class="grade-cell">
                         <div class="grade-box">TOTAL</div>
                     </td>
-                    <td>
+                    <td class="point-cell">
                         <div class="point-box">{{ $result->total_point }}</div>
                     </td>
                 </tr>
