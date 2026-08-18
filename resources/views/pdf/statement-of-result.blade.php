@@ -34,17 +34,16 @@
         }
 
         .page {
-            width: 794px;
-            height: 1123px;
+            width: 100%;
             position: relative;
-            overflow: hidden;
             background: #fff;
         }
 
         .letterhead {
             display: block;
-            width: 794px;
-            height: 178px;
+            width: 100%;
+            height: auto;
+            max-height: 178px;
         }
 
         /* ── Content card ─────────────────────────────────── */
@@ -66,7 +65,6 @@
             width: 466px;
             opacity: 0.08;
             z-index: 0;
-            pointer-events: none;
         }
 
         .content {
@@ -76,9 +74,14 @@
 
         /* ── Header row ───────────────────────────────────── */
 
+        .header-container {
+            position: relative;
+            margin-top: 55px;
+            min-height: 100px;
+        }
+
         .header {
             text-align: center;
-            margin-top: 55px;
         }
 
         .header-title {
@@ -90,7 +93,7 @@
 
         .header-right {
             position: absolute;
-            top: 12px;
+            top: -40px;
             right: 18px;
             text-align: right;
         }
@@ -262,54 +265,59 @@
         }
 
         /* ── Footer ────────────────────────────────────────── */
-
-        .footer {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-top: 3px;
-            margin-left: 33px;
-            margin-right: 20px;
+        .footer{
+            margin:10px 30px 15px;
         }
 
-        .stamp-container {
-            position: relative;
-            width: 168px;
-            height: 115px;
+        .footer-table{
+            width:100%;
+            border-collapse:collapse;
         }
 
-        .stamp-img {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 168px;
-            height: 115px;
+        .footer-table td{
+            vertical-align:bottom;
         }
 
-        .signature-img {
-            position: absolute;
-            left: 9px;
-            top: 31px;
-            width: 150px;
-            height: 53px;
+        .footer-left{
+            width:45%;
+            background: yellow;
         }
 
-        .director-name {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 20px;
-            font-weight: bold;
-            line-height: 18px;
-            color: #000;
-            white-space: pre-line;
+        .footer-right{
+            background: red;
+            width:55%;
+            text-align:right;
+            font-family:Arial,sans-serif;
+            font-size:14px;
         }
 
-        .alteration-note {
-            margin-top: 167px;
-            width: 346px;
-            text-align: right;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            color: #000;
+        .stamp-container{
+            position:relative;
+            width:170px;
+            height:110px;
+        }
+
+        .stamp-img{
+            position:absolute;
+            top:0;
+            left:0;
+            width:170px;
+            height:110px;
+        }
+
+        .signature-img{
+            position:absolute;
+            top:30px;
+            left:10px;
+            width:145px;
+            height:50px;
+        }
+
+        .director-name{
+            margin-top:6px;
+            font-size:18px;
+            font-weight:bold;
+            line-height:20px;
         }
     </style>
 </head>
@@ -334,8 +342,11 @@
 
         <div class="content">
             {{-- Header: date, title, passport --}}
+            <div class="header-container">
             <div class="header-right">
-                <span class="header-date">Date: {{ $issueDate }}</span>
+                <span class="header-date">
+                    Date: {{ \Carbon\Carbon::createFromFormat('d/m/Y', $issueDate)->format('jS F, Y') }}
+                </span>
                 @if ($passport)
                     <img src="{{ $passport }}" alt="Passport" class="passport-photo">
                 @else
@@ -344,6 +355,7 @@
             </div>
             <div class="header">
                 <span class="header-title">Statement of Result</span>
+            </div>
             </div>
 
             <table class="student-info-table">
@@ -417,26 +429,28 @@
 
             {{-- Footer: stamp/signature + director + alteration note --}}
             <div class="footer">
-                <div>
-                    <div class="stamp-container">
-                        <img
-                            src="{{ $settings->get('official_stamp') ? Storage::url($settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
-                            alt="JUPEB Stamp"
-                            class="stamp-img"
-                        >
-                        <img
-                            src="{{ $settings->get('director_signature') ? Storage::url($settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
-                            alt="Signature"
-                            class="signature-img"
-                        >
-                    </div>
-                    <div class="director-name">{{ $settings->get('director_name', 'Director') }}
-                        Programme Director
-                    </div>
-                </div>
-                <div class="alteration-note">
-                    Any alteration or erasure renders this result slip invalid
-                </div>
+                <table class="footer-table">
+                    <tr>
+                        <td class="footer-left">
+                            <div class="stamp-container">
+                                <img src="{{ $settings->get('official_stamp') ? Storage::url($settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
+                                     class="stamp-img">
+
+                                <img src="{{ $settings->get('director_signature') ? Storage::url($settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
+                                     class="signature-img">
+                            </div>
+
+                            <div class="director-name">
+                                {{ $settings->get('director_name', 'Director') }}<br>
+                                Programme Director
+                            </div>
+                        </td>
+
+                        <td class="footer-right">
+                            Any alteration or erasure renders this result slip invalid
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

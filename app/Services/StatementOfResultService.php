@@ -36,12 +36,13 @@ class StatementOfResultService
             ->setPaper('a4', 'portrait');
 
         $pdf->setOptions([
-            'isRemoteEnabled' => true,
+            'defaultFont' => 'Times New Roman',
             'isHtml5ParserEnabled' => true,
-            'isPhpEnabled' => true,
-            'dpi' => 96,
+            'isRemoteEnabled' => true,
+            'isPhpEnabled' => false,
+            'enable_css_float' => true,
+            'enable_html5_parser' => true,
         ]);
-
 
         return $stream
             ? $pdf->stream($this->filename($student))
