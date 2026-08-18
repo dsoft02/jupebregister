@@ -109,8 +109,8 @@
         }
 
         .passport-photo {
-            width: 90px;
-            height: 90px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
             border: 0.5px solid #ccc;
             display: block;
@@ -119,12 +119,11 @@
         }
 
         .passport-placeholder {
-            width: 90px;
-            height: 90px;
+            width: 120px;
+            height: 120px;
             border: 0.5px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
+            line-height: 55px;
             font-size: 9px;
             color: #94a3b8;
             font-family: Arial, sans-serif;
