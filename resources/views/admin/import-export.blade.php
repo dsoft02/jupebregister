@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="space-y-6">
         <x-admin.page-header
-            title="Import &amp; Export"
+            title="Import & Export"
             eyebrow="Data Management"
             description="Bulk import or export students and results from spreadsheets." />
 
@@ -136,7 +136,10 @@
                         @enderror
                     </div>
 
-                    <div class="flex items-center justify-end">
+                    <div class="flex items-center justify-between">
+                        <a href="{{ route('admin.sample-template', 'results') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
+                            Download sample template &rarr;
+                        </a>
                         <button type="submit" class="btn-primary">Import Results</button>
                     </div>
                 </form>
@@ -192,6 +195,51 @@
                     <p class="text-xs text-slate-400">
                         Exports include student details, subject names, grades, points, and result status.
                     </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Import Subjects</h3>
+                    <p class="mt-1 text-xs text-slate-400">
+                        Upload a CSV or Excel file to add or update subjects.
+                    </p>
+                </div>
+
+                <form action="{{ route('admin.subjects.import') }}" method="POST" enctype="multipart/form-data" class="space-y-5 p-6">
+                    @csrf
+
+                    <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                        <p class="mt-3 text-sm font-medium text-slate-700">Drag & drop your spreadsheet here, or</p>
+                        <label class="btn-secondary mt-3 cursor-pointer">
+                            Choose File
+                            <input type="file" name="file" accept=".csv,.xlsx,.xls" class="sr-only">
+                        </label>
+                        <p class="mt-2 text-xs text-slate-400">CSV, XLSX or XLS &middot; maximum 5MB</p>
+                        @error('file')
+                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <a href="{{ route('admin.sample-template', 'subjects') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
+                            Download sample template &rarr;
+                        </a>
+                        <button type="submit" class="btn-primary">Import Subjects</button>
+                    </div>
+                </form>
+
+                <div class="border-t border-slate-100 px-6 py-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Required Columns</p>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        @foreach (['name', 'is_active'] as $column)
+                            <span class="rounded-lg bg-slate-100 px-2 py-1 font-mono text-[11px] text-slate-600">{{ $column }}</span>
+                        @endforeach
+                    </div>
+                    <p class="mt-2 text-xs text-slate-400">is_active should be 1 (active) or 0 (inactive). Defaults to 1 if omitted.</p>
                 </div>
             </div>
         </div>

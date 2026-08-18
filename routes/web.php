@@ -91,6 +91,14 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         Route::get('results/export/{format}', [ImportExportController::class, 'exportResults'])
             ->name('results.export');
 
+        // Subjects Import
+        Route::post('subjects/import', [ImportExportController::class, 'importSubjects'])
+            ->name('subjects.import');
+
+        // Sample Templates
+        Route::get('sample-template/{type}', [ImportExportController::class, 'sampleTemplate'])
+            ->name('sample-template');
+
         // Settings
         Volt::route('settings', 'pages.admin.settings')
             ->name('settings');

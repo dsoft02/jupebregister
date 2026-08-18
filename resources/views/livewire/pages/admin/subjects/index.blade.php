@@ -180,6 +180,11 @@ new #[Layout('layouts.app')] class extends Component {
                     </div>
                     <p class="mt-2 text-xs text-slate-400">Subjects with matching names will be updated. Restored if previously deleted.</p>
                 </div>
+                <div class="flex items-center justify-between">
+                    <a href="{{ route('admin.sample-template', 'subjects') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
+                        Download sample template &rarr;
+                    </a>
+                </div>
             </div>
             <div class="mt-5 flex items-center justify-end gap-3">
                 <button type="button" wire:click="$set('showImportForm', false)" class="btn-outline">Cancel</button>
