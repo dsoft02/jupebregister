@@ -35,6 +35,14 @@ class StatementOfResultService
         ])
             ->setPaper('a4', 'portrait');
 
+        $pdf->setOptions([
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+
         return $stream
             ? $pdf->stream($this->filename($student))
             : $pdf->download($this->filename($student));

@@ -280,7 +280,7 @@
     <div class="page">
         {{-- Letterhead --}}
         <img
-            src="{{ $settings->get('letterhead') ? Storage::url($settings->get('letterhead')) : asset('assets/jupeb/letterhead.png') }}"
+            src="{{ $settings->get('letterhead_image') ? Storage::url($settings->get('letterhead_image')) : asset('assets/jupeb/letterhead.png') }}"
             alt="JUPEB Letterhead"
             class="letterhead"
         >
@@ -289,7 +289,7 @@
         <div class="content-card">
             {{-- Watermark --}}
             <img
-                src="{{ $settings->get('watermark') ? Storage::url($settings->get('watermark')) : asset('assets/jupeb/watermark.png') }}"
+                src="{{ $settings->get('watermark_image') ? Storage::url($settings->get('watermark_image')) : asset('assets/jupeb/watermark.png') }}"
                 alt=""
                 aria-hidden="true"
                 class="watermark"
