@@ -172,8 +172,8 @@ new #[Layout('layouts.app')] class extends Component {
                             form.submit();
                         }
                     })" class="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-700">Download ZIP</button>
-                    <a href="#" target="_blank"
-                        x-on:click.prevent="
+                    <button type="button"
+                        x-on:click="
                             const form = document.getElementById('combined-statement-form');
                             const container = document.getElementById('combined-statement-ids');
                             container.innerHTML = '';
@@ -186,7 +186,7 @@ new #[Layout('layouts.app')] class extends Component {
                             });
                             form.submit();
                         "
-                        class="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700">Combined Statement</a>
+                        class="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700">Combined Statement</button>
                 </div>
                 <button wire:click="$set('selected', [])" class="ml-auto text-xs font-semibold text-primary-600 hover:text-primary-800">Clear</button>
             </div>
@@ -297,7 +297,7 @@ new #[Layout('layouts.app')] class extends Component {
         <div id="bulk-download-ids"></div>
     </form>
 
-    <form id="combined-statement-form" action="{{ route('admin.results.combined-statement.selected') }}" method="POST" class="hidden">
+    <form id="combined-statement-form" action="{{ route('admin.results.combined-statement.selected') }}" method="POST" target="_blank" class="hidden">
         @csrf
         <div id="combined-statement-ids"></div>
     </form>
