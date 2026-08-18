@@ -162,73 +162,88 @@
             text-decoration: underline;
         }
 
-        /* ── Subject table ─────────────────────────────────── */
+        /* ── Subject section ─────────────────────────────── */
 
         .subject-table {
             width: 648px;
             margin: 41px 0 0 47px;
             border-collapse: separate;
-            border-spacing: 0;
+            border-spacing: 0 8px;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 16px;
             font-weight: bold;
             color: #000;
         }
 
         .subject-table th {
-            padding: 0 0 4px 0;
             font-size: 18px;
             text-decoration: underline;
             text-align: left;
-            border: none;
+            padding: 0 0 4px 0;
         }
 
-        .subject-table th.col-grade,
-        .subject-table th.col-point {
+        .subject-table th.grade-col,
+        .subject-table th.point-col {
             text-align: center;
         }
 
         .subject-table td {
             padding: 0;
-            height: 35px;
             vertical-align: middle;
         }
 
-        .subject-table .cell-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .subject-table td.subject-cell {
+            width: 273px;
+            padding-right: 8px;
+        }
+
+        .subject-table td.grade-cell {
+            width: 205px;
+            padding-right: 8px;
+        }
+
+        .subject-table td.point-cell {
+            width: 170px;
+        }
+
+        .subject-table .subject-box {
+            width: 205px;
+            height: 35px;
+            border-radius: 8px;
             border: 1px solid #CCC;
             background: #fff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            font-size: 16px;
+        }
+
+        .subject-table .grade-box {
+            width: 100px;
             height: 35px;
+            border: 1px solid #CCC;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
-        .subject-table .cell-box.rounded {
-            border-radius: 8px;
-        }
-
-        .subject-table td.col-subject {
-            width: 205px;
-            padding-right: 68px;
-        }
-
-        .subject-table td.col-grade {
+        .subject-table .point-box {
             width: 100px;
-            padding-right: 105px;
-        }
-
-        .subject-table td.col-point {
-            width: 100px;
+            height: 35px;
+            border: 1px solid #CCC;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
         .subject-table .total-row td {
-            padding-top: 5px;
-        }
-
-        .subject-table .total-row td.col-subject {
-            text-align: right;
-            border: none;
+            padding-top: 4px;
         }
 
         /* ── Grade point summary ───────────────────────────── */
@@ -353,36 +368,36 @@ Examination Number :	{{ $student->examination_number ?? '—' }}</div>
                 {{-- Exam heading --}}
                 <div class="exam-heading">2025 JUPEB EXAM (A-Level Equivalent)</div>
 
-                {{-- Subject table --}}
+                {{-- Subject section --}}
                 <table class="subject-table">
                     <thead>
                         <tr>
                             <th>SUBJECT</th>
-                            <th class="col-grade">GRADE LETTER</th>
-                            <th class="col-point">GRADE POINT</th>
+                            <th class="grade-col">GRADE LETTER</th>
+                            <th class="point-col">GRADE POINT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($result->subjects() as $subject)
-                            <tr>
-                                <td class="col-subject">
-                                    <div class="cell-box rounded">{{ strtoupper($subject['subject']) }}</div>
-                                </td>
-                                <td class="col-grade">
-                                    <div class="cell-box">{{ $subject['grade']->value }}</div>
-                                </td>
-                                <td class="col-point">
-                                    <div class="cell-box">{{ $subject['point'] }}</div>
-                                </td>
-                            </tr>
+                        @foreach($result->subjects() as $subject)
+                        <tr>
+                            <td class="subject-cell">
+                                <div class="subject-box">{{ strtoupper($subject['subject']) }}</div>
+                            </td>
+                            <td class="grade-cell">
+                                <div class="grade-box">{{ $subject['grade']->value }}</div>
+                            </td>
+                            <td class="point-cell">
+                                <div class="point-box">{{ $subject['point'] }}</div>
+                            </td>
+                        </tr>
                         @endforeach
                         <tr class="total-row">
-                            <td class="col-subject"></td>
-                            <td class="col-grade">
-                                <div class="cell-box">TOTAL</div>
+                            <td></td>
+                            <td>
+                                <div class="grade-box">TOTAL</div>
                             </td>
-                            <td class="col-point">
-                                <div class="cell-box">{{ $result->total_point }}</div>
+                            <td>
+                                <div class="point-box">{{ $result->total_point }}</div>
                             </td>
                         </tr>
                     </tbody>
