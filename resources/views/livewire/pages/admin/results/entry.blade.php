@@ -2,6 +2,7 @@
 
 use App\Actions\Results\UpsertResult;
 use App\Enums\ResultGrade;
+use App\Enums\ResultStatus;
 use App\Models\Result;
 use App\Models\Student;
 use App\Services\GradeService;
@@ -25,13 +26,13 @@ new #[Layout('layouts.app')] class extends Component {
     {
         $this->authorize('enter', Result::class);
 
-        $this->student = $student->load('subjectOne', 'subjectTwo', 'subjectThree', 'result');
+        $this->student = $student->load('subjectOne', 'subjectTwo', 'subjectThree', 'results');
 
-        if ($result = $student->result) {
+        if ($result = $student->currentResult()) {
             $this->grade_one = $result->grade_one->value;
             $this->grade_two = $result->grade_two->value;
             $this->grade_three = $result->grade_three->value;
-            $this->publish = $result->status === \App\Enums\ResultStatus::Published;
+            $this->publish = $result->status === ResultStatus::Published;
         }
     }
 
@@ -69,7 +70,7 @@ new #[Layout('layouts.app')] class extends Component {
             'grade_one' => $this->grade_one,
             'grade_two' => $this->grade_two,
             'grade_three' => $this->grade_three,
-            'status' => $this->publish ? \App\Enums\ResultStatus::Published->value : \App\Enums\ResultStatus::Draft->value,
+            'status' => $this->publish ? ResultStatus::Published->value : ResultStatus::Draft->value,
         ]);
 
         session()->flash('status', 'Result saved successfully.');
@@ -86,7 +87,7 @@ new #[Layout('layouts.app')] class extends Component {
     #[Computed]
     public function result(): ?Result
     {
-        return $this->student->result;
+        return $this->student->currentResult();
     }
 };
 

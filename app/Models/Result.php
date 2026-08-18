@@ -15,6 +15,7 @@ class Result extends Model
 
     protected $fillable = [
         'student_id',
+        'session',
         'subject_one',
         'grade_one',
         'point_one',

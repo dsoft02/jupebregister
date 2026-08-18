@@ -93,6 +93,7 @@ new #[Layout('layouts.app')] class extends Component {
                 <thead class="border-b border-slate-100">
                     <tr>
                         <th class="th">Student</th>
+                        <th class="th hidden md:table-cell">Session</th>
                         <th class="th hidden lg:table-cell">Grades</th>
                         <th class="th text-center">Total</th>
                         <th class="th">Status</th>
@@ -106,6 +107,9 @@ new #[Layout('layouts.app')] class extends Component {
                             <td class="td">
                                 <p class="font-semibold text-slate-800">{{ $result->student->fullName() }}</p>
                                 <p class="text-xs text-slate-400">{{ $result->student->foundation_number }}</p>
+                            </td>
+                            <td class="td hidden md:table-cell">
+                                <span class="badge bg-slate-100 text-slate-700">{{ $result->session }}</span>
                             </td>
                             <td class="td hidden lg:table-cell">
                                 <div class="flex items-center gap-2">
@@ -156,7 +160,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <x-admin.empty-state
                                     title="No results found"
                                     description="Enter results for students to see them here."

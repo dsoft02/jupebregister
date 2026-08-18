@@ -6,6 +6,7 @@ use App\Actions\Logs\LogActivity;
 use App\Enums\ResultStatus;
 use App\Models\Result;
 use App\Services\GradeService;
+use App\Services\SettingsService;
 use Illuminate\Support\Facades\DB;
 
 class UpsertResult
@@ -16,14 +17,18 @@ class UpsertResult
     ) {}
 
     /**
-     * Create or update a student's result. Only grade letters are supplied;
-     * points, bonus and total are derived by the GradeService.
+     * Create or update a student's result for the current session.
+     * Only grade letters are supplied; points, bonus and total are
+     * derived by the GradeService.
      *
      * @param  array<string, mixed>  $data
      */
     public function run(int $studentId, array $data): Result
     {
         return DB::transaction(function () use ($studentId, $data) {
+            $session = app(SettingsService::class)->get('current_session')
+                ?? now()->format('Y').'/'.(now()->format('Y') + 1);
+
             $calculation = $this->grades->calculate(
                 $data['grade_one'],
                 $data['grade_two'],
@@ -32,6 +37,7 @@ class UpsertResult
 
             $payload = [
                 'student_id' => $studentId,
+                'session' => $session,
                 'subject_one' => $data['subject_one'],
                 'grade_one' => $data['grade_one'],
                 'subject_two' => $data['subject_two'],
@@ -42,7 +48,10 @@ class UpsertResult
                 'created_by' => auth()->id(),
             ];
 
-            $result = Result::updateOrCreate(['student_id' => $studentId], $payload);
+            $result = Result::updateOrCreate(
+                ['student_id' => $studentId, 'session' => $session],
+                $payload,
+            );
 
             $result->refresh();
 

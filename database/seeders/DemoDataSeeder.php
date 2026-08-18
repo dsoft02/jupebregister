@@ -16,16 +16,16 @@ class DemoDataSeeder extends Seeder
         $subjects = Subject::all()->keyBy('name');
 
         $students = [
-            ['surname' => 'Adeyemi', 'first_name' => 'Oluwaseun', 'middle_name' => 'Temitope', 'foundation_number' => 'PAAU/FS/2025/001', 'examination_number' => 'PAAU-EXM-0001', 'session' => '2025/2026'],
-            ['surname' => 'Okonkwo', 'first_name' => 'Chiamaka', 'middle_name' => 'Blessing', 'foundation_number' => 'PAAU/FS/2025/002', 'examination_number' => 'PAAU-EXM-0002', 'session' => '2025/2026'],
-            ['surname' => 'Bello', 'first_name' => 'Abdulrahman', 'middle_name' => 'Sodiq', 'foundation_number' => 'PAAU/FS/2025/003', 'examination_number' => 'PAAU-EXM-0003', 'session' => '2025/2026'],
-            ['surname' => 'Eze', 'first_name' => 'Ngozi', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/004', 'examination_number' => 'PAAU-EXM-0004', 'session' => '2025/2026'],
-            ['surname' => 'Okafor', 'first_name' => 'Ifeanyi', 'middle_name' => 'David', 'foundation_number' => 'PAAU/FS/2025/005', 'examination_number' => 'PAAU-EXM-0005', 'session' => '2025/2026'],
-            ['surname' => 'Mohammed', 'first_name' => 'Aisha', 'middle_name' => 'Fatima', 'foundation_number' => 'PAAU/FS/2025/006', 'examination_number' => 'PAAU-EXM-0006', 'session' => '2025/2026'],
-            ['surname' => 'Adeleke', 'first_name' => 'Kemi', 'middle_name' => 'Olajumoke', 'foundation_number' => 'PAAU/FS/2025/007', 'examination_number' => 'PAAU-EXM-0007', 'session' => '2025/2026'],
-            ['surname' => 'Ibrahim', 'first_name' => 'Musa', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/008', 'examination_number' => 'PAAU-EXM-0008', 'session' => '2025/2026'],
-            ['surname' => 'Nwachukwu', 'first_name' => 'Adaeze', 'middle_name' => 'Chinenye', 'foundation_number' => 'PAAU/FS/2025/009', 'examination_number' => 'PAAU-EXM-0009', 'session' => '2025/2026'],
-            ['surname' => 'Yusuf', 'first_name' => 'Habiba', 'middle_name' => 'Amina', 'foundation_number' => 'PAAU/FS/2025/010', 'examination_number' => 'PAAU-EXM-0010', 'session' => '2025/2026'],
+            ['surname' => 'Adeyemi', 'first_name' => 'Oluwaseun', 'middle_name' => 'Temitope', 'foundation_number' => 'PAAU/FS/2025/001', 'examination_number' => 'PAAU-EXM-0001'],
+            ['surname' => 'Okonkwo', 'first_name' => 'Chiamaka', 'middle_name' => 'Blessing', 'foundation_number' => 'PAAU/FS/2025/002', 'examination_number' => 'PAAU-EXM-0002'],
+            ['surname' => 'Bello', 'first_name' => 'Abdulrahman', 'middle_name' => 'Sodiq', 'foundation_number' => 'PAAU/FS/2025/003', 'examination_number' => 'PAAU-EXM-0003'],
+            ['surname' => 'Eze', 'first_name' => 'Ngozi', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/004', 'examination_number' => 'PAAU-EXM-0004'],
+            ['surname' => 'Okafor', 'first_name' => 'Ifeanyi', 'middle_name' => 'David', 'foundation_number' => 'PAAU/FS/2025/005', 'examination_number' => 'PAAU-EXM-0005'],
+            ['surname' => 'Mohammed', 'first_name' => 'Aisha', 'middle_name' => 'Fatima', 'foundation_number' => 'PAAU/FS/2025/006', 'examination_number' => 'PAAU-EXM-0006'],
+            ['surname' => 'Adeleke', 'first_name' => 'Kemi', 'middle_name' => 'Olajumoke', 'foundation_number' => 'PAAU/FS/2025/007', 'examination_number' => 'PAAU-EXM-0007'],
+            ['surname' => 'Ibrahim', 'first_name' => 'Musa', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/008', 'examination_number' => 'PAAU-EXM-0008'],
+            ['surname' => 'Nwachukwu', 'first_name' => 'Adaeze', 'middle_name' => 'Chinenye', 'foundation_number' => 'PAAU/FS/2025/009', 'examination_number' => 'PAAU-EXM-0009'],
+            ['surname' => 'Yusuf', 'first_name' => 'Habiba', 'middle_name' => 'Amina', 'foundation_number' => 'PAAU/FS/2025/010', 'examination_number' => 'PAAU-EXM-0010'],
         ];
 
         $subjectSets = [
@@ -84,7 +84,7 @@ class DemoDataSeeder extends Seeder
 
             $publish = ! in_array($index, [6, 7]);
 
-            $upsert->run($student->id, [
+            $result = $upsert->run($student->id, [
                 'subject_one' => $s1Name,
                 'subject_two' => $s2Name,
                 'subject_three' => $s3Name,
@@ -95,7 +95,7 @@ class DemoDataSeeder extends Seeder
             ]);
 
             if ($publish) {
-                $student->result?->update(['published_at' => now()->subDays(rand(5, 30))]);
+                $result->update(['published_at' => now()->subDays(rand(5, 30))]);
             }
         }
     }

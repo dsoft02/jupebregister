@@ -3,6 +3,7 @@
 use App\Enums\ResultStatus;
 use App\Models\Result;
 use App\Models\Student;
+use App\Services\SettingsService;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -33,7 +34,11 @@ new #[Layout('layouts.public')] class extends Component {
             return;
         }
 
+        $currentSession = app(SettingsService::class)->get('current_session')
+            ?? now()->format('Y').'/'.(now()->format('Y') + 1);
+
         $result = Result::where('student_id', $student->id)
+            ->where('session', $currentSession)
             ->where('status', ResultStatus::Published)
             ->first();
 
@@ -46,8 +51,24 @@ new #[Layout('layouts.public')] class extends Component {
     public function verified(): ?Student
     {
         return $this->verifiedStudentId
-            ? Student::with('subjectOne', 'subjectTwo', 'subjectThree', 'result')->find($this->verifiedStudentId)
+            ? Student::with('subjectOne', 'subjectTwo', 'subjectThree')->find($this->verifiedStudentId)
             : null;
+    }
+
+    #[Computed]
+    public function verifiedResult()
+    {
+        if (! $this->verifiedStudentId) {
+            return null;
+        }
+
+        $currentSession = app(SettingsService::class)->get('current_session')
+            ?? now()->format('Y').'/'.(now()->format('Y') + 1);
+
+        return Result::where('student_id', $this->verifiedStudentId)
+            ->where('session', $currentSession)
+            ->where('status', ResultStatus::Published)
+            ->first();
     }
 };
 
@@ -61,7 +82,7 @@ new #[Layout('layouts.public')] class extends Component {
         <h1 class="text-3xl font-bold text-primary-800">Result Verification</h1>
         <p class="mt-2 text-sm text-slate-500">
             Enter a Foundation Number or JUPEB Number to verify a published result.
-            Only published results are available for verification.
+            Only published results for the current session are available for verification.
         </p>
     </div>
 
@@ -78,7 +99,7 @@ new #[Layout('layouts.public')] class extends Component {
     </form>
 
     @if ($searched)
-        @if ($this->verified)
+        @if ($this->verified && $this->verifiedResult)
             <div class="card mt-6 overflow-hidden">
                 <div class="flex items-center gap-3 border-b border-primary-100 bg-primary-50 px-6 py-4">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-primary-600"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -95,7 +116,7 @@ new #[Layout('layouts.public')] class extends Component {
                         </div>
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Academic Session</dt>
-                            <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verified->session }}</dd>
+                            <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verifiedResult->session }}</dd>
                         </div>
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Subjects</dt>
@@ -103,7 +124,7 @@ new #[Layout('layouts.public')] class extends Component {
                         </div>
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Point</dt>
-                            <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verified->result->total_point }} / 16</dd>
+                            <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verifiedResult->total_point }} / 16</dd>
                         </div>
                     </dl>
 
@@ -117,7 +138,7 @@ new #[Layout('layouts.public')] class extends Component {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-50">
-                                @foreach ($this->verified->result->subjects() as $subject)
+                                @foreach ($this->verifiedResult->subjects() as $subject)
                                     <tr>
                                         <td class="td">{{ $subject['subject'] }}</td>
                                         <td class="td text-center font-bold">{{ $subject['grade']->value }}</td>
@@ -130,13 +151,13 @@ new #[Layout('layouts.public')] class extends Component {
 
                     <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
                         <span class="badge bg-primary-100 text-primary-800">
-                            Published {{ $this->verified->result->published_at?->format('d M Y') }}
+                            Published {{ $this->verifiedResult->published_at?->format('d M Y') }}
                         </span>
                         <span class="badge bg-secondary-50 text-secondary-700">Verification Ref: {{ strtoupper($this->verified->foundation_number) }}</span>
                     </div>
 
                     <div class="mt-5">
-                        <a href="{{ route('results.download', $this->verified->result) }}"
+                        <a href="{{ route('results.download', $this->verifiedResult) }}"
                            class="inline-flex items-center gap-2 rounded-lg bg-secondary-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-800 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                             Download Result
@@ -151,7 +172,7 @@ new #[Layout('layouts.public')] class extends Component {
                 </div>
                 <h3 class="text-base font-bold text-slate-900">No Published Result Found</h3>
                 <p class="mt-1 max-w-sm text-sm text-slate-500">
-                    No published result matches the number entered. The record may not exist yet or the result
+                    No published result matches the number entered for the current session. The record may not exist yet or the result
                     has not been published. Please check the number and try again.
                 </p>
             </div>

@@ -74,16 +74,7 @@
                 </div>
 
                 <form action="{{ route('admin.export', 'xlsx') }}" method="GET" class="space-y-5 p-6">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                        <div>
-                            <label for="session" class="label">Session</label>
-                            <select id="session" name="session" class="input">
-                                <option value="">All Sessions</option>
-                                @foreach (\App\Models\Student::distinct()->orderByDesc('session')->pluck('session') as $session)
-                                    <option value="{{ $session }}">{{ $session }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                             <label for="status" class="label">Status</label>
                             <select id="status" name="status" class="input">
@@ -175,7 +166,7 @@
                             <label for="result_session" class="label">Session</label>
                             <select id="result_session" name="session" class="input">
                                 <option value="">All Sessions</option>
-                                @foreach (\App\Models\Student::distinct()->orderByDesc('session')->pluck('session') as $session)
+                                @foreach (\App\Models\Result::distinct()->orderByDesc('session')->pluck('session') as $session)
                                     <option value="{{ $session }}">{{ $session }}</option>
                                 @endforeach
                             </select>

@@ -7,7 +7,7 @@ use App\Services\SettingsService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
@@ -86,11 +86,19 @@ class Student extends Model
     }
 
     /**
-     * @return HasOne<Result, $this>
+     * @return HasMany<Result, $this>
      */
-    public function result(): HasOne
+    public function results(): HasMany
     {
-        return $this->hasOne(Result::class);
+        return $this->hasMany(Result::class);
+    }
+
+    /**
+     * Get the result for the current academic session.
+     */
+    public function currentResult()
+    {
+        return $this->results()->where('session', $this->session)->first();
     }
 
     public function fullName(): string

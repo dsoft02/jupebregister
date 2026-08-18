@@ -36,7 +36,6 @@ class EntryDebugTest extends TestCase
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
             'status' => StudentStatus::Approved,
-            'session' => '2025/2026',
         ]);
 
         \Livewire\Livewire::actingAs($this->admin)
@@ -47,8 +46,10 @@ class EntryDebugTest extends TestCase
             ->set('publish', true)
             ->call('save');
 
-        fwrite(STDERR, "result: ".($student->result ? 'FOUND '.$student->result->total_point : 'NULL')."\n");
-        fwrite(STDERR, "fresh result: ".($student->fresh()->result ? 'FOUND '.$student->fresh()->result->total_point : 'NULL')."\n");
+        $result = $student->fresh()->currentResult();
+
+        fwrite(STDERR, "result: ".($result ? 'FOUND '.$result->total_point : 'NULL')."\n");
+        fwrite(STDERR, "fresh result: ".($student->fresh()->currentResult() ? 'FOUND '.$student->fresh()->currentResult()->total_point : 'NULL')."\n");
         fwrite(STDERR, "all results count: ".Result::count()."\n");
         fwrite(STDERR, "latest result student: ".Result::latest('id')->first()?->student_id."\n");
         $this->assertTrue(true);

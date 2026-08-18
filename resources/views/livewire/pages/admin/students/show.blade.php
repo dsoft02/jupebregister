@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ResultStatus;
 use App\Enums\StudentStatus;
 use App\Models\Student;
 use Livewire\Attributes\Layout;
@@ -10,7 +11,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount(Student $student): void
     {
-        $this->student = $student->load('subjectOne', 'subjectTwo', 'subjectThree', 'result');
+        $this->student = $student->load('subjectOne', 'subjectTwo', 'subjectThree', 'results');
     }
 
     public function approveStudent(): void
@@ -50,8 +51,8 @@ new #[Layout('layouts.app')] class extends Component {
         @else
             <a href="{{ route('admin.students.edit', $student) }}" class="btn-secondary">Edit Student</a>
             <a href="{{ route('admin.results.entry', $student) }}" class="btn-accent">Enter Result</a>
-            @if ($student->result)
-                <a href="{{ route('admin.results.pdf', $student->result) }}" target="_blank" class="btn-primary">Generate PDF</a>
+            @if ($student->currentResult())
+                <a href="{{ route('admin.results.pdf', $student->currentResult()) }}" target="_blank" class="btn-primary">Generate PDF</a>
             @endif
         @endif
     </x-admin.page-header>
@@ -108,14 +109,15 @@ new #[Layout('layouts.app')] class extends Component {
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Result</h3>
-                    @if ($student->result)
-                        <x-admin.status-badge :status="$student->result->status->value">{{ $student->result->status->label() }}</x-admin.status-badge>
-                    @endif
-                </div>
-                @if ($student->result)
+            @forelse ($student->results->sortByDesc('session') as $result)
+                <div class="card">
+                    <div class="card-header flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Result</h3>
+                            <span class="badge bg-slate-100 text-slate-700">{{ $result->session }}</span>
+                        </div>
+                        <x-admin.status-badge :status="$result->status->value">{{ $result->status->label() }}</x-admin.status-badge>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full">
                             <thead>
@@ -126,7 +128,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-50">
-                                @foreach ($student->result->subjects() as $subject)
+                                @foreach ($result->subjects() as $subject)
                                     <tr>
                                         <td class="td">{{ $subject['subject'] }}</td>
                                         <td class="td text-center font-bold text-slate-800">{{ $subject['grade']->value }}</td>
@@ -136,28 +138,33 @@ new #[Layout('layouts.app')] class extends Component {
                                 <tr class="bg-slate-50">
                                     <td class="td font-semibold">Bonus Point</td>
                                     <td class="td"></td>
-                                    <td class="td text-center font-semibold">{{ $student->result->bonus_point }}</td>
+                                    <td class="td text-center font-semibold">{{ $result->bonus_point }}</td>
                                 </tr>
                                 <tr class="bg-primary-50">
                                     <td class="td font-bold text-primary-800">Total Points</td>
                                     <td class="td"></td>
-                                    <td class="td text-center font-bold text-primary-800">{{ $student->result->total_point }}</td>
+                                    <td class="td text-center font-bold text-primary-800">{{ $result->total_point }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="flex items-center justify-between px-6 py-4">
                         <p class="text-sm text-slate-500">Grade Point</p>
-                        <p class="text-lg font-bold text-slate-900">{{ $student->result->gradePointLabel() }}</p>
+                        <p class="text-lg font-bold text-slate-900">{{ $result->gradePointLabel() }}</p>
                     </div>
                     <div class="border-t border-slate-100 px-6 py-4">
-                        <a href="{{ route('results.download', $student->result) }}"
+                        <a href="{{ route('results.download', $result) }}"
                            class="inline-flex items-center gap-2 rounded-lg bg-secondary-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary-800 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                             Download Result
                         </a>
                     </div>
-                @else
+                </div>
+            @empty
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Result</h3>
+                    </div>
                     <div class="p-8">
                         <x-admin.empty-state
                             title="No result entered yet"
@@ -166,8 +173,8 @@ new #[Layout('layouts.app')] class extends Component {
                             <a href="{{ route('admin.results.entry', $student) }}" class="btn-primary">Enter Result</a>
                         </x-admin.empty-state>
                     </div>
-                @endif
-            </div>
+                </div>
+            @endforelse
         </div>
     </div>
 </div>

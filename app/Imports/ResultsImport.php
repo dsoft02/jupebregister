@@ -47,7 +47,7 @@ class ResultsImport implements ToCollection, WithHeadingRow, WithValidation, Ski
                 continue;
             }
 
-            $existingResult = $student->result;
+            $existingResult = $student->currentResult();
 
             $data = [
                 'subject_one' => $student->subjectOne?->name ?? '',

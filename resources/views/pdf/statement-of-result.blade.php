@@ -380,7 +380,7 @@
                 </tr>
                 <tr>
                     <td class="label">Examination Year:</td>
-                    <td class="value">{{ $student->session }} Academic Session</td>
+                    <td class="value">{{ $result->session }} Academic Session</td>
                 </tr>
                 <tr>
                     <td class="label">Foundation Number:</td>

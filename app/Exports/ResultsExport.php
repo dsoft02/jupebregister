@@ -22,7 +22,7 @@ class ResultsExport implements FromCollection, WithHeadings, ShouldAutoSize
                 fn ($q) => $q->where('status', $this->filters['status'])
             )
             ->when(isset($this->filters['session']) && $this->filters['session'],
-                fn ($q) => $q->whereHas('student', fn ($s) => $s->where('session', $this->filters['session']))
+                fn ($q) => $q->where('session', $this->filters['session'])
             )
             ->get()
             ->map(fn (Result $result) => [
@@ -40,7 +40,7 @@ class ResultsExport implements FromCollection, WithHeadings, ShouldAutoSize
                 'total_point' => $result->total_point,
                 'bonus_point' => $result->bonus_point,
                 'status' => $result->status->label(),
-                'session' => $result->student->session,
+                'session' => $result->session,
             ]);
     }
 

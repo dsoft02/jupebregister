@@ -20,9 +20,6 @@ new #[Layout('layouts.app')] class extends Component {
     public string $status = '';
 
     #[Url]
-    public string $session = '';
-
-    #[Url]
     public string $subject = '';
 
     public function updatingSearch(): void
@@ -35,11 +32,6 @@ new #[Layout('layouts.app')] class extends Component {
         $this->resetPage();
     }
 
-    public function updatingSession(): void
-    {
-        $this->resetPage();
-    }
-
     public function updatingSubject(): void
     {
         $this->resetPage();
@@ -47,7 +39,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function clearFilters(): void
     {
-        $this->reset(['search', 'status', 'session', 'subject']);
+        $this->reset(['search', 'status', 'subject']);
     }
 
     public function deleteStudent(Student $student): void
@@ -56,7 +48,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         $name = $student->fullName();
 
-        $student->result()?->delete();
+        $student->results()->delete();
         $student->delete();
 
         session()->flash('status', "Student {$name} deleted.");
@@ -84,21 +76,14 @@ new #[Layout('layouts.app')] class extends Component {
     public function students()
     {
         return Student::query()
-            ->with('subjectOne', 'subjectTwo', 'subjectThree', 'result')
+            ->with('subjectOne', 'subjectTwo', 'subjectThree', 'results')
             ->when($this->search !== '', fn ($q) => $q->search($this->search))
             ->when($this->status !== '', fn ($q) => $q->where('status', $this->status))
-            ->when($this->session !== '', fn ($q) => $q->where('session', $this->session))
             ->when($this->subject !== '', fn ($q) => $q->where('subject_one_id', $this->subject)
                 ->orWhere('subject_two_id', $this->subject)
                 ->orWhere('subject_three_id', $this->subject))
             ->latest()
             ->paginate(15);
-    }
-
-    #[Computed]
-    public function sessions(): array
-    {
-        return Student::distinct()->orderByDesc('session')->pluck('session')->all();
     }
 
     #[Computed]
@@ -149,14 +134,6 @@ new #[Layout('layouts.app')] class extends Component {
                     @endforeach
                 </select>
             </div>
-            <div class="md:col-span-2">
-                <select wire:model.live="session" class="input">
-                    <option value="">All Sessions</option>
-                    @foreach ($this->sessions as $option)
-                        <option value="{{ $option }}">{{ $option }}</option>
-                    @endforeach
-                </select>
-            </div>
             <div class="md:col-span-3">
                 <select wire:model.live="subject" class="input">
                     <option value="">All Subjects</option>
@@ -168,7 +145,7 @@ new #[Layout('layouts.app')] class extends Component {
         </div>
         <div class="mt-3 flex items-center justify-between text-sm text-slate-500">
             <span>{{ $this->students->total() }} student{{ $this->students->total() !== 1 ? 's' : '' }} found</span>
-            @if ($search || $status || $session || $subject)
+            @if ($search || $status || $subject)
                 <button wire:click="clearFilters" class="font-semibold text-primary-700 hover:text-primary-800">Clear filters</button>
             @endif
         </div>
@@ -182,7 +159,6 @@ new #[Layout('layouts.app')] class extends Component {
                         <th class="th">Student</th>
                         <th class="th">Foundation No.</th>
                         <th class="th hidden lg:table-cell">Subjects</th>
-                        <th class="th">Session</th>
                         <th class="th">Status</th>
                         <th class="th text-right">Actions</th>
                     </tr>
@@ -207,7 +183,6 @@ new #[Layout('layouts.app')] class extends Component {
                             </td>
                             <td class="td font-mono text-xs">{{ $student->foundation_number }}</td>
                             <td class="td hidden lg:table-cell">{{ implode(' / ', $student->chosenSubjectNames()) }}</td>
-                            <td class="td">{{ $student->session }}</td>
                             <td class="td">
                                 <x-admin.status-badge :status="$student->status->value">{{ $student->status->label() }}</x-admin.status-badge>
                             </td>
@@ -235,8 +210,8 @@ new #[Layout('layouts.app')] class extends Component {
                                         class="rounded-lg p-2 text-slate-500 transition hover:bg-accent-50 hover:text-accent-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg>
                                     </a>
-                                    @if ($student->result)
-                                        <a href="{{ route('admin.results.pdf', $student->result) }}" target="_blank" title="Generate PDF"
+                                    @if ($student->currentResult())
+                                        <a href="{{ route('admin.results.pdf', $student->currentResult()) }}" target="_blank" title="Generate PDF"
                                             class="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-700">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                                         </a>
@@ -255,7 +230,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="5">
                                 <x-admin.empty-state
                                     title="No students found"
                                     description="Adjust your filters or register a new student to get started."

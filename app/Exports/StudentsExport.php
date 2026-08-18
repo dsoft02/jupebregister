@@ -19,9 +19,6 @@ class StudentsExport implements FromCollection, WithHeadings, ShouldAutoSize
     {
         return Student::query()
             ->with('subjectOne', 'subjectTwo', 'subjectThree')
-            ->when(isset($this->filters['session']) && $this->filters['session'],
-                fn ($q) => $q->where('session', $this->filters['session'])
-            )
             ->when(isset($this->filters['status']) && $this->filters['status'],
                 fn ($q) => $q->where('status', $this->filters['status'])
             )

@@ -83,7 +83,6 @@ class AdminWorkflowTest extends TestCase
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
             'status' => StudentStatus::Approved,
-            'session' => '2025/2026',
         ]);
 
         \Livewire\Livewire::actingAs($this->admin)
@@ -94,7 +93,7 @@ class AdminWorkflowTest extends TestCase
             ->set('publish', true)
             ->call('save');
 
-        $result = $student->fresh()->result;
+        $result = $student->fresh()->currentResult();
 
         $this->assertNotNull($result);
         $this->assertSame(5, $result->point_one);
@@ -146,7 +145,7 @@ class AdminWorkflowTest extends TestCase
     {
         $director = User::where('email', 'director@paau.edu.ng')->first();
 
-        $student = Student::whereDoesntHave('result')->first();
+        $student = Student::whereDoesntHave('results')->first();
 
         if ($student) {
             $this->actingAs($director)
