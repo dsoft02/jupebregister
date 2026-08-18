@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StudentStatus;
+use App\Services\SettingsService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,10 +24,14 @@ class Student extends Model
         'subject_two_id',
         'subject_three_id',
         'passport',
-        'session',
         'status',
         'registered_at',
     ];
+
+    public function getSessionAttribute(): string
+    {
+        return app(SettingsService::class)->get('current_session') ?? now()->format('Y').'/'.(now()->format('Y') + 1);
+    }
 
     protected function casts(): array
     {

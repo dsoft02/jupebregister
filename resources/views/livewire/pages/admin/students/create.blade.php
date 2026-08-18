@@ -3,7 +3,6 @@
 use App\Actions\Students\CreateStudent;
 use App\Enums\StudentStatus;
 use App\Models\Subject;
-use App\Services\SettingsService;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -31,14 +30,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public $passport = null;
 
-    public string $session = '';
-
     public string $status = 'approved';
-
-    public function mount(SettingsService $settings): void
-    {
-        $this->session = $settings->get('current_session') ?? now()->format('Y').'/'.(now()->format('Y') + 1);
-    }
 
     public function rules(): array
     {
@@ -52,7 +44,6 @@ new #[Layout('layouts.app')] class extends Component {
             'subject_two_id' => ['required', 'exists:subjects,id', 'different:subject_one_id'],
             'subject_three_id' => ['required', 'exists:subjects,id', 'different:subject_one_id', 'different:subject_two_id'],
             'passport' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'session' => ['required', 'string', 'max:20'],
             'status' => ['required', 'in:pending,approved,rejected'],
         ];
     }
@@ -167,11 +158,7 @@ new #[Layout('layouts.app')] class extends Component {
                     <x-input-error :messages="$errors->get('subject_three_id')" class="mt-1" />
                 </div>
             </div>
-            <div class="mt-3">
-                <label for="session" class="label">Academic Session <span class="text-red-500">*</span></label>
-                <input type="text" id="session" wire:model="session" class="input w-48" placeholder="2025/2026">
-                <x-input-error :messages="$errors->get('session')" class="mt-1" />
-            </div>
+
         </div>
 
         <div>
