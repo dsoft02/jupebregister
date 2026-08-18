@@ -143,7 +143,7 @@
         }
 
         .student-info-table td {
-            padding: 3px 0;
+            padding: 4px 0;
             vertical-align: top;
         }
 
@@ -220,8 +220,8 @@
 
         .subject-table .subject-box {
             width: 205px;
-            height: 35px;
-            line-height: 30px;
+            height: 30px;
+            line-height: 26px;
             border: 1px solid #CCC;
             border-radius: 8px;
             background: #fff;
@@ -234,8 +234,8 @@
         .subject-table .grade-box,
         .subject-table .point-box {
             width: 100px;
-            height: 35px;
-            line-height: 30px;
+            height: 30px;
+            line-height: 26px;
             text-align: center;
             border: 1px solid #CCC;
             background: #fff;
@@ -274,9 +274,9 @@
             margin-left: 63px;
             margin-right: 63px;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
-            line-height: 20px;
+            line-height: 28px;
             color: #000;
             white-space: pre-line;
         }

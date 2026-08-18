@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\PublicRegistrationController;
+use App\Http\Controllers\PublicResultDownloadController;
 use App\Http\Controllers\StatementOfResultController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
@@ -25,6 +26,9 @@ Route::get('register/success/{student}', [PublicRegistrationController::class, '
 
 Volt::route('verify', 'pages.verify')
     ->name('verify');
+
+Route::get('results/{result}/download', PublicResultDownloadController::class)
+    ->name('results.download');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
