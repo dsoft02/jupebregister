@@ -74,7 +74,7 @@ class CombinedStatementOfResultController extends Controller
             'issueDate'       => Carbon::createFromFormat('d/m/Y', $issueDate)->format('jS F, Y'),
             'academicSession' => $currentSession,
             'examYear'        => explode('/', $currentSession)[0],
-            'letterhead'      => $this->settings->fileAsDataUri('letterhead_image') ?? file_get_contents(public_path('assets/jupeb/letterhead.png')),
+            'letterhead'      => $this->settings->fileAsDataUri('letterhead_image') ?? file_get_contents(asset('assets/jupeb/letterhead.png')),
             'watermark'       => $this->settings->fileAsDataUri('watermark_image') ?? file_get_contents(public_path('assets/jupeb/watermark.png')),
             'stamp'           => $this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png'),
             'signature'       => $this->settings->fileAsDataUri('director_signature') ?? $this->fallbackAsset('signature.png'),

@@ -5,239 +5,249 @@
     <title>Combined Statement of Result</title>
 
     <style>
-        @font-face{
-            font-family:"Old English Text MT";
-            src:url("{{ public_path('assets/fonts/oldenglishtextmt.ttf') }}") format("truetype");
+        @font-face {
+            font-family: "Old English Text MT";
+            src: url("{{ public_path('assets/fonts/oldenglishtextmt.ttf') }}") format("truetype");
         }
 
-        @page{
-            size:A4 landscape;
-            margin:8mm;
+        @page {
+            size: A4 landscape;
+            margin: 8mm;
         }
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body{
-            font-family:"Times New Roman",serif;
-            color:#000;
-            background:#fff;
-            font-size:12px;
+        body {
+            font-family: "Times New Roman", serif;
+            color: #000;
+            background: #fff;
+            font-size: 12px;
         }
 
-        .certificate{
-            position:relative;
-            padding:10px;
-            min-height:186mm;
+        .certificate {
+            position: relative;
+            padding: 10px;
+            min-height: 186mm;
         }
 
-        .watermark{
-            position:absolute;
-            width:390px;
-            left:50%;
-            top:52%;
-            margin-left:-195px;
-            margin-top:-195px;
-            opacity:.05;
-            z-index:1;
+        .watermark {
+            position: absolute;
+            width: 390px;
+            left: 50%;
+            top: 52%;
+            margin-left: -195px;
+            margin-top: -195px;
+            opacity: .05;
+            z-index: 1;
         }
 
-        .content{
-            position:relative;
-            z-index:2;
+        .content {
+            position: relative;
+            z-index: 2;
         }
 
-        .letterhead-wrap{
-            width:100%;
-            text-align:center;
-            margin-bottom:4px;
+        .letterhead-wrap {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 4px;
         }
 
-        .letterhead{
-            display:inline-block;
-            height:150px;
-            width:auto;
-            max-width:100%;
+        .letterhead {
+            display: inline-block;
+            height: 150px;
+            width: auto;
+            max-width: 100%;
         }
 
-        .title{
-            position:relative;
-            text-align:center;
-            margin-bottom:10px;
+        .title {
+            position: relative;
+            text-align: center;
+            margin-bottom: 10px;
         }
 
-        .issue-date{
-            position:absolute;
-            right:5px;
-            top:2px;
-            font-size:16px;
-            font-weight:bold;
+        .issue-date {
+            position: absolute;
+            right: 5px;
+            top: 2px;
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        .main-title{
-            font-size:24px;
-            font-weight:900;
-            text-decoration:underline;
+        .main-title {
+            font-size: 24px;
+            font-weight: 900;
+            text-decoration: underline;
         }
 
-        .session{
-            font-size:18px;
-            font-weight:bold;
-            margin-top:3px;
+        .session {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 3px;
         }
 
-        .exam{
-            font-size:17px;
-            font-weight:bold;
-            margin-top:3px;
+        .exam {
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 3px;
         }
 
         table.result-table{
             width:100%;
             border-collapse:collapse;
-            table-layout:fixed;
+            table-layout:auto;
             font-size:10px;
         }
 
         .result-table th,
         .result-table td{
             border:1px solid #333;
-            padding:5px 4px;
+            padding:8px 6px;
             vertical-align:middle;
         }
 
-        .result-table thead th{
-            background:#E8EEF8;
-            text-align:center;
-            font-weight:bold;
+        .result-table thead th {
+            background: #E8EEF8;
+            text-align: center;
+            font-weight: bold;
         }
 
-        .group{
-            background:#D9E3F3;
-            font-size:11px;
+        .group {
+            background: #D9E3F3;
+            font-size: 11px;
         }
 
-        .name{
-            text-align:left;
-            font-weight:bold;
-            font-size:11px;
+        .name {
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
         }
 
         .subject{
             text-align:center;
             font-weight:bold;
+            font-size:10px;
+            line-height:1.15;
         }
 
         .grade,
         .point{
+            width:30px;
+            min-width:10px;
+            max-width:10px;
             text-align:center;
             font-weight:bold;
-            font-size:11px;
+            font-size:10px;
+            white-space:nowrap;
+            padding:8px 2px;
         }
 
-        .total{
-            text-align:center;
-            font-size:16px;
-            font-weight:bold;
+        .total {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        .remark{
-            text-align:center;
-            font-size:12px;
-            font-weight:bold;
+        .remark {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
         }
 
         /* ── Bottom three-column section ───────────────────── */
 
-        .bottom-section{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:16px;
+        .bottom-section {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
         }
 
-        .bottom-section td{
-            vertical-align:bottom;
+        .bottom-section td {
+            vertical-align: bottom;
         }
 
-        .key-cell{
-            width:40%;
-            padding-right:15px;
+        .key-cell {
+            width: 40%;
+            padding-right: 15px;
         }
 
-        .stamp-cell{
-            width:35%;
-            text-align:center;
+        .stamp-cell {
+            width: 35%;
+            text-align: center;
         }
 
-        .notice-cell{
-            width:25%;
-            text-align:right;
+        .notice-cell {
+            width: 25%;
+            text-align: right;
         }
 
-        .key-title{
-            font-size:14px;
-            font-weight:bold;
-            margin-bottom:6px;
+        .key-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 6px;
         }
 
-        .key-text{
-            font-size:14px;
-            font-weight:bold;
-            line-height:2;
+        .key-text {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 2;
         }
 
-        .stamp-wrap{
-            position:relative;
-            width:180px;
-            height:148px;
-            margin:0 auto;
+        .stamp-wrap {
+            position: relative;
+            width: 180px;
+            height: 148px;
+            margin: 0 auto;
         }
 
-        .stamp{
-            position:absolute;
-            left:10px;
-            top:18px;
-            width:140px;
-            z-index:1;
+        .stamp {
+            position: absolute;
+            left: 10px;
+            top: 18px;
+            width: 140px;
+            z-index: 1;
         }
 
-        .signature{
-            position:absolute;
-            left:38px;
-            top:45px;
-            width:105px;
-            z-index:2;
+        .signature {
+            position: absolute;
+            left: 38px;
+            top: 45px;
+            width: 105px;
+            z-index: 2;
         }
 
-        .director{
-            position:absolute;
-            left:0;
-            bottom:0;
-            width:100%;
-            text-align:center;
-            font-size:15px;
-            font-weight:bold;
-            line-height:18px;
+        .director {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 18px;
         }
 
-        .director span{
-            display:block;
-            font-size:14px;
-            font-weight:bold;
+        .director span {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        .notice{
-            border:1px solid #777;
-            border-radius:8px;
-            padding:12px;
-            width:90%;
-            margin-left:auto;
-            text-align:center;
-            font-size:12px;
-            line-height:1.45;
+        .notice {
+            border: 1px solid #777;
+            border-radius: 8px;
+            padding: 12px;
+            width: 90%;
+            margin-left: auto;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+        .nowrap{
+            white-space:nowrap;
         }
     </style>
 
@@ -280,45 +290,53 @@
         </div>
 
         <table class="result-table">
+            <colgroup>
+                <col style="width:32px;">   <!-- S/N -->
+
+                <col style="width:135px;">  <!-- Name -->
+                <col style="width:95px;">   <!-- Foundation -->
+                <col style="width:102px;">  <!-- Exam -->
+
+                <col style="width:86px;">   <!-- Subject 1 -->
+                <col style="width:26px;">   <!-- Grade -->
+                <col style="width:26px;">   <!-- Point -->
+
+                <col style="width:86px;">   <!-- Subject 2 -->
+                <col style="width:26px;">   <!-- Grade -->
+                <col style="width:26px;">   <!-- Point -->
+
+                <col style="width:86px;">   <!-- Subject 3 -->
+                <col style="width:26px;">   <!-- Grade -->
+                <col style="width:26px;">   <!-- Point -->
+
+                <col style="width:78px;">   <!-- Grade Point -->
+                <col style="width:68px;">   <!-- Remarks -->
+            </colgroup>
 
             <thead>
 
             <tr>
-
-                <th rowspan="2" width="3%">S/N</th>
-
-                <th colspan="3" class="group">STUDENT INFORMATION</th>
-
-                <th colspan="9" class="group">SUBJECTS</th>
-
-                <th colspan="2" class="group">TOTAL</th>
-
+                <th rowspan="2" class="group" style="width:3%;">S/N</th>
+                <th colspan="3" class="group" style="width:40%;">STUDENT INFORMATION</th>
+                <th colspan="9" class="group" style="width:45%;">SUBJECTS</th>
+                <th colspan="2" class="group" style="width:12%;">TOTAL</th>
             </tr>
 
             <tr>
-
-                <th width="15%">NAME (SURNAME FIRST)</th>
-
-                <th width="10%">FOUNDATION NO.</th>
-
-                <th width="10%">EXAMINATION NO.</th>
-
-                <th width="11%">SUBJECT 1</th>
-                <th width="4%">GRADE</th>
-                <th width="4%">POINT</th>
-
-                <th width="11%">SUBJECT 2</th>
-                <th width="4%">GRADE</th>
-                <th width="4%">POINT</th>
-
-                <th width="10%">SUBJECT 3</th>
-                <th width="4%">GRADE</th>
-                <th width="4%">POINT</th>
-
-                <th width="8%">GRADE POINT<br>(OUT OF 16)</th>
-
-                <th width="7%">REMARKS</th>
-
+                <th>NAME (SURNAME FIRST)</th>
+                <th class="nowrap">FOUNDATION NO.</th>
+                <th class="nowrap">EXAMINATION NO.</th>
+                <th>SUBJECT 1</th>
+                <th>GRADE</th>
+                <th>POINT</th>
+                <th>SUBJECT 2</th>
+                <th>GRADE</th>
+                <th>POINT</th>
+                <th>SUBJECT 3</th>
+                <th>GRADE</th>
+                <th>POINT</th>
+                <th>GRADE POINT<br>(OUT OF 16)</th>
+                <th>REMARKS</th>
             </tr>
 
             </thead>
@@ -335,19 +353,15 @@
 
                 <tr>
 
-                    <td>{{ $index+1 }}</td>
+                    <td style="text-align:center;">{{ $index+1 }}</td>
 
                     <td class="name">
                         {{ $student->lastNameFirst() }}
                     </td>
 
-                    <td>
-                        {{ $student->foundation_number }}
-                    </td>
+                    <td class="nowrap">{{ $student->foundation_number }}</td>
 
-                    <td>
-                        {{ $student->examination_number ?? '—' }}
-                    </td>
+                    <td class="nowrap">{{ $student->examination_number ?? '—' }}</td>
 
                     <td class="subject">
                         {{ strtoupper($result->subject_one) }}
