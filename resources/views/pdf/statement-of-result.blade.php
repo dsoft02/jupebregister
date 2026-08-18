@@ -162,47 +162,73 @@
             text-decoration: underline;
         }
 
-        /* ── Table headers ─────────────────────────────────── */
+        /* ── Subject table ─────────────────────────────────── */
 
-        .table-headers {
-            display: flex;
-            margin-top: 41px;
-            margin-left: 47px;
+        .subject-table {
+            width: 648px;
+            margin: 41px 0 0 47px;
+            border-collapse: separate;
+            border-spacing: 0;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #000;
         }
 
-        .table-headers span {
+        .subject-table th {
+            padding: 0 0 4px 0;
+            font-size: 18px;
             text-decoration: underline;
+            text-align: left;
+            border: none;
         }
 
-        /* ── Subject rows ──────────────────────────────────── */
-
-        .subject-row {
-            display: flex;
-            align-items: center;
-            margin-left: 47px;
+        .subject-table th.col-grade,
+        .subject-table th.col-point {
+            text-align: center;
         }
 
-        .subject-box {
+        .subject-table td {
+            padding: 0;
+            height: 35px;
+            vertical-align: middle;
+        }
+
+        .subject-table .cell-box {
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid #CCC;
             background: #fff;
-            font-weight: bold;
-            color: #000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-            font-family: 'Times New Roman', Times, serif;
             height: 35px;
-            font-size: 16px;
-            flex-shrink: 0;
         }
 
-        .subject-box.rounded {
+        .subject-table .cell-box.rounded {
             border-radius: 8px;
+        }
+
+        .subject-table td.col-subject {
+            width: 205px;
+            padding-right: 68px;
+        }
+
+        .subject-table td.col-grade {
+            width: 100px;
+            padding-right: 105px;
+        }
+
+        .subject-table td.col-point {
+            width: 100px;
+        }
+
+        .subject-table .total-row td {
+            padding-top: 5px;
+        }
+
+        .subject-table .total-row td.col-subject {
+            text-align: right;
+            border: none;
         }
 
         /* ── Grade point summary ───────────────────────────── */
@@ -327,27 +353,40 @@ Examination Number :	{{ $student->examination_number ?? '—' }}</div>
                 {{-- Exam heading --}}
                 <div class="exam-heading">2025 JUPEB EXAM (A-Level Equivalent)</div>
 
-                {{-- Table headers --}}
-                <div class="table-headers">
-                    <span style="width: 205px; margin-left: 0;">SUBJECT</span>
-                    <span style="width: 100px; margin-left: 68px;">GRADE LETTER</span>
-                    <span style="width: 100px; margin-left: 105px;">GRADE POINT</span>
-                </div>
-
-                {{-- Subject rows --}}
-                @foreach ($result->subjects() as $subject)
-                    <div class="subject-row" style="margin-top: {{ $loop->first ? '9px' : '5px' }};">
-                        <div class="subject-box rounded" style="width: 205px;">{{ strtoupper($subject['subject']) }}</div>
-                        <div class="subject-box" style="width: 100px; margin-left: 68px;">{{ $subject['grade']->value }}</div>
-                        <div class="subject-box" style="width: 100px; margin-left: 105px;">{{ $subject['point'] }}</div>
-                    </div>
-                @endforeach
-
-                {{-- Total row --}}
-                <div class="subject-row" style="margin-top: 5px; margin-left: 273px;">
-                    <div class="subject-box" style="width: 100px;">TOTAL</div>
-                    <div class="subject-box" style="width: 100px; margin-left: 105px;">{{ $result->total_point }}</div>
-                </div>
+                {{-- Subject table --}}
+                <table class="subject-table">
+                    <thead>
+                        <tr>
+                            <th>SUBJECT</th>
+                            <th class="col-grade">GRADE LETTER</th>
+                            <th class="col-point">GRADE POINT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($result->subjects() as $subject)
+                            <tr>
+                                <td class="col-subject">
+                                    <div class="cell-box rounded">{{ strtoupper($subject['subject']) }}</div>
+                                </td>
+                                <td class="col-grade">
+                                    <div class="cell-box">{{ $subject['grade']->value }}</div>
+                                </td>
+                                <td class="col-point">
+                                    <div class="cell-box">{{ $subject['point'] }}</div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr class="total-row">
+                            <td class="col-subject"></td>
+                            <td class="col-grade">
+                                <div class="cell-box">TOTAL</div>
+                            </td>
+                            <td class="col-point">
+                                <div class="cell-box">{{ $result->total_point }}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 {{-- Grade point --}}
                 <div class="grade-point">Grade Point = {{ $result->gradePointLabel() }}</div>
