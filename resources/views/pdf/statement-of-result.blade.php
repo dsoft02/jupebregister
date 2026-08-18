@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <title>Statement of Result</title>
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap");
+        @font-face {
+            font-family: 'Old English Text MT';
+            src: url('{{ asset("assets/fonts/oldenglishtextmt.ttf") }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
 
         @page {
             size: A4;
@@ -90,7 +96,7 @@
         }
 
         .header-title {
-            font-family: 'UnifrakturMaguntia', cursive;
+            font-family: 'Old English Text MT', serif;
             font-size: 36px;
             color: #000;
             text-decoration: underline;
