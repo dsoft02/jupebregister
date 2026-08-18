@@ -78,7 +78,7 @@
         }
 
         .main-title{
-            font-size:30px;
+            font-size:24px;
             font-weight:900;
             text-decoration:underline;
         }
@@ -163,17 +163,17 @@
         }
 
         .key-cell{
-            width:35%;
+            width:40%;
             padding-right:15px;
         }
 
         .stamp-cell{
-            width:45%;
+            width:35%;
             text-align:center;
         }
 
         .notice-cell{
-            width:20%;
+            width:25%;
             text-align:right;
         }
 
@@ -191,32 +191,34 @@
 
         .stamp-wrap{
             position:relative;
-            width:420px;
-            height:120px;
+            width:180px;
+            height:148px;
             margin:0 auto;
         }
 
         .stamp{
             position:absolute;
-            left:0;
-            top:5px;
-            width:135px;
+            left:10px;
+            top:18px;
+            width:140px;
+            z-index:1;
         }
 
         .signature{
             position:absolute;
-            left:145px;
-            top:28px;
-            width:115px;
+            left:38px;
+            top:45px;
+            width:105px;
+            z-index:2;
         }
 
         .director{
             position:absolute;
-            left:145px;
-            top:60px;
-            width:200px;
-            text-align:left;
-            font-size:16px;
+            left:0;
+            bottom:0;
+            width:100%;
+            text-align:center;
+            font-size:15px;
             font-weight:bold;
             line-height:18px;
         }
@@ -224,13 +226,14 @@
         .director span{
             display:block;
             font-size:14px;
+            font-weight:bold;
         }
 
         .notice{
             border:1px solid #777;
             border-radius:8px;
             padding:12px;
-            width:170px;
+            width:90%;
             margin-left:auto;
             text-align:center;
             font-size:12px;
