@@ -245,7 +245,6 @@ new #[Layout('layouts.app')] class extends Component {
                                 class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
                         </th>
                         <th class="th">Student</th>
-                        <th class="th">Student</th>
                         <th class="th">Foundation No.</th>
                         <th class="th hidden lg:table-cell">Subjects</th>
                         <th class="th">Status</th>
@@ -307,6 +306,10 @@ new #[Layout('layouts.app')] class extends Component {
                                         <a href="{{ route('admin.results.pdf', $student->currentResult()) }}" target="_blank" title="Generate PDF"
                                             class="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-700">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                        </a>
+                                        <a href="{{ route('results.download', $student->currentResult()) }}" target="_blank" title="Download Result"
+                                            class="rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                                         </a>
                                     @endif
                                     <button x-on:click="$store.confirmModal.show({
