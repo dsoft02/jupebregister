@@ -43,27 +43,41 @@
 
         /* ── Title block ─────────────────────────────────── */
 
-        .title{
-            text-align:center;
-            margin-bottom:15px;
+        .title-block {
+            text-align: center;
+            margin: 8px 0 6px;
         }
 
-        .main-title{
-            font-size:28px;
-            font-weight:bold;
-            text-decoration:underline;
+        .title-office {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #333;
+            letter-spacing: 1px;
         }
 
-        .session{
-            font-size:18px;
-            font-weight:bold;
-            margin-top:4px;
+        .title-main {
+            font-family: 'Old English Text MT', serif;
+            font-size: 22px;
+            color: #000;
+            text-decoration: underline;
+            margin: 3px 0;
         }
 
-        .exam{
-            margin-top:6px;
-            font-size:16px;
-            font-weight:bold;
+        .title-session {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
+            margin: 2px 0;
+        }
+
+        .title-exam {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: underline;
+            color: #000;
+            margin: 2px 0;
         }
 
         .title-date {
@@ -192,10 +206,10 @@
         .grading-key {
             margin-top: 8px;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
+            font-size: 9px;
             font-weight: bold;
             color: #000;
-            line-height: 10px;
+            line-height: 15px;
             white-space: pre-line;
         }
 
@@ -265,16 +279,11 @@
                 alt="JUPEB Letterhead"
                 class="letterhead"
             >
-            <div class="title">
-                <div class="main-title">COMBINED STATEMENT OF RESULT</div>
-
-                <div class="session">
-                    {{ $academicSession ?? '2025/2026' }} Academic Session
-                </div>
-
-                <div class="exam">
-                    2025 JUPEB EXAMINATION (A-LEVEL EQUIVALENT)
-                </div>
+            <div class="title-block">
+                <div class="title-office">Office of the Director</div>
+                <div class="title-main">Combined Statement of Result</div>
+                <div class="title-session">{{ $academicSession }} Academic Session</div>
+                <div class="title-exam">{{ $examYear }} JUPEB EXAM (A-Level Equivalent)</div>
             </div>
             <div class="title-date">Date: {{ $issueDate }}</div>
         </th>
@@ -327,17 +336,7 @@
     </tbody>
 </table>
 
-<div class="grading-key">
-    Key to Grade:<br>
-
-    A = 70–100 (5 Points); B = 60–69 (4 Points); C = 50–59 (3 Points); D = 45–49 (2 Points)<br>
-
-    E = 40–45 (1 Point); F(Fail) = 0–39 (0 Point)<br>
-
-    X = Absent; Q = Cancelled; W = Withheld<br>
-
-    One point added if all three subjects are passed.
-</div>
+<div class="grading-key">Key to Grade: A = 70–100 (5 pts); B = 60–69 (4 pts); C = 50–59 (3 pts); D = 45–49 (2 pts); E = 40–44 (1 pt); F = 0–39 (0 pts). X = Absent; Q = Cancelled; W = Withheld. One point added if all 3 subjects passed.</div>
 
 <table class="footer">
     <tr>

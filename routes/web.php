@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BulkResultDownloadController;
+use App\Http\Controllers\CombinedStatementOfResultController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\PublicRegistrationController;
 use App\Http\Controllers\PublicResultDownloadController;
@@ -103,6 +104,13 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         // Bulk Download
         Route::post('results/bulk-download', BulkResultDownloadController::class)
             ->name('results.bulk-download');
+
+        // Combined Statement of Result
+        Route::post('results/combined-statement/selected', [CombinedStatementOfResultController::class, 'selected'])
+            ->name('results.combined-statement.selected');
+
+        Route::get('results/combined-statement/all', [CombinedStatementOfResultController::class, 'all'])
+            ->name('results.combined-statement.all');
 
         // Settings
         Volt::route('settings', 'pages.admin.settings')
