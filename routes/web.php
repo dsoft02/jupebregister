@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BulkResultDownloadController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\PublicRegistrationController;
 use App\Http\Controllers\PublicResultDownloadController;
@@ -98,6 +99,10 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         // Sample Templates
         Route::get('sample-template/{type}', [ImportExportController::class, 'sampleTemplate'])
             ->name('sample-template');
+
+        // Bulk Download
+        Route::post('results/bulk-download', BulkResultDownloadController::class)
+            ->name('results.bulk-download');
 
         // Settings
         Volt::route('settings', 'pages.admin.settings')

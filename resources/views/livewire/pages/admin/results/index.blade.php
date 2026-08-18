@@ -147,6 +147,24 @@ new #[Layout('layouts.app')] class extends Component {
                         confirmText: 'Unpublish',
                         onConfirm: () => @this.call('bulkUnpublish')
                     })" class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700">Unpublish</button>
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Download Results',
+                        message: 'Download {{ count($selected) }} result(s) as a ZIP file?',
+                        confirmText: 'Download',
+                        onConfirm: () => {
+                            const form = document.getElementById('bulk-download-form');
+                            const container = document.getElementById('bulk-download-ids');
+                            container.innerHTML = '';
+                            $wire.selected.forEach(id => {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'ids[]';
+                                input.value = id;
+                                container.appendChild(input);
+                            });
+                            form.submit();
+                        }
+                    })" class="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-700">Download ZIP</button>
                 </div>
                 <button wire:click="$set('selected', [])" class="ml-auto text-xs font-semibold text-primary-600 hover:text-primary-800">Clear</button>
             </div>
@@ -251,4 +269,9 @@ new #[Layout('layouts.app')] class extends Component {
             {{ $this->results->links() }}
         </div>
     </div>
+
+    <form id="bulk-download-form" action="{{ route('admin.results.bulk-download') }}" method="POST" class="hidden">
+        @csrf
+        <div id="bulk-download-ids"></div>
+    </form>
 </div>
