@@ -44,18 +44,18 @@
         .letterhead {
             display: block;
             width: 794px;
-            height: 179px;
+            height: 178px;
         }
 
         /* ── Content card ─────────────────────────────────── */
 
         .content-card {
             position: relative;
-            margin: 1px 32px 0;
+            margin: 1px 30px 0;
             border: 1.5px solid #CCC;
             border-radius: 20px;
             overflow: hidden;
-            padding-bottom: 24px;
+            padding-bottom: 5px;
         }
 
         .watermark {
@@ -77,22 +77,8 @@
         /* ── Header row ───────────────────────────────────── */
 
         .header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-top: 8px;
-            padding: 0 14px 0 20px;
-        }
-
-        .header-left {
-            width: 183px;
-            flex-shrink: 0;
-        }
-
-        .header-center {
-            flex: 1;
             text-align: center;
-            padding-top: 59px;
+            margin-top: 55px;
         }
 
         .header-title {
@@ -103,12 +89,10 @@
         }
 
         .header-right {
-            width: 183px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 1px;
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            text-align: right;
         }
 
         .header-date {
@@ -124,6 +108,8 @@
             height: 90px;
             object-fit: cover;
             border: 0.5px solid #ccc;
+            display: block;
+            margin-top: 1px;
         }
 
         .passport-placeholder {
@@ -136,12 +122,13 @@
             font-size: 9px;
             color: #94a3b8;
             font-family: Arial, sans-serif;
+            margin-top: 1px;
         }
 
         /* ── Name / info block ─────────────────────────────── */
 
         .name-block {
-            margin: 15px 20px 0 47px;
+            margin: 35px 20px 0 47px;
             font-family: 'Times New Roman', Times, serif;
             font-weight: 700;
             font-size: 20px;
@@ -208,43 +195,28 @@
         .subject-table .subject-box {
             width: 205px;
             height: 35px;
+            line-height: 35px;
+            border: 1px solid #CCC;
             border-radius: 8px;
-            border: 1px solid #CCC;
             background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            padding-left: 12px;
-            line-height: 1;
+            padding: 0 0 0 20px;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
+            font-weight: bold;
         }
 
-        .subject-table .grade-box {
-            width: 100px;
-            height: 35px;
-            border: 1px solid #CCC;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            padding: 0;
-            font-size: 16px;
-        }
-
+        .subject-table .grade-box,
         .subject-table .point-box {
             width: 100px;
             height: 35px;
+            line-height: 35px;
+            text-align: center;
             border: 1px solid #CCC;
             background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            padding: 0;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
+            font-weight: bold;
+            padding: 0;
         }
 
         .subject-table .total-row td {
@@ -265,13 +237,13 @@
         /* ── Key to grade ──────────────────────────────────── */
 
         .key-to-grade {
-            margin-top: 12px;
+            margin-top: 0;
             margin-left: 63px;
             margin-right: 63px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 14px;
             font-weight: bold;
-            line-height: 28px;
+            line-height: 20px;
             color: #000;
             white-space: pre-line;
         }
@@ -349,19 +321,16 @@
 
             <div class="content">
                 {{-- Header: date, title, passport --}}
+                <div class="header-right">
+                    <span class="header-date">Date: {{ $issueDate }}</span>
+                    @if ($passport)
+                        <img src="{{ $passport }}" alt="Passport" class="passport-photo">
+                    @else
+                        <div class="passport-placeholder">No Photo</div>
+                    @endif
+                </div>
                 <div class="header">
-                    <div class="header-left"></div>
-                    <div class="header-center">
-                        <span class="header-title">Statement of Result</span>
-                    </div>
-                    <div class="header-right">
-                        <span class="header-date">Date: {{ $issueDate }}</span>
-                        @if ($passport)
-                            <img src="{{ $passport }}" alt="Passport" class="passport-photo">
-                        @else
-                            <div class="passport-placeholder">No Photo</div>
-                        @endif
-                    </div>
+                    <span class="header-title">Statement of Result</span>
                 </div>
 
                 {{-- Name / exam info --}}
@@ -412,11 +381,13 @@ Examination Number :	{{ $student->examination_number ?? '—' }}</div>
                 <div class="grade-point">Grade Point = {{ $result->gradePointLabel() }}</div>
 
                 {{-- Key to grade --}}
-                <div class="key-to-grade">Key to Grade:
-A = 70-100 (5 Points); B=60-69 (4 Points); C=50 - 59 (3 Points); D=45 - 49 (2Points)
-E= 40 - 45 (1 Point); F(Fail)=0 - 39 (0 Point)
-X = Absent; Q = Cancelled; W = Withheld
-One Point added if all 3 subjects passed.</div>
+                <div class="key-to-grade">
+                    Key to Grade:
+                    A = 70-100 (5 Points); B=60-69 (4 Points); C=50 - 59 (3 Points); D=45 - 49 (2Points)
+                    E= 40 - 45 (1 Point); F(Fail)=0 - 39 (0 Point)
+                    X = Absent; Q = Cancelled; W = Withheld
+                    One Point added if all 3 subjects passed.
+                </div>
 
                 {{-- Footer: stamp/signature + director + alteration note --}}
                 <div class="footer">
