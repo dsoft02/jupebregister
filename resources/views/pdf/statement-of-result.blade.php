@@ -166,7 +166,7 @@
 
         .subject-table {
             width: 648px;
-            margin: 41px 0 0 47px;
+            margin: 18px 0 0 47px;
             border-collapse: separate;
             border-spacing: 0 8px;
             font-family: 'Times New Roman', Times, serif;
@@ -215,6 +215,7 @@
             display: flex;
             align-items: center;
             padding-left: 12px;
+            line-height: 1;
             font-size: 16px;
         }
 
@@ -227,6 +228,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1;
+            padding: 0;
             font-size: 16px;
         }
 
@@ -239,6 +242,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1;
+            padding: 0;
             font-size: 16px;
         }
 
