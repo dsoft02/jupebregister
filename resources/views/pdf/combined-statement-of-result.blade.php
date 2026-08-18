@@ -95,24 +95,34 @@
             margin-top: 3px;
         }
 
-        table.result-table{
-            width:100%;
-            border-collapse:collapse;
-            table-layout:auto;
-            font-size:10px;
+        table.result-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            font-size: 10px;
         }
 
         .result-table th,
-        .result-table td{
-            border:1px solid #333;
-            padding:8px 6px;
-            vertical-align:middle;
+        .result-table td {
+            border: 1px solid #333;
+            padding: 8px 6px;
+            vertical-align: middle;
         }
 
         .result-table thead th {
             background: #E8EEF8;
             text-align: center;
             font-weight: bold;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+        .page-gap th{
+            border:none !important;
+            padding:0;
+            height:12px; /* adjust 10–18px to taste */
+            background:transparent !important;
         }
 
         .group {
@@ -126,23 +136,23 @@
             font-size: 11px;
         }
 
-        .subject{
-            text-align:center;
-            font-weight:bold;
-            font-size:10px;
-            line-height:1.15;
+        .subject {
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 1.15;
         }
 
         .grade,
-        .point{
-            width:30px;
-            min-width:10px;
-            max-width:10px;
-            text-align:center;
-            font-weight:bold;
-            font-size:10px;
-            white-space:nowrap;
-            padding:8px 2px;
+        .point {
+            width: 30px;
+            min-width: 10px;
+            max-width: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+            white-space: nowrap;
+            padding: 8px 2px;
         }
 
         .total {
@@ -246,8 +256,9 @@
             font-size: 12px;
             line-height: 1.45;
         }
-        .nowrap{
-            white-space:nowrap;
+
+        .nowrap {
+            white-space: nowrap;
         }
     </style>
 
@@ -288,7 +299,6 @@
             </div>
 
         </div>
-
         <table class="result-table">
             <colgroup>
                 <col style="width:32px;">   <!-- S/N -->
@@ -314,7 +324,9 @@
             </colgroup>
 
             <thead>
-
+            <tr class="page-gap">
+                <th colspan="15"></th>
+            </tr>
             <tr>
                 <th rowspan="2" class="group" style="width:3%;">S/N</th>
                 <th colspan="3" class="group" style="width:40%;">STUDENT INFORMATION</th>
