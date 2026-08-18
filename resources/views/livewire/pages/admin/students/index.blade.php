@@ -22,6 +22,10 @@ new #[Layout('layouts.app')] class extends Component {
     #[Url]
     public string $subject = '';
 
+    public array $selected = [];
+
+    public string $bulkAction = '';
+
     public function updatingSearch(): void
     {
         $this->resetPage();
@@ -40,6 +44,19 @@ new #[Layout('layouts.app')] class extends Component {
     public function clearFilters(): void
     {
         $this->reset(['search', 'status', 'subject']);
+        $this->selected = [];
+    }
+
+    public function toggleSelectAll(): void
+    {
+        $this->selected = $this->selected === $this->studentIds()
+            ? []
+            : $this->studentIds();
+    }
+
+    public function studentIds(): array
+    {
+        return $this->students->pluck('id')->toArray();
     }
 
     public function deleteStudent(Student $student): void
@@ -70,6 +87,46 @@ new #[Layout('layouts.app')] class extends Component {
         $student->update(['status' => StudentStatus::Rejected]);
 
         session()->flash('status', "Student {$student->fullName()} rejected.");
+    }
+
+    public function bulkApprove(): void
+    {
+        $this->authorize('update', Student::class);
+
+        $count = Student::whereIn('id', $this->selected)
+            ->where('status', StudentStatus::Pending)
+            ->update(['status' => StudentStatus::Approved]);
+
+        $this->selected = [];
+        session()->flash('status', "{$count} student(s) approved.");
+    }
+
+    public function bulkReject(): void
+    {
+        $this->authorize('update', Student::class);
+
+        $count = Student::whereIn('id', $this->selected)
+            ->where('status', StudentStatus::Pending)
+            ->update(['status' => StudentStatus::Rejected]);
+
+        $this->selected = [];
+        session()->flash('status', "{$count} student(s) rejected.");
+    }
+
+    public function bulkDelete(): void
+    {
+        $this->authorize('delete', Student::class);
+
+        $students = Student::whereIn('id', $this->selected)->get();
+
+        foreach ($students as $student) {
+            $student->results()->delete();
+            $student->delete();
+        }
+
+        $count = $students->count();
+        $this->selected = [];
+        session()->flash('status', "{$count} student(s) deleted.");
     }
 
     #[Computed]
@@ -152,10 +209,42 @@ new #[Layout('layouts.app')] class extends Component {
     </div>
 
     <div class="card overflow-hidden">
+        @if (count($selected) > 0)
+            <div class="flex items-center gap-3 border-b border-primary-100 bg-primary-50 px-4 py-3">
+                <span class="text-sm font-semibold text-primary-800">{{ count($selected) }} selected</span>
+                <div class="flex items-center gap-2">
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Approve Students',
+                        message: 'Approve {{ count($selected) }} student(s)?',
+                        confirmText: 'Approve',
+                        onConfirm: () => @this.call('bulkApprove')
+                    })" class="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700">Approve</button>
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Reject Students',
+                        message: 'Reject {{ count($selected) }} student(s)?',
+                        confirmText: 'Reject',
+                        onConfirm: () => @this.call('bulkReject')
+                    })" class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700">Reject</button>
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Delete Students',
+                        message: 'Delete {{ count($selected) }} student(s)? This cannot be undone.',
+                        confirmText: 'Delete',
+                        onConfirm: () => @this.call('bulkDelete')
+                    })" class="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700">Delete</button>
+                </div>
+                <button wire:click="$set('selected', [])" class="ml-auto text-xs font-semibold text-primary-600 hover:text-primary-800">Clear</button>
+            </div>
+        @endif
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead class="border-b border-slate-100">
                     <tr>
+                        <th class="th w-10">
+                            <input type="checkbox" x-on:click="$wire.toggleSelectAll()"
+                                :checked="$wire.selected.length > 0 && $wire.selected.length === {{ $this->students->count() }}"
+                                class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                        </th>
+                        <th class="th">Student</th>
                         <th class="th">Student</th>
                         <th class="th">Foundation No.</th>
                         <th class="th hidden lg:table-cell">Subjects</th>
@@ -165,7 +254,11 @@ new #[Layout('layouts.app')] class extends Component {
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse ($this->students as $student)
-                        <tr class="hover:bg-slate-50">
+                        <tr class="hover:bg-slate-50" :class="$wire.selected.includes({{ $student->id }}) && 'bg-primary-50'">
+                            <td class="td w-10">
+                                <input type="checkbox" wire:model.live="selected" value="{{ $student->id }}"
+                                    class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                            </td>
                             <td class="td">
                                 <div class="flex items-center gap-3">
                                     @if ($student->passport)
@@ -230,7 +323,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <x-admin.empty-state
                                     title="No students found"
                                     description="Adjust your filters or register a new student to get started."

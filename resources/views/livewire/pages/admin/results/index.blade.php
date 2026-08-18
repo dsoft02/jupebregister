@@ -19,6 +19,8 @@ new #[Layout('layouts.app')] class extends Component {
     #[Url]
     public string $status = '';
 
+    public array $selected = [];
+
     public function updatingSearch(): void
     {
         $this->resetPage();
@@ -27,6 +29,18 @@ new #[Layout('layouts.app')] class extends Component {
     public function updatingStatus(): void
     {
         $this->resetPage();
+    }
+
+    public function toggleSelectAll(): void
+    {
+        $this->selected = $this->selected === $this->resultIds()
+            ? []
+            : $this->resultIds();
+    }
+
+    public function resultIds(): array
+    {
+        return $this->results->pluck('id')->toArray();
     }
 
     public function togglePublish(Result $result, UpsertResult $action): void
@@ -40,6 +54,35 @@ new #[Layout('layouts.app')] class extends Component {
         }
 
         $this->dispatch('flash-message', message: 'Result status updated.');
+    }
+
+    public function bulkPublish(UpsertResult $action): void
+    {
+        $this->authorize('publish', Result::class);
+
+        $results = Result::whereIn('id', $this->selected)
+            ->where('status', '!=', ResultStatus::Published)
+            ->get();
+
+        foreach ($results as $result) {
+            $action->publish($result);
+        }
+
+        $count = $results->count();
+        $this->selected = [];
+        session()->flash('status', "{$count} result(s) published.");
+    }
+
+    public function bulkUnpublish(): void
+    {
+        $this->authorize('publish', Result::class);
+
+        $count = Result::whereIn('id', $this->selected)
+            ->where('status', ResultStatus::Published)
+            ->update(['status' => ResultStatus::Draft]);
+
+        $this->selected = [];
+        session()->flash('status', "{$count} result(s) unpublished.");
     }
 
     #[Computed]
@@ -88,10 +131,35 @@ new #[Layout('layouts.app')] class extends Component {
     </div>
 
     <div class="card overflow-hidden">
+        @if (count($selected) > 0)
+            <div class="flex items-center gap-3 border-b border-primary-100 bg-primary-50 px-4 py-3">
+                <span class="text-sm font-semibold text-primary-800">{{ count($selected) }} selected</span>
+                <div class="flex items-center gap-2">
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Publish Results',
+                        message: 'Publish {{ count($selected) }} result(s)?',
+                        confirmText: 'Publish',
+                        onConfirm: () => @this.call('bulkPublish')
+                    })" class="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700">Publish</button>
+                    <button x-on:click="$store.confirmModal.show({
+                        title: 'Unpublish Results',
+                        message: 'Unpublish {{ count($selected) }} result(s)?',
+                        confirmText: 'Unpublish',
+                        onConfirm: () => @this.call('bulkUnpublish')
+                    })" class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700">Unpublish</button>
+                </div>
+                <button wire:click="$set('selected', [])" class="ml-auto text-xs font-semibold text-primary-600 hover:text-primary-800">Clear</button>
+            </div>
+        @endif
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead class="border-b border-slate-100">
                     <tr>
+                        <th class="th w-10">
+                            <input type="checkbox" x-on:click="$wire.toggleSelectAll()"
+                                :checked="$wire.selected.length > 0 && $wire.selected.length === {{ $this->results->count() }}"
+                                class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                        </th>
                         <th class="th">Student</th>
                         <th class="th hidden md:table-cell">Session</th>
                         <th class="th hidden lg:table-cell">Grades</th>
@@ -103,7 +171,11 @@ new #[Layout('layouts.app')] class extends Component {
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse ($this->results as $result)
-                        <tr class="hover:bg-slate-50">
+                        <tr class="hover:bg-slate-50" :class="$wire.selected.includes({{ $result->id }}) && 'bg-primary-50'">
+                            <td class="td w-10">
+                                <input type="checkbox" wire:model.live="selected" value="{{ $result->id }}"
+                                    class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                            </td>
                             <td class="td">
                                 <p class="font-semibold text-slate-800">{{ $result->student->fullName() }}</p>
                                 <p class="text-xs text-slate-400">{{ $result->student->foundation_number }}</p>
@@ -160,7 +232,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 <x-admin.empty-state
                                     title="No results found"
                                     description="Enter results for students to see them here."
