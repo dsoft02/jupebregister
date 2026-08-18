@@ -126,21 +126,34 @@
         }
 
         /* ── Name / info block ─────────────────────────────── */
-
-        .name-block {
-            margin: 35px 20px 0 47px;
-            font-family: 'Times New Roman', Times, serif;
-            font-weight: 700;
+        .student-info-table {
+            width: 610px;
+            margin: 5px 0 0 40px;
+            border-collapse: collapse;
+            font-family: "Times New Roman", Times, serif;
             font-size: 20px;
-            line-height: 30px;
+            font-weight: bold;
             color: #000;
-            white-space: pre;
+        }
+
+        .student-info-table td {
+            padding: 3px 0;
+            vertical-align: top;
+        }
+
+        .student-info-table .label {
+            width: 200px;
+            white-space: nowrap;
+        }
+
+        .student-info-table .value {
+            width: 360px;
         }
 
         /* ── Exam heading ──────────────────────────────────── */
 
         .exam-heading {
-            margin-top: 44px;
+            margin-top: 20px;
             margin-left: 47px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 20px;
@@ -155,7 +168,7 @@
             width: 648px;
             margin: 18px 0 0 47px;
             border-collapse: separate;
-            border-spacing: 0 8px;
+            border-spacing: 0 3px;
             font-family: 'Times New Roman', Times, serif;
             font-weight: bold;
             color: #000;
@@ -195,7 +208,7 @@
         .subject-table .subject-box {
             width: 205px;
             height: 35px;
-            line-height: 35px;
+            line-height: 30px;
             border: 1px solid #CCC;
             border-radius: 8px;
             background: #fff;
@@ -209,7 +222,7 @@
         .subject-table .point-box {
             width: 100px;
             height: 35px;
-            line-height: 35px;
+            line-height: 30px;
             text-align: center;
             border: 1px solid #CCC;
             background: #fff;
@@ -301,118 +314,132 @@
     </style>
 </head>
 <body>
-    <div class="page">
-        {{-- Letterhead --}}
+<div class="page">
+    {{-- Letterhead --}}
+    <img
+        src="{{ $settings->get('letterhead_image') ? Storage::url($settings->get('letterhead_image')) : asset('assets/jupeb/letterhead.png') }}"
+        alt="JUPEB Letterhead"
+        class="letterhead"
+    >
+
+    {{-- Content card --}}
+    <div class="content-card">
+        {{-- Watermark --}}
         <img
-            src="{{ $settings->get('letterhead_image') ? Storage::url($settings->get('letterhead_image')) : asset('assets/jupeb/letterhead.png') }}"
-            alt="JUPEB Letterhead"
-            class="letterhead"
+            src="{{ $settings->get('watermark_image') ? Storage::url($settings->get('watermark_image')) : asset('assets/jupeb/watermark.png') }}"
+            alt=""
+            aria-hidden="true"
+            class="watermark"
         >
 
-        {{-- Content card --}}
-        <div class="content-card">
-            {{-- Watermark --}}
-            <img
-                src="{{ $settings->get('watermark_image') ? Storage::url($settings->get('watermark_image')) : asset('assets/jupeb/watermark.png') }}"
-                alt=""
-                aria-hidden="true"
-                class="watermark"
-            >
+        <div class="content">
+            {{-- Header: date, title, passport --}}
+            <div class="header-right">
+                <span class="header-date">Date: {{ $issueDate }}</span>
+                @if ($passport)
+                    <img src="{{ $passport }}" alt="Passport" class="passport-photo">
+                @else
+                    <div class="passport-placeholder">No Photo</div>
+                @endif
+            </div>
+            <div class="header">
+                <span class="header-title">Statement of Result</span>
+            </div>
 
-            <div class="content">
-                {{-- Header: date, title, passport --}}
-                <div class="header-right">
-                    <span class="header-date">Date: {{ $issueDate }}</span>
-                    @if ($passport)
-                        <img src="{{ $passport }}" alt="Passport" class="passport-photo">
-                    @else
-                        <div class="passport-placeholder">No Photo</div>
-                    @endif
-                </div>
-                <div class="header">
-                    <span class="header-title">Statement of Result</span>
-                </div>
+            <table class="student-info-table">
+                <tr>
+                    <td class="label">Name (Surname First):</td>
+                    <td class="value">{{ $student->lastNameFirst() }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Examination Year:</td>
+                    <td class="value">{{ $student->session }} Academic Session</td>
+                </tr>
+                <tr>
+                    <td class="label">Foundation Number:</td>
+                    <td class="value">{{ $student->foundation_number }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Examination Number :</td>
+                    <td class="value">{{ $student->examination_number ?? '—' }}</td>
+                </tr>
+            </table>
 
-                {{-- Name / exam info --}}
-                <div class="name-block">Name (Surname First):	{{ $student->lastNameFirst() }}
-Examination Year:	{{ $student->session }} Academic Session
-Foundation Number:	{{ $student->foundation_number }}
-Examination Number :	{{ $student->examination_number ?? '—' }}</div>
+            {{-- Exam heading --}}
+            <div class="exam-heading">2025 JUPEB EXAM (A-Level Equivalent)</div>
 
-                {{-- Exam heading --}}
-                <div class="exam-heading">2025 JUPEB EXAM (A-Level Equivalent)</div>
+            {{-- Subject section --}}
+            <table class="subject-table">
+                <thead>
+                <tr>
+                    <th>SUBJECT</th>
+                    <th class="grade-col">GRADE LETTER</th>
+                    <th class="point-col">GRADE POINT</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($result->subjects() as $subject)
+                    <tr>
+                        <td class="subject-cell">
+                            <div class="subject-box">{{ strtoupper($subject['subject']) }}</div>
+                        </td>
+                        <td class="grade-cell">
+                            <div class="grade-box">{{ $subject['grade']->value }}</div>
+                        </td>
+                        <td class="point-cell">
+                            <div class="point-box">{{ $subject['point'] }}</div>
+                        </td>
+                    </tr>
+                @endforeach
+                <tr class="total-row">
+                    <td></td>
+                    <td>
+                        <div class="grade-box">TOTAL</div>
+                    </td>
+                    <td>
+                        <div class="point-box">{{ $result->total_point }}</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-                {{-- Subject section --}}
-                <table class="subject-table">
-                    <thead>
-                        <tr>
-                            <th>SUBJECT</th>
-                            <th class="grade-col">GRADE LETTER</th>
-                            <th class="point-col">GRADE POINT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($result->subjects() as $subject)
-                        <tr>
-                            <td class="subject-cell">
-                                <div class="subject-box">{{ strtoupper($subject['subject']) }}</div>
-                            </td>
-                            <td class="grade-cell">
-                                <div class="grade-box">{{ $subject['grade']->value }}</div>
-                            </td>
-                            <td class="point-cell">
-                                <div class="point-box">{{ $subject['point'] }}</div>
-                            </td>
-                        </tr>
-                        @endforeach
-                        <tr class="total-row">
-                            <td></td>
-                            <td>
-                                <div class="grade-box">TOTAL</div>
-                            </td>
-                            <td>
-                                <div class="point-box">{{ $result->total_point }}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            {{-- Grade point --}}
+            <div class="grade-point">Grade Point = {{ $result->gradePointLabel() }}</div>
 
-                {{-- Grade point --}}
-                <div class="grade-point">Grade Point = {{ $result->gradePointLabel() }}</div>
+            {{-- Key to grade --}}
+            <div class="key-to-grade">
+                Key to Grade:
+                A = 70-100 (5 Points); B=60-69 (4 Points); C=50 - 59 (3 Points); D=45 - 49 (2Points)
+                E= 40 - 45 (1 Point); F(Fail)=0 - 39 (0 Point)
+                X = Absent; Q = Cancelled; W = Withheld
+                One Point added if all 3 subjects passed.
+            </div>
 
-                {{-- Key to grade --}}
-                <div class="key-to-grade">
-                    Key to Grade:
-                    A = 70-100 (5 Points); B=60-69 (4 Points); C=50 - 59 (3 Points); D=45 - 49 (2Points)
-                    E= 40 - 45 (1 Point); F(Fail)=0 - 39 (0 Point)
-                    X = Absent; Q = Cancelled; W = Withheld
-                    One Point added if all 3 subjects passed.
-                </div>
-
-                {{-- Footer: stamp/signature + director + alteration note --}}
-                <div class="footer">
-                    <div>
-                        <div class="stamp-container">
-                            <img
-                                src="{{ $settings->get('official_stamp') ? Storage::url($settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
-                                alt="JUPEB Stamp"
-                                class="stamp-img"
-                            >
-                            <img
-                                src="{{ $settings->get('director_signature') ? Storage::url($settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
-                                alt="Signature"
-                                class="signature-img"
-                            >
-                        </div>
-                        <div class="director-name">{{ $settings->get('director_name', 'Director') }}
-Programme Director</div>
+            {{-- Footer: stamp/signature + director + alteration note --}}
+            <div class="footer">
+                <div>
+                    <div class="stamp-container">
+                        <img
+                            src="{{ $settings->get('official_stamp') ? Storage::url($settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
+                            alt="JUPEB Stamp"
+                            class="stamp-img"
+                        >
+                        <img
+                            src="{{ $settings->get('director_signature') ? Storage::url($settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
+                            alt="Signature"
+                            class="signature-img"
+                        >
                     </div>
-                    <div class="alteration-note">
-                        Any alteration or erasure renders this result slip invalid
+                    <div class="director-name">{{ $settings->get('director_name', 'Director') }}
+                        Programme Director
                     </div>
+                </div>
+                <div class="alteration-note">
+                    Any alteration or erasure renders this result slip invalid
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
