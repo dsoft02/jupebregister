@@ -90,9 +90,7 @@ new #[Layout('layouts.app')] class extends Component {
             description: 'Statement of Result settings were updated',
         );
 
-        $this->dispatch('flash-message', message: 'Settings saved. Future PDFs will use the latest assets.');
-
-        session()->flash('status', 'Settings saved successfully. Future PDFs will use the latest assets.');
+        $this->dispatch('flash-message', message: 'Settings saved successfully.');
     }
 
     #[Computed]
@@ -117,12 +115,6 @@ new #[Layout('layouts.app')] class extends Component {
         title="Settings"
         eyebrow="Configuration"
         description="Manage Statement of Result letterhead, stamp, signature and official text." />
-
-    @if (session()->has('status'))
-        <div class="rounded-2xl border border-primary-200 bg-primary-50 p-4 text-sm font-medium text-primary-800">
-            {{ session('status') }}
-        </div>
-    @endif
 
     <form wire:submit="save" class="space-y-6">
         <div class="card">

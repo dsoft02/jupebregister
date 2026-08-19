@@ -193,7 +193,7 @@ new #[Layout('layouts.app')] class extends Component {
             <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Passport Photo</h3>
             @if ($student->passport)
                 <div class="mb-4 flex items-center gap-4 rounded-xl border border-slate-200 p-4">
-                    <img src="{{ Storage::url($student->passport) }}" alt="Current passport" class="h-16 w-16 rounded-lg object-cover">
+                    <img src="{{ Storage::url($student->passport) }} " alt="Current passport" class="h-16 w-16 rounded-lg object-cover">
                     <div>
                         <p class="text-sm font-medium text-slate-700">Current passport photo</p>
                         <p class="text-xs text-slate-400">Upload a new photo below to replace it.</p>

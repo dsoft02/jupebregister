@@ -272,11 +272,17 @@
     <div class="content">
         <div class="letterhead-wrap">
             <img
-                src="{{ $settings->get('letterhead_image')
-            ? Storage::path($settings->get('letterhead_image'))
-            : asset('assets/jupeb/letterhead_landscape.png') }}"
+                src="{{ $settings->get('letterhead_landscape')
+        ? asset('storage/' . $settings->get('letterhead_landscape'))
+        : asset('assets/jupeb/letterhead_landscape.png') }}"
                 class="letterhead"
                 alt="JUPEB Letterhead"
+            >
+
+            <img src="{{ $settings->get('letterhead_image') ? asset('storage/' . $settings->get('letterhead_image')) : asset('assets/jupeb/watermark.png') }}"
+                 alt=""
+                 aria-hidden="true"
+                 class="watermark"
             >
         </div>
 

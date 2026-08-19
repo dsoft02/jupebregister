@@ -339,8 +339,7 @@
 <body>
 <div class="page">
     {{-- Letterhead --}}
-    <img
-        src="{{ $settings->get('letterhead_image') ? Storage::url($settings->get('letterhead_image')) : asset('assets/jupeb/letterhead.png') }}"
+    <img src="{{ $settings->get('letterhead_image') ? asset('storage/' . $settings->get('letterhead_image')) : asset('assets/jupeb/letterhead.png') }}"
         alt="JUPEB Letterhead"
         class="letterhead"
     >
@@ -348,8 +347,7 @@
     {{-- Content card --}}
     <div class="content-card">
         {{-- Watermark --}}
-        <img
-            src="{{ $settings->get('watermark_image') ? Storage::url($settings->get('watermark_image')) : asset('assets/jupeb/watermark.png') }}"
+        <img src="{{ $settings->get('watermark_image') ? asset('storage/' . $settings->get('watermark_image')) : asset('assets/jupeb/watermark.png') }}"
             alt=""
             aria-hidden="true"
             class="watermark"
@@ -448,10 +446,10 @@
                     <tr>
                         <td class="footer-left">
                             <div class="stamp-container">
-                                <img src="{{ $settings->get('official_stamp') ? Storage::url($settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
+                                <img src="{{ $settings->get('official_stamp') ? asset('storage/' . $settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
                                      class="stamp-img">
 
-                                <img src="{{ $settings->get('director_signature') ? Storage::url($settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
+                                <img src="{{ $settings->get('director_signature') ? asset('storage/' . $settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
                                      class="signature-img">
                             </div>
 

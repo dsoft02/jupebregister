@@ -107,6 +107,35 @@
 
         <x-admin.confirm-modal />
 
+        {{-- Toast notification --}}
+        <div x-data="toast()" x-on:flash-message.window="show($event.detail.message)" x-cloak
+            class="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3.5 shadow-lg transition-all duration-300"
+            :class="visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 shrink-0 text-emerald-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-sm font-medium text-emerald-800" x-text="message"></span>
+            <button x-on:click="visible = false" class="ml-2 shrink-0 rounded p-0.5 text-emerald-600 hover:text-emerald-800">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <script>
+            function toast() {
+                return {
+                    visible: false,
+                    message: '',
+                    timeout: null,
+                    show(msg) {
+                        clearTimeout(this.timeout);
+                        this.message = msg;
+                        this.visible = true;
+                        this.timeout = setTimeout(() => { this.visible = false; }, 4000);
+                    },
+                };
+            }
+        </script>
+
         @livewireScripts
     </body>
 </html>
