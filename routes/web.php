@@ -32,10 +32,6 @@ Volt::route('verify', 'pages.verify')
 Route::get('results/{result}/download', PublicResultDownloadController::class)
     ->name('results.download');
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
 /*
 |--------------------------------------------------------------------------
 | Authenticated staff routes
@@ -125,6 +121,10 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
             Volt::route('migrations', 'pages.admin.migrations')
                 ->name('migrations');
         });
+
+        // Profile
+        Volt::route('profile', 'pages.admin.profile')
+            ->name('profile');
 
         // Users
         Volt::route('users', 'pages.admin.users.index')

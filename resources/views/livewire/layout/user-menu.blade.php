@@ -19,7 +19,7 @@ new class extends Component {
         {{ strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}
     </div>
     <div class="min-w-0 flex-1">
-        <p class="truncate text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
+        <a href="{{ route('admin.profile') }}" class="block truncate text-sm font-semibold text-white hover:text-emerald-300 transition">{{ auth()->user()->name }}</a>
         <p class="truncate text-[11px] text-primary-200 capitalize">
             {{ auth()->user()->getRoleNames()->first() ? str_replace('_', ' ', auth()->user()->getRoleNames()->first()) : 'User' }}
         </p>
