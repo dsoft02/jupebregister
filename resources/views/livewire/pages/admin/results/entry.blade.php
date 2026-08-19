@@ -145,7 +145,7 @@ new #[Layout('layouts.app')] class extends Component {
                 <div class="mt-6 rounded-2xl border border-primary-100 bg-primary-50 p-5">
                     <div class="mb-3 flex items-center justify-between">
                         <h3 class="text-sm font-bold uppercase tracking-wider text-primary-800">Automatic Calculation</h3>
-                        <span class="text-xs font-medium text-primary-700">Maximum 16</span>
+                        <span class="text-xs font-medium text-primary-700">Maximum {{ $this->preview['bonus_point'] ? 16 : 15 }}</span>
                     </div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-5">
                         <div class="rounded-xl bg-white p-3 text-center">
@@ -162,7 +162,7 @@ new #[Layout('layouts.app')] class extends Component {
                         </div>
                         <div class="rounded-xl bg-white p-3 text-center sm:col-span-2">
                             <p class="text-xs font-medium text-slate-400">Grade Point</p>
-                            <p class="text-lg font-bold text-secondary-800">{{ $this->preview['total_point'] }}/16</p>
+                            <p class="text-lg font-bold text-secondary-800">{{ $this->preview['total_point'] }}/{{ $this->preview['bonus_point'] ? 16 : 15 }}</p>
                         </div>
                     </div>
                     @if ($this->preview['bonus_point'] === 0 && ($this->preview['point_one'] + $this->preview['point_two'] + $this->preview['point_three']) > 0)

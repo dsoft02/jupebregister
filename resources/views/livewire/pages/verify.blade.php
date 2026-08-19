@@ -153,7 +153,7 @@ new #[Layout('layouts.public')] class extends Component {
                             </div>
                             <div>
                                 <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Point</dt>
-                                <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verifiedResult->total_point }} / 16</dd>
+                                <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verifiedResult->total_point }} / {{ $this->verifiedResult->maximumPoints() }}</dd>
                             </div>
                         </dl>
 

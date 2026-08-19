@@ -234,7 +234,7 @@ new #[Layout('layouts.app')] class extends Component {
                             </td>
                             <td class="td text-center">
                                 <span class="text-base font-bold text-primary-800">{{ $result->total_point }}</span>
-                                <span class="text-xs text-slate-400">/16</span>
+                                <span class="text-xs text-slate-400">/{{ $result->bonus_point ? 16 : 15 }}</span>
                             </td>
                             <td class="td">
                                 <x-admin.status-badge :status="$result->status->value">{{ $result->status->label() }}</x-admin.status-badge>

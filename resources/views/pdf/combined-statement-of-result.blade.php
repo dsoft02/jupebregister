@@ -353,7 +353,7 @@
                 <th>SUBJECT 3</th>
                 <th>GRADE</th>
                 <th>POINT</th>
-                <th>GRADE POINT<br>(OUT OF 16)</th>
+                <th>GRADE POINT<br>(OUT OF {{ $result->bonus_point ? 16 : 15 }})</th>
                 <th>REMARKS</th>
             </tr>
 
@@ -418,7 +418,7 @@
                     </td>
 
                     <td class="total">
-                        {{ $result->total_point }}/16
+                        {{ $result->total_point }}/{{ $result->bonus_point ? 16 : 15 }}
                     </td>
 
                     <td class="remark">

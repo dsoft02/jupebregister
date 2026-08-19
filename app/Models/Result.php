@@ -70,7 +70,7 @@ class Result extends Model
 
     public function maximumPoints(): int
     {
-        return 16;
+        return $this->bonus_point ? 16 : 15;
     }
 
     public function gradePointLabel(): string

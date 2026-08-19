@@ -76,4 +76,20 @@ class GradeServiceTest extends TestCase
 
         $this->assertLessThanOrEqual(16, $result['total_point']);
     }
+
+    public function test_maximum_is_sixteen_when_all_passed(): void
+    {
+        $result = $this->service->calculate('A', 'B', 'C');
+
+        $this->assertSame(1, $result['bonus_point']);
+        $this->assertLessThanOrEqual(16, $result['total_point']);
+    }
+
+    public function test_maximum_is_fifteen_when_not_all_passed(): void
+    {
+        $result = $this->service->calculate('A', 'B', 'F');
+
+        $this->assertSame(0, $result['bonus_point']);
+        $this->assertLessThanOrEqual(15, $result['total_point']);
+    }
 }
