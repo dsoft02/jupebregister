@@ -42,6 +42,9 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/', fn () => redirect()->route('admin.dashboard'))
+            ->name('home');
+
         Volt::route('dashboard', 'pages.dashboard')
             ->name('dashboard');
 
