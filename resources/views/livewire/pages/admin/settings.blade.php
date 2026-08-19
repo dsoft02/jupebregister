@@ -26,11 +26,14 @@ new #[Layout('layouts.app')] class extends Component {
 
     public ?string $current_session = null;
 
+    public ?string $result_year = null;
+
     public function mount(SettingsService $settings): void
     {
         $this->director_name = $settings->get('director_name');
         $this->issue_date = $settings->get('issue_date');
         $this->current_session = $settings->get('current_session');
+        $this->result_year = $settings->get('result_year');
     }
 
     public function rules(): array
@@ -44,6 +47,7 @@ new #[Layout('layouts.app')] class extends Component {
             'director_name' => ['nullable', 'string', 'max:255'],
             'issue_date' => ['nullable', 'date'],
             'current_session' => ['nullable', 'string', 'max:20'],
+            'result_year' => ['nullable', 'string', 'max:10'],
         ];
     }
 
@@ -55,6 +59,7 @@ new #[Layout('layouts.app')] class extends Component {
             'director_name',
             'issue_date',
             'current_session',
+            'result_year',
         ]);
 
         $settings->set($textValues);
@@ -179,6 +184,12 @@ new #[Layout('layouts.app')] class extends Component {
                     <label for="current_session" class="label">Current Academic Session</label>
                     <input type="text" id="current_session" wire:model="current_session" class="input" placeholder="2025/2026">
                     <x-input-error :messages="$errors->get('current_session')" class="mt-1" />
+                </div>
+                <div>
+                    <label for="result_year" class="label">Result Year</label>
+                    <input type="text" id="result_year" wire:model="result_year" class="input" placeholder="2025">
+                    <p class="mt-1 text-xs text-slate-400">Year shown on statement of result PDFs (e.g. 2025). Defaults to 2025 if blank.</p>
+                    <x-input-error :messages="$errors->get('result_year')" class="mt-1" />
                 </div>
             </div>
         </div>

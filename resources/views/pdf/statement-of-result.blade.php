@@ -393,7 +393,7 @@
             </table>
 
             {{-- Exam heading --}}
-            <div class="exam-heading">2025 JUPEB EXAM (A-Level Equivalent)</div>
+            <div class="exam-heading">{{ $settings->get('result_year') ?: '2025' }} JUPEB EXAM (A-Level Equivalent)</div>
 
             {{-- Subject section --}}
             <table class="subject-table">

@@ -295,7 +295,7 @@
             </div>
 
             <div class="exam">
-                2025 JUPEB EXAMINATION (A-LEVEL EQUIVALENT)
+                {{ $settings->get('result_year') ?: '2025' }} JUPEB EXAMINATION (A-LEVEL EQUIVALENT)
             </div>
 
         </div>

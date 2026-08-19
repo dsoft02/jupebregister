@@ -283,7 +283,7 @@
                 <div class="title-office">Office of the Director</div>
                 <div class="title-main">Combined Statement of Result</div>
                 <div class="title-session">{{ $academicSession }} Academic Session</div>
-                <div class="title-exam">{{ $examYear }} JUPEB EXAM (A-Level Equivalent)</div>
+                <div class="title-exam">{{ $settings->get('result_year') ?: ($examYear ?: '2025') }} JUPEB EXAM (A-Level Equivalent)</div>
             </div>
             <div class="title-date">Date: {{ $issueDate }}</div>
         </th>

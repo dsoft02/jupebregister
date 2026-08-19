@@ -37,6 +37,7 @@ class Setting extends Model
             'director_name',
             'issue_date',
             'current_session',
+            'result_year',
         ];
     }
 

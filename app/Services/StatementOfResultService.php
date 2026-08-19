@@ -25,6 +25,7 @@ class StatementOfResultService
         $student = $result->student->load('subjectOne', 'subjectTwo', 'subjectThree');
 
         $passport = $this->studentPassportDataUri($student);
+        $currentSession = $this->settings->get('current_session', Carbon::now()->year . '/' . (Carbon::now()->year + 1));
 
         $pdf = Pdf::loadView('pdf.statement-of-result', [
             'result' => $result,
@@ -32,6 +33,7 @@ class StatementOfResultService
             'settings' => $this->settings,
             'passport' => $passport,
             'issueDate' => $this->issueDate(),
+            'currentSession' => $currentSession,
         ])
             ->setPaper('a4', 'portrait');
 
