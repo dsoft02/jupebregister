@@ -271,14 +271,6 @@
 
     <div class="content">
         <div class="letterhead-wrap">
-            <img
-                src="{{ $settings->get('letterhead_landscape')
-        ? asset('storage/' . $settings->get('letterhead_landscape'))
-        : asset('assets/jupeb/letterhead_landscape.png') }}"
-                class="letterhead"
-                alt="JUPEB Letterhead"
-            >
-
             <img src="{{ $settings->get('letterhead_image') ? asset('storage/' . $settings->get('letterhead_image')) : asset('assets/jupeb/watermark.png') }}"
                  alt=""
                  aria-hidden="true"
@@ -462,9 +454,13 @@
 
                     <div class="stamp-wrap">
 
+                        @if($stamp)
                         <img src="{{ $stamp }}" class="stamp">
+                        @endif
 
+                        @if($signature)
                         <img src="{{ $signature }}" class="signature">
+                        @endif
 
                         <div class="director">
                             {{ $directorName }}

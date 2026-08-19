@@ -75,8 +75,8 @@ class CombinedStatementOfResultController extends Controller
             'resultYear' => $this->statementService->resultYear(),
             'letterhead' => $this->settings->fileAsDataUri('letterhead_landscape') ?? $this->fallbackAsset('letterhead_landscape.png'),
             'watermark' => $this->settings->fileAsDataUri('watermark_image') ?? file_get_contents(public_path('assets/jupeb/watermark.png')),
-            'stamp' => $this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png'),
-            'signature' => $this->settings->fileAsDataUri('director_signature') ?? $this->fallbackAsset('signature.png'),
+            'stamp' => $this->settings->get('show_stamp') !== '0' ? ($this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png')) : null,
+            'signature' => $this->settings->get('show_signature') !== '0' ? ($this->settings->fileAsDataUri('director_signature') ?? $this->fallbackAsset('signature.png')) : null,
             'directorName' => $this->settings->get('director_name', 'Director'),
         ];
 

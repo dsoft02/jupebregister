@@ -38,6 +38,8 @@ class Setting extends Model
             'current_session',
             'result_year',
             'verification_enabled',
+            'show_stamp',
+            'show_signature',
         ];
     }
 

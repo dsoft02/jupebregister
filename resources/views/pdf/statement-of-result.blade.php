@@ -445,13 +445,19 @@
                 <table class="footer-table">
                     <tr>
                         <td class="footer-left">
+                            @if($settings->get('show_stamp') !== '0' || $settings->get('show_signature') !== '0')
                             <div class="stamp-container">
+                                @if($settings->get('show_stamp') !== '0')
                                 <img src="{{ $settings->get('official_stamp') ? asset('storage/' . $settings->get('official_stamp')) : asset('assets/jupeb/stamp.png') }}"
                                      class="stamp-img">
+                                @endif
 
+                                @if($settings->get('show_signature') !== '0')
                                 <img src="{{ $settings->get('director_signature') ? asset('storage/' . $settings->get('director_signature')) : asset('assets/jupeb/signature.png') }}"
                                      class="signature-img">
+                                @endif
                             </div>
+                            @endif
 
                             <div class="director-name">
                                 {{ $settings->get('director_name', 'Director') }}<br>

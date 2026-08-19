@@ -30,6 +30,10 @@ new #[Layout('layouts.app')] class extends Component {
 
     public bool $verification_enabled = false;
 
+    public bool $show_stamp = true;
+
+    public bool $show_signature = true;
+
     public function mount(SettingsService $settings): void
     {
         $this->director_name = $settings->get('director_name');
@@ -37,6 +41,8 @@ new #[Layout('layouts.app')] class extends Component {
         $this->current_session = $settings->get('current_session');
         $this->result_year = $settings->get('result_year');
         $this->verification_enabled = $settings->get('verification_enabled') === '1';
+        $this->show_stamp = $settings->get('show_stamp') !== '0';
+        $this->show_signature = $settings->get('show_signature') !== '0';
     }
 
     public function rules(): array
@@ -66,6 +72,8 @@ new #[Layout('layouts.app')] class extends Component {
         ]);
 
         $textValues['verification_enabled'] = $this->verification_enabled ? '1' : '0';
+        $textValues['show_stamp'] = $this->show_stamp ? '1' : '0';
+        $textValues['show_signature'] = $this->show_signature ? '1' : '0';
 
         $settings->set($textValues);
 
@@ -206,6 +214,37 @@ new #[Layout('layouts.app')] class extends Component {
                         <span class="font-semibold text-slate-700">Enable Result Verification</span>
                         <span class="block text-xs text-slate-400">
                             When enabled, students can use their Foundation Number and Verification Token to verify and download published results.
+                        </span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">PDF Display Options</h3>
+                <p class="mt-1 text-xs text-slate-400">
+                    Control which elements are displayed on generated Statement of Result PDFs.
+                </p>
+            </div>
+            <div class="space-y-3 p-6">
+                <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 p-4 text-sm">
+                    <input type="checkbox" wire:model="show_stamp" value="1"
+                        class="mt-0.5 rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                    <span>
+                        <span class="font-semibold text-slate-700">Show Official Stamp</span>
+                        <span class="block text-xs text-slate-400">
+                            Display the official stamp image on generated PDFs.
+                        </span>
+                    </span>
+                </label>
+                <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 p-4 text-sm">
+                    <input type="checkbox" wire:model="show_signature" value="1"
+                        class="mt-0.5 rounded border-slate-300 text-primary-700 focus:ring-primary-500">
+                    <span>
+                        <span class="font-semibold text-slate-700">Show Director Signature</span>
+                        <span class="block text-xs text-slate-400">
+                            Display the director's signature on generated PDFs.
                         </span>
                     </span>
                 </label>
