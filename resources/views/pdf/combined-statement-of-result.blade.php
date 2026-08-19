@@ -291,11 +291,11 @@
             </div>
 
             <div class="session">
-                {{ $academicSession ?? '2025/2026' }} ACADEMIC SESSION
+                {{ $academicSession }} ACADEMIC SESSION
             </div>
 
             <div class="exam">
-                {{ $settings->get('result_year') ?: '2025' }} JUPEB EXAMINATION (A-LEVEL EQUIVALENT)
+                {{ $resultYear }} JUPEB EXAMINATION (A-LEVEL EQUIVALENT)
             </div>
 
         </div>

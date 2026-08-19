@@ -380,7 +380,7 @@
                 </tr>
                 <tr>
                     <td class="label">Examination Year:</td>
-                    <td class="value">{{ $result->session }} Academic Session</td>
+                    <td class="value">{{ $currentSession }} Academic Session</td>
                 </tr>
                 <tr>
                     <td class="label">Foundation Number:</td>
@@ -393,7 +393,7 @@
             </table>
 
             {{-- Exam heading --}}
-            <div class="exam-heading">{{ $settings->get('result_year') ?: '2025' }} JUPEB EXAM (A-Level Equivalent)</div>
+            <div class="exam-heading">{{ $resultYear }} JUPEB EXAM (A-Level Equivalent)</div>
 
             {{-- Subject section --}}
             <table class="subject-table">

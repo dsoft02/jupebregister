@@ -66,14 +66,13 @@ class CombinedStatementOfResultController extends Controller
         ])->values();
 
         $issueDate = $this->statementService->issueDate();
-        $currentSession = $this->settings->get('current_session', Carbon::now()->year . '/' . (Carbon::now()->year + 1));
 
         $data = [
             'results'         => $rows,
             'settings'        => $this->settings,
             'issueDate'       => Carbon::createFromFormat('d/m/Y', $issueDate)->format('jS F, Y'),
-            'academicSession' => $currentSession,
-            'examYear'        => explode('/', $currentSession)[0],
+            'academicSession' => $this->statementService->currentSession(),
+            'resultYear'        => $this->statementService->resultYear(),
             'letterhead'      => $this->settings->fileAsDataUri('letterhead_landscape') ?? $this->fallbackAsset('letterhead_landscape.png'),
             'watermark'       => $this->settings->fileAsDataUri('watermark_image') ?? file_get_contents(public_path('assets/jupeb/watermark.png')),
             'stamp'           => $this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png'),

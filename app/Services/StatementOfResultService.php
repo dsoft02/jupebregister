@@ -25,7 +25,6 @@ class StatementOfResultService
         $student = $result->student->load('subjectOne', 'subjectTwo', 'subjectThree');
 
         $passport = $this->studentPassportDataUri($student);
-        $currentSession = $this->settings->get('current_session', Carbon::now()->year . '/' . (Carbon::now()->year + 1));
 
         $pdf = Pdf::loadView('pdf.statement-of-result', [
             'result' => $result,
@@ -33,7 +32,8 @@ class StatementOfResultService
             'settings' => $this->settings,
             'passport' => $passport,
             'issueDate' => $this->issueDate(),
-            'currentSession' => $currentSession,
+            'currentSession' => $this->currentSession(),
+            'resultYear' => $this->resultYear(),
         ])
             ->setPaper('a4', 'portrait');
 
@@ -96,4 +96,27 @@ class StatementOfResultService
 
         return 'data:'.$mime.';base64,'.base64_encode(file_get_contents($path));
     }
+
+    /**
+     * Get the current academic session.
+     */
+    public function currentSession(): string
+    {
+        return $this->settings->get(
+            'current_session',
+            Carbon::now()->year.'/'.(Carbon::now()->year + 1)
+        );
+    }
+
+    /**
+     * Get the result year.
+     */
+    public function resultYear(): string
+    {
+        return $this->settings->get(
+            'result_year',
+            explode('/', $this->currentSession())[0]
+        );
+    }
+
 }
