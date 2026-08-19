@@ -27,6 +27,7 @@
             this.selectedLabel = option.label;
             this.selectedValue = option.value;
             this.$refs.hiddenInput.value = option.value;
+            this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
             this.emitChange(prev, option.value);
             this.open = false;
             this.query = '';
@@ -36,6 +37,7 @@
             this.selectedLabel = null;
             this.selectedValue = '';
             this.$refs.hiddenInput.value = '';
+            this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
             this.emitChange(prev, '');
         },
         init() {

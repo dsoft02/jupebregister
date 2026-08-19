@@ -135,6 +135,7 @@ class AdminWorkflowTest extends TestCase
             'signature' => null,
             'passport' => null,
             'issueDate' => app(\App\Services\StatementOfResultService::class)->issueDate(),
+            'resultYear' => app(\App\Services\StatementOfResultService::class)->resultYear(),
         ])->render();
 
         $this->assertStringContainsString('Any alteration or erasure renders this result slip invalid', $html);
