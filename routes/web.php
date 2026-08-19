@@ -120,6 +120,12 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         Volt::route('settings', 'pages.admin.settings')
             ->name('settings');
 
+        // Migrations (super_admin only)
+        Route::middleware('role:super_admin')->group(function () {
+            Volt::route('migrations', 'pages.admin.migrations')
+                ->name('migrations');
+        });
+
         // Users
         Volt::route('users', 'pages.admin.users.index')
             ->name('users.index');

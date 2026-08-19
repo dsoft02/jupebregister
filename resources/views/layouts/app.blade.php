@@ -52,7 +52,7 @@
                         Import &amp; Export
                     </x-admin.nav-link>
 
-                    <x-admin.nav-link href="{{ route('verify') }}" icon="shield">
+                    <x-admin.nav-link href="{{ route('verify') }}" icon="shield" target="_blank">
                         Verification
                     </x-admin.nav-link>
 
@@ -69,6 +69,12 @@
                             Users
                         </x-admin.nav-link>
                     @endcan
+
+                    @if (auth()->user()->hasRole('super_admin'))
+                        <x-admin.nav-link href="{{ route('admin.migrations') }}" :active="request()->routeIs('admin.migrations')" icon="database">
+                            Migrations
+                        </x-admin.nav-link>
+                    @endif
 
                     <div class="my-3 border-t border-white/10"></div>
 
