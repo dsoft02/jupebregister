@@ -37,6 +37,8 @@ class BulkResultDownloadController extends Controller
                 'settings' => app(\App\Services\SettingsService::class),
                 'passport' => $this->studentPassportDataUri($student),
                 'issueDate' => $service->issueDate(),
+                'currentSession' => $service->currentSession(),
+                'resultYear' => $service->resultYear(),
             ])->setPaper('a4', 'portrait');
 
             $pdf->setOptions([
