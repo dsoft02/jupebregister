@@ -50,7 +50,7 @@ class CombinedStatementOfResultController extends Controller
         }
 
         if ($request->filled('session')) {
-            $query->where('session', $request->session);
+            $query->where('session', $request->input('session'));
         }
 
         $results = $query->latest()->get();
