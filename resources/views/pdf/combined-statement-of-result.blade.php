@@ -267,14 +267,22 @@
 
 <div class="certificate">
 
-    <img src="{{ asset('assets/jupeb/watermark.png') }}" class="watermark">
+    <img
+        src="{{ $settings->get('watermark')
+                ? asset('storage/' . $settings->get('watermark'))
+                : asset('assets/jupeb/watermark.png') }}"
+        class="watermark"
+        alt=""
+    >
 
     <div class="content">
         <div class="letterhead-wrap">
-            <img src="{{ $settings->get('letterhead_image') ? asset('storage/' . $settings->get('letterhead_image')) : asset('assets/jupeb/watermark.png') }}"
-                 alt=""
-                 aria-hidden="true"
-                 class="watermark"
+            <img
+                src="{{ $settings->get('letterhead_landscape')
+                ? asset('storage/' . $settings->get('letterhead_landscape'))
+                : asset('assets/jupeb/letterhead_landscape.png') }}"
+                class="letterhead"
+                alt="JUPEB Letterhead"
             >
         </div>
 
