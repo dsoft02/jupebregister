@@ -65,6 +65,12 @@
                             Users
                         </x-admin.nav-link>
                     @endcan
+
+                    <div class="my-3 border-t border-white/10"></div>
+
+                    <x-admin.nav-link href="{{ route('home') }}" icon="external-link" target="_blank">
+                        Public Site &nearr;
+                    </x-admin.nav-link>
                 </nav>
 
                 <!-- User -->
