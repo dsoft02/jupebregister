@@ -118,5 +118,4 @@ class StatementOfResultService
             explode('/', $this->currentSession())[0]
         );
     }
-
 }

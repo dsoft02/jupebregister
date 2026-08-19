@@ -69,6 +69,10 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         Volt::route('subjects', 'pages.admin.subjects.index')
             ->name('subjects.index');
 
+        // Verification Tokens
+        Volt::route('tokens', 'pages.admin.tokens.index')
+            ->name('tokens.index');
+
         // Results
         Volt::route('results', 'pages.admin.results.index')
             ->name('results.index');

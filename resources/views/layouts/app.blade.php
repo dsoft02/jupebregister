@@ -56,6 +56,10 @@
                         Verification
                     </x-admin.nav-link>
 
+                    <x-admin.nav-link href="{{ route('admin.tokens.index') }}" :active="request()->routeIs('admin.tokens.*')" icon="key">
+                        Verification Tokens
+                    </x-admin.nav-link>
+
                     <x-admin.nav-link href="{{ route('admin.settings') }}" :active="request()->routeIs('admin.settings')" icon="settings">
                         Settings
                     </x-admin.nav-link>

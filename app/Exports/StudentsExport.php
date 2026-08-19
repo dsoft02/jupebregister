@@ -6,10 +6,9 @@ use App\Models\Student;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class StudentsExport implements FromCollection, WithHeadings, ShouldAutoSize
+class StudentsExport implements FromCollection, ShouldAutoSize, WithHeadings
 {
     public function __construct(
         private readonly array $filters = [],

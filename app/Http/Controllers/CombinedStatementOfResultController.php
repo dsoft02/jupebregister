@@ -8,7 +8,6 @@ use App\Services\StatementOfResultService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CombinedStatementOfResultController extends Controller
 {
@@ -25,7 +24,7 @@ class CombinedStatementOfResultController extends Controller
         $this->authorize('viewAny', Result::class);
 
         $request->validate([
-            'ids'   => ['required', 'array', 'min:1'],
+            'ids' => ['required', 'array', 'min:1'],
             'ids.*' => ['exists:results,id'],
         ]);
 
@@ -62,40 +61,40 @@ class CombinedStatementOfResultController extends Controller
     {
         $rows = $results->map(fn ($r) => [
             'student' => $r->student,
-            'result'  => $r,
+            'result' => $r,
         ])->values();
 
         $issueDate = $this->statementService->issueDate();
         $currentSession = $this->statementService->currentSession();
 
         $data = [
-            'results'         => $rows,
-            'settings'        => $this->settings,
-            'issueDate'       => Carbon::createFromFormat('d/m/Y', $issueDate)->format('jS F, Y'),
+            'results' => $rows,
+            'settings' => $this->settings,
+            'issueDate' => Carbon::createFromFormat('d/m/Y', $issueDate)->format('jS F, Y'),
             'academicSession' => $currentSession,
-            'resultYear'        => $this->statementService->resultYear(),
-            'letterhead'      => $this->settings->fileAsDataUri('letterhead_landscape') ?? $this->fallbackAsset('letterhead_landscape.png'),
-            'watermark'       => $this->settings->fileAsDataUri('watermark_image') ?? file_get_contents(public_path('assets/jupeb/watermark.png')),
-            'stamp'           => $this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png'),
-            'signature'       => $this->settings->fileAsDataUri('director_signature') ?? $this->fallbackAsset('signature.png'),
-            'directorName'    => $this->settings->get('director_name', 'Director'),
+            'resultYear' => $this->statementService->resultYear(),
+            'letterhead' => $this->settings->fileAsDataUri('letterhead_landscape') ?? $this->fallbackAsset('letterhead_landscape.png'),
+            'watermark' => $this->settings->fileAsDataUri('watermark_image') ?? file_get_contents(public_path('assets/jupeb/watermark.png')),
+            'stamp' => $this->settings->fileAsDataUri('official_stamp') ?? $this->fallbackAsset('stamp.png'),
+            'signature' => $this->settings->fileAsDataUri('director_signature') ?? $this->fallbackAsset('signature.png'),
+            'directorName' => $this->settings->get('director_name', 'Director'),
         ];
 
         $pdf = Pdf::loadView('pdf.combined-statement-of-result', $data)
             ->setPaper('a4', 'landscape');
 
         $pdf->setOptions([
-            'defaultFont'             => 'Times New Roman',
-            'isHtml5ParserEnabled'    => true,
-            'isRemoteEnabled'         => true,
-            'isPhpEnabled'            => false,
-            'enable_css_float'        => true,
-            'enable_html5_parser'     => true,
+            'defaultFont' => 'Times New Roman',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'isPhpEnabled' => false,
+            'enable_css_float' => true,
+            'enable_html5_parser' => true,
         ]);
 
         $session = str_replace(['/', '\\'], '-', $currentSession);
 
-        $filename = "Combined-Statement-of-Result_{$session}_" . now()->format('Ymd-His') . '.pdf';
+        $filename = "Combined-Statement-of-Result_{$session}_".now()->format('Ymd-His').'.pdf';
 
         return $pdf->stream($filename);
     }

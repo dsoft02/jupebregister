@@ -12,10 +12,9 @@ use App\Imports\SubjectsImport;
 use App\Models\Subject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImportExportController extends Controller
 {
@@ -67,7 +66,7 @@ class ImportExportController extends Controller
             'file' => ['required', 'file', 'mimes:csv,xlsx,xls', 'max:5120'],
         ]);
 
-        $importer = new ResultsImport();
+        $importer = new ResultsImport;
 
         Excel::import($importer, $request->file('file'));
 
@@ -132,7 +131,7 @@ class ImportExportController extends Controller
             'file' => ['required', 'file', 'mimes:csv,xlsx,xls', 'max:5120'],
         ]);
 
-        $importer = new SubjectsImport();
+        $importer = new SubjectsImport;
 
         Excel::import($importer, $request->file('file'));
 

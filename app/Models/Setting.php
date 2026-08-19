@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 class Setting extends Model
 {
@@ -38,6 +37,7 @@ class Setting extends Model
             'issue_date',
             'current_session',
             'result_year',
+            'verification_enabled',
         ];
     }
 

@@ -3,7 +3,6 @@
 namespace App\Imports;
 
 use App\Actions\Students\CreateStudent;
-use App\Enums\StudentStatus;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Support\Collection;
@@ -13,7 +12,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class StudentsImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
+class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, WithValidation
 {
     private const REQUIRED_COLUMNS = [
         'surname',

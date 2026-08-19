@@ -7,7 +7,6 @@ use App\Enums\StudentStatus;
 use App\Models\Student;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CreateStudent
 {

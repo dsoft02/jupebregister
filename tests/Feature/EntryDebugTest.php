@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\ResultStatus;
 use App\Enums\StudentStatus;
 use App\Models\Result;
 use App\Models\Student;
@@ -48,10 +47,10 @@ class EntryDebugTest extends TestCase
 
         $result = $student->fresh()->currentResult();
 
-        fwrite(STDERR, "result: ".($result ? 'FOUND '.$result->total_point : 'NULL')."\n");
-        fwrite(STDERR, "fresh result: ".($student->fresh()->currentResult() ? 'FOUND '.$student->fresh()->currentResult()->total_point : 'NULL')."\n");
-        fwrite(STDERR, "all results count: ".Result::count()."\n");
-        fwrite(STDERR, "latest result student: ".Result::latest('id')->first()?->student_id."\n");
+        fwrite(STDERR, 'result: '.($result ? 'FOUND '.$result->total_point : 'NULL')."\n");
+        fwrite(STDERR, 'fresh result: '.($student->fresh()->currentResult() ? 'FOUND '.$student->fresh()->currentResult()->total_point : 'NULL')."\n");
+        fwrite(STDERR, 'all results count: '.Result::count()."\n");
+        fwrite(STDERR, 'latest result student: '.Result::latest('id')->first()?->student_id."\n");
         $this->assertTrue(true);
     }
 }

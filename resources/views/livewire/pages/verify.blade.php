@@ -11,26 +11,37 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.public')] class extends Component {
     public string $query = '';
 
+    public string $token = '';
+
     public ?int $verifiedStudentId = null;
 
     public bool $searched = false;
+
+    public bool $verificationEnabled = true;
+
+    public function mount(): void
+    {
+        $this->verificationEnabled = app(SettingsService::class)->get('verification_enabled') === '1';
+    }
 
     public function verify(): void
     {
         $this->searched = true;
         $this->verifiedStudentId = null;
 
-        if (blank($this->query)) {
+        if (blank($this->query) || blank($this->token)) {
             return;
         }
 
         $query = trim($this->query);
+        $token = trim($this->token);
 
         $student = Student::where('foundation_number', $query)
             ->orWhere('examination_number', $query)
+            ->where('verification_token', $token)
             ->first();
 
-        if (! $student) {
+        if (! $student || $student->verification_token !== $token) {
             return;
         }
 
@@ -81,101 +92,119 @@ new #[Layout('layouts.public')] class extends Component {
         </div>
         <h1 class="text-3xl font-bold text-primary-800">Result Verification</h1>
         <p class="mt-2 text-sm text-slate-500">
-            Enter a Foundation Number or JUPEB Number to verify a published result.
+            Enter your Foundation Number and Verification Token to verify and download a published result.
             Only published results for the current session are available for verification.
         </p>
     </div>
 
-    <form wire:submit="verify" class="card flex flex-col gap-3 p-5 sm:flex-row">
-        <div class="relative flex-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-            <input type="text" wire:model="query" placeholder="e.g. PAAU/FS/001 or 23J/1234"
-                class="input py-3 pl-11" autofocus>
+    @if (! $verificationEnabled)
+        <div class="card flex flex-col items-center p-8 text-center">
+            <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-amber-600"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Verification Disabled</h3>
+            <p class="mt-1 max-w-sm text-sm text-slate-500">
+                Result verification is currently disabled. Please contact the school administration.
+            </p>
         </div>
-        <button type="submit" class="btn-primary px-8 py-3">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-            Verify
-        </button>
-    </form>
-
-    @if ($searched)
-        @if ($this->verified && $this->verifiedResult)
-            <div class="card mt-6 overflow-hidden">
-                <div class="flex items-center gap-3 border-b border-primary-100 bg-primary-50 px-6 py-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-primary-600"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <div>
-                        <p class="font-bold text-primary-800">Result Verified</p>
-                        <p class="text-xs text-primary-600">This result is authentic and published by PAAU Foundation School.</p>
-                    </div>
+    @else
+        <form wire:submit="verify" class="card flex flex-col gap-3 p-5 sm:flex-row">
+            <div class="flex-1 space-y-3">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+                    <input type="text" wire:model="token" placeholder="Enter Verification Token"
+                        class="input py-3 pl-11" autofocus>
                 </div>
-                <div class="p-6">
-                    <dl class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                        <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Student Name</dt>
-                            <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verified->fullName() }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Academic Session</dt>
-                            <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verifiedResult->session }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Subjects</dt>
-                            <dd class="mt-1 text-sm font-bold text-slate-800">{{ implode(' / ', $this->verified->chosenSubjectNames()) }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Point</dt>
-                            <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verifiedResult->total_point }} / 16</dd>
-                        </div>
-                    </dl>
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                    <input type="text" wire:model="query" placeholder="e.g. PAAU/FS/001 or 23J/1234"
+                        class="input py-3 pl-11">
+                </div>
+            </div>
+            <button type="submit" class="btn-primary px-8 py-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                Verify
+            </button>
+        </form>
 
-                    <div class="mt-6 overflow-hidden rounded-xl border border-slate-200">
-                        <table class="min-w-full">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="th">Subject</th>
-                                    <th class="th text-center">Grade</th>
-                                    <th class="th text-center">Points</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                @foreach ($this->verifiedResult->subjects() as $subject)
+        @if ($searched)
+            @if ($this->verified && $this->verifiedResult)
+                <div class="card mt-6 overflow-hidden">
+                    <div class="flex items-center gap-3 border-b border-primary-100 bg-primary-50 px-6 py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-primary-600"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div>
+                            <p class="font-bold text-primary-800">Result Verified</p>
+                            <p class="text-xs text-primary-600">This result is authentic and published by PAAU Foundation School.</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <dl class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Student Name</dt>
+                                <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verified->fullName() }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Academic Session</dt>
+                                <dd class="mt-1 text-sm font-bold text-slate-800">{{ $this->verifiedResult->session }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Subjects</dt>
+                                <dd class="mt-1 text-sm font-bold text-slate-800">{{ implode(' / ', $this->verified->chosenSubjectNames()) }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Point</dt>
+                                <dd class="mt-1 text-lg font-bold text-primary-800">{{ $this->verifiedResult->total_point }} / 16</dd>
+                            </div>
+                        </dl>
+
+                        <div class="mt-6 overflow-hidden rounded-xl border border-slate-200">
+                            <table class="min-w-full">
+                                <thead class="bg-slate-50">
                                     <tr>
-                                        <td class="td">{{ $subject['subject'] }}</td>
-                                        <td class="td text-center font-bold">{{ $subject['grade']->value }}</td>
-                                        <td class="td text-center">{{ $subject['point'] }}</td>
+                                        <th class="th">Subject</th>
+                                        <th class="th text-center">Grade</th>
+                                        <th class="th text-center">Points</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @foreach ($this->verifiedResult->subjects() as $subject)
+                                        <tr>
+                                            <td class="td">{{ $subject['subject'] }}</td>
+                                            <td class="td text-center font-bold">{{ $subject['grade']->value }}</td>
+                                            <td class="td text-center">{{ $subject['point'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
-                        <span class="badge bg-primary-100 text-primary-800">
-                            Published {{ $this->verifiedResult->published_at?->format('d M Y') }}
-                        </span>
-                        <span class="badge bg-secondary-50 text-secondary-700">Verification Ref: {{ strtoupper($this->verified->foundation_number) }}</span>
-                    </div>
+                        <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+                            <span class="badge bg-primary-100 text-primary-800">
+                                Published {{ $this->verifiedResult->published_at?->format('d M Y') }}
+                            </span>
+                            <span class="badge bg-secondary-50 text-secondary-700">Verification Ref: {{ strtoupper($this->verified->foundation_number) }}</span>
+                        </div>
 
-                    <div class="mt-5">
-                        <a href="{{ route('results.download', $this->verifiedResult) }}"
-                           class="inline-flex items-center gap-2 rounded-lg bg-secondary-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-800 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                            Download Result
-                        </a>
+                        <div class="mt-5">
+                            <a href="{{ route('results.download', $this->verifiedResult) }}"
+                               class="inline-flex items-center gap-2 rounded-lg bg-secondary-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-800 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                                Download Result
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @else
-            <div class="card mt-6 flex flex-col items-center p-8 text-center">
-                <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-red-600"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+            @else
+                <div class="card mt-6 flex flex-col items-center p-8 text-center">
+                    <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6 text-red-600"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">No Result Found</h3>
+                    <p class="mt-1 max-w-sm text-sm text-slate-500">
+                        No result matches the Foundation Number and Verification Token entered. Please verify your details and try again.
+                    </p>
                 </div>
-                <h3 class="text-base font-bold text-slate-900">No Published Result Found</h3>
-                <p class="mt-1 max-w-sm text-sm text-slate-500">
-                    No published result matches the number entered for the current session. The record may not exist yet or the result
-                    has not been published. Please check the number and try again.
-                </p>
-            </div>
+            @endif
         @endif
     @endif
 </div>

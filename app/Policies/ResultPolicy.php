@@ -17,7 +17,7 @@ class ResultPolicy
         return $user->can('results.view');
     }
 
-    public function enter(User $user, Result $result = null): bool
+    public function enter(User $user, ?Result $result = null): bool
     {
         return $user->can('results.enter');
     }

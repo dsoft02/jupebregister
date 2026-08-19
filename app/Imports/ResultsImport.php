@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ResultsImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
+class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, WithValidation
 {
     public int $created = 0;
 
@@ -28,6 +28,7 @@ class ResultsImport implements ToCollection, WithHeadingRow, WithValidation, Ski
 
             if (blank($foundationNumber)) {
                 $this->skipped++;
+
                 continue;
             }
 
@@ -35,6 +36,7 @@ class ResultsImport implements ToCollection, WithHeadingRow, WithValidation, Ski
 
             if (! $student) {
                 $this->skipped++;
+
                 continue;
             }
 
@@ -44,6 +46,7 @@ class ResultsImport implements ToCollection, WithHeadingRow, WithValidation, Ski
 
             if (! ResultGrade::tryFrom($gradeOne) || ! ResultGrade::tryFrom($gradeTwo) || ! ResultGrade::tryFrom($gradeThree)) {
                 $this->skipped++;
+
                 continue;
             }
 

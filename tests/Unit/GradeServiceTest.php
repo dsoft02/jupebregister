@@ -14,7 +14,7 @@ class GradeServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new GradeService();
+        $this->service = new GradeService;
     }
 
     public function test_grade_point_scale_matches_jupeb_system(): void

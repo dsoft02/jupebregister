@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ResultsExport implements FromCollection, WithHeadings, ShouldAutoSize
+class ResultsExport implements FromCollection, ShouldAutoSize, WithHeadings
 {
     public function __construct(
         private readonly array $filters = [],

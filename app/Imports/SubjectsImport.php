@@ -4,13 +4,12 @@ namespace App\Imports;
 
 use App\Models\Subject;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class SubjectsImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
+class SubjectsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, WithValidation
 {
     public int $created = 0;
 
@@ -25,6 +24,7 @@ class SubjectsImport implements ToCollection, WithHeadingRow, WithValidation, Sk
 
             if (blank($name)) {
                 $this->skipped++;
+
                 continue;
             }
 
@@ -43,6 +43,7 @@ class SubjectsImport implements ToCollection, WithHeadingRow, WithValidation, Sk
                 } else {
                     $this->skipped++;
                 }
+
                 continue;
             }
 

@@ -93,11 +93,24 @@ class PublicPortalTest extends TestCase
 
         Livewire::test('pages.verify')
             ->set('query', $published->student->foundation_number)
+            ->set('token', $published->student->verification_token)
             ->call('verify')
             ->assertSet('verifiedStudentId', $published->student_id);
 
         Livewire::test('pages.verify')
             ->set('query', $draft->student->foundation_number)
+            ->set('token', $draft->student->verification_token)
+            ->call('verify')
+            ->assertSet('verifiedStudentId', null);
+    }
+
+    public function test_verify_rejects_wrong_token(): void
+    {
+        $published = Result::where('status', ResultStatus::Published)->first();
+
+        Livewire::test('pages.verify')
+            ->set('query', $published->student->foundation_number)
+            ->set('token', 'WRONG-TOKEN')
             ->call('verify')
             ->assertSet('verifiedStudentId', null);
     }
@@ -106,6 +119,7 @@ class PublicPortalTest extends TestCase
     {
         Livewire::test('pages.verify')
             ->set('query', 'DOES-NOT-EXIST')
+            ->set('token', 'ANY-TOKEN')
             ->call('verify')
             ->assertSet('verifiedStudentId', null);
     }

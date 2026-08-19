@@ -24,6 +24,7 @@ class Student extends Model
         'subject_two_id',
         'subject_three_id',
         'passport',
+        'verification_token',
         'status',
         'registered_at',
     ];
@@ -127,6 +128,25 @@ class Student extends Model
         }
 
         return $initials;
+    }
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Student $student) {
+            if (blank($student->verification_token)) {
+                $student->verification_token = strtoupper(bin2hex(random_bytes(16)));
+            }
+        });
+    }
+
+    public function generateVerificationToken(): string
+    {
+        $this->verification_token = strtoupper(bin2hex(random_bytes(16)));
+        $this->save();
+
+        return $this->verification_token;
     }
 
     public function scopeApproved($query)
