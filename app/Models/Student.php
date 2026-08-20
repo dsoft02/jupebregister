@@ -164,6 +164,9 @@ class Student extends Model
             $q->where('surname', 'like', "%{$term}%")
                 ->orWhere('first_name', 'like', "%{$term}%")
                 ->orWhere('middle_name', 'like', "%{$term}%")
+                ->orWhereRaw("CONCAT(surname, ' ', first_name) LIKE ?", ["%{$term}%"])
+                ->orWhereRaw("CONCAT(surname, ' ', first_name, ' ', middle_name) LIKE ?", ["%{$term}%"])
+                ->orWhereRaw("CONCAT(first_name, ' ', middle_name) LIKE ?", ["%{$term}%"])
                 ->orWhere('foundation_number', 'like', "%{$term}%")
                 ->orWhere('examination_number', 'like', "%{$term}%");
         });
