@@ -218,7 +218,7 @@ new #[Layout('layouts.app')] class extends Component {
                             </td>
                             <td class="td">
                                 <p class="font-semibold text-slate-800">{{ $result->student->fullName() }}</p>
-                                <p class="text-xs text-slate-400">{{ $result->student->foundation_number }}</p>
+                                <p class="text-xs text-slate-400">{{ $result->student->examination_number }}</p>
                             </td>
                             <td class="td hidden md:table-cell">
                                 <span class="badge bg-slate-100 text-slate-700">{{ $result->session }}</span>

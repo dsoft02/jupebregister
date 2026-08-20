@@ -24,15 +24,15 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
         $action = app(UpsertResult::class);
 
         foreach ($rows as $row) {
-            $foundationNumber = trim($row['foundation_number'] ?? '');
+            $examinationNumber = trim($row['examination_number'] ?? '');
 
-            if (blank($foundationNumber)) {
+            if (blank($examinationNumber)) {
                 $this->skipped++;
 
                 continue;
             }
 
-            $student = Student::where('foundation_number', $foundationNumber)->first();
+            $student = Student::where('examination_number', $examinationNumber)->first();
 
             if (! $student) {
                 $this->skipped++;
@@ -74,7 +74,7 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
     public function rules(): array
     {
         return [
-            'foundation_number' => ['required', 'string'],
+            'examination_number' => ['required', 'string'],
             'grade_one' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
             'grade_two' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
             'grade_three' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],

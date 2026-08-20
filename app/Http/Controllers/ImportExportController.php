@@ -104,9 +104,9 @@ class ImportExportController extends Controller
         return match ($type) {
             'results' => response()->streamDownload(function () {
                 $handle = fopen('php://output', 'w');
-                fputcsv($handle, ['foundation_number', 'grade_one', 'grade_two', 'grade_three']);
-                fputcsv($handle, ['FND001', 'A', 'B', 'C']);
-                fputcsv($handle, ['FND002', 'B', 'C', 'D']);
+                fputcsv($handle, ['examination_number', 'grade_one', 'grade_two', 'grade_three']);
+                fputcsv($handle, ['EXM001', 'A', 'B', 'C']);
+                fputcsv($handle, ['EXM002', 'B', 'C', 'D']);
                 fclose($handle);
             }, 'results-sample-template.csv', $headers),
 
