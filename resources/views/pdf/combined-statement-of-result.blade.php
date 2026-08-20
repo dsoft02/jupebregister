@@ -353,7 +353,7 @@
                 <th>SUBJECT 3</th>
                 <th>GRADE</th>
                 <th>POINT</th>
-                <th>GRADE POINT<br>(OUT OF {{ $result->bonus_point ? 16 : 15 }})</th>
+                <th>GRADE POINT<br>(OUT OF {{ $results->contains('result.bonus_point', true) ? 16 : 15 }})</th>
                 <th>REMARKS</th>
             </tr>
 
