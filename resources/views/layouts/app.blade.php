@@ -36,8 +36,12 @@
                         Dashboard
                     </x-admin.nav-link>
 
-                    <x-admin.nav-link href="{{ route('admin.students.index') }}" :active="request()->routeIs('admin.students.*')" icon="users">
+                    <x-admin.nav-link href="{{ route('admin.students.index') }}" :active="request()->routeIs('admin.students.*') && ! request()->routeIs('admin.students.trash')" icon="users">
                         Students
+                    </x-admin.nav-link>
+
+                    <x-admin.nav-link href="{{ route('admin.students.trash') }}" :active="request()->routeIs('admin.students.trash')" icon="trash">
+                        Student Trash
                     </x-admin.nav-link>
 
                     <x-admin.nav-link href="{{ route('admin.subjects.index') }}" :active="request()->routeIs('admin.subjects.*')" icon="layers">

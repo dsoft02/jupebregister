@@ -55,6 +55,9 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
         Volt::route('students/create', 'pages.admin.students.create')
             ->name('students.create');
 
+        Volt::route('students/trash', 'pages.admin.students.trash')
+            ->name('students.trash');
+
         Volt::route('students/{student}', 'pages.admin.students.show')
             ->name('students.show');
 
