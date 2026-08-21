@@ -3,7 +3,6 @@
 use App\Actions\Students\CreateStudent;
 use App\Enums\StudentStatus;
 use App\Models\Subject;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -40,7 +39,7 @@ new #[Layout('layouts.app')] class extends Component {
             'middle_name' => ['nullable', 'string', 'max:255'],
             'foundation_number' => ['required', 'string', 'max:50', 'unique:students,foundation_number'],
             'examination_number' => ['required', 'string', 'max:50', 'unique:students,examination_number'],
-            'subject_one_id' => ['required', 'exists:subjects,id', Rule::unique('subjects', 'id')->ignore($this->subject_two_id)->whereNull('deleted_at'), Rule::unique('subjects', 'id')->ignore($this->subject_three_id)->whereNull('deleted_at')],
+            'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id', 'different:subject_one_id'],
             'subject_three_id' => ['required', 'exists:subjects,id', 'different:subject_one_id', 'different:subject_two_id'],
             'passport' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
