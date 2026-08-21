@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Actions\Results\UpsertResult;
 use App\Enums\ResultGrade;
 use App\Models\Student;
+use App\Services\SettingsService;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -73,8 +74,10 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
 
     public function rules(): array
     {
+        $examLength = app(SettingsService::class)->examinationNumberLength();
+
         return [
-            'examination_number' => ['required', 'string'],
+            'examination_number' => ['required', 'string', 'size:'.$examLength],
             'grade_one' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
             'grade_two' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
             'grade_three' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],

@@ -77,8 +77,8 @@ class AdminWorkflowTest extends TestCase
         $student = Student::create([
             'surname' => 'Test',
             'first_name' => 'Student',
-            'foundation_number' => 'PAAU/FS/TEST/001',
-            'examination_number' => 'PAAU/EXM/TEST/001',
+            'foundation_number' => 'PAAU/FS/TST/01',
+            'examination_number' => 'EXMTST001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],

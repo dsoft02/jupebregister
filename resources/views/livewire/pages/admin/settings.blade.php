@@ -34,6 +34,10 @@ new #[Layout('layouts.app')] class extends Component {
 
     public bool $show_signature = true;
 
+    public ?string $foundation_number_length = null;
+
+    public ?string $examination_number_length = null;
+
     public function mount(SettingsService $settings): void
     {
         $this->director_name = $settings->get('director_name');
@@ -43,6 +47,8 @@ new #[Layout('layouts.app')] class extends Component {
         $this->verification_enabled = $settings->get('verification_enabled') === '1';
         $this->show_stamp = $settings->get('show_stamp') !== '0';
         $this->show_signature = $settings->get('show_signature') !== '0';
+        $this->foundation_number_length = (string) $settings->foundationNumberLength();
+        $this->examination_number_length = (string) $settings->examinationNumberLength();
     }
 
     public function rules(): array
@@ -57,6 +63,8 @@ new #[Layout('layouts.app')] class extends Component {
             'issue_date' => ['nullable', 'date'],
             'current_session' => ['nullable', 'string', 'max:20'],
             'result_year' => ['nullable', 'string', 'max:10'],
+            'foundation_number_length' => ['required', 'integer', 'min:1', 'max:50'],
+            'examination_number_length' => ['required', 'integer', 'min:1', 'max:50'],
         ];
     }
 
@@ -69,6 +77,8 @@ new #[Layout('layouts.app')] class extends Component {
             'issue_date',
             'current_session',
             'result_year',
+            'foundation_number_length',
+            'examination_number_length',
         ]);
 
         $textValues['verification_enabled'] = $this->verification_enabled ? '1' : '0';
@@ -195,6 +205,29 @@ new #[Layout('layouts.app')] class extends Component {
                     <input type="text" id="result_year" wire:model="result_year" class="input" placeholder="2025">
                     <p class="mt-1 text-xs text-slate-400">Year shown on statement of result PDFs (e.g. 2025). Defaults to 2025 if blank.</p>
                     <x-input-error :messages="$errors->get('result_year')" class="mt-1" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Registration Numbers</h3>
+                <p class="mt-1 text-xs text-slate-400">
+                    Required character length for student numbers during registration, editing and imports.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 gap-5 p-6 sm:grid-cols-2">
+                <div>
+                    <label for="foundation_number_length" class="label">Foundation Number Length</label>
+                    <input type="number" min="1" max="50" id="foundation_number_length" wire:model="foundation_number_length" class="input" placeholder="14">
+                    <p class="mt-1 text-xs text-slate-400">Number of characters required for a Foundation Number (e.g. 14).</p>
+                    <x-input-error :messages="$errors->get('foundation_number_length')" class="mt-1" />
+                </div>
+                <div>
+                    <label for="examination_number_length" class="label">Examination Number Length</label>
+                    <input type="number" min="1" max="50" id="examination_number_length" wire:model="examination_number_length" class="input" placeholder="9">
+                    <p class="mt-1 text-xs text-slate-400">Number of characters required for an Examination Number (e.g. 9).</p>
+                    <x-input-error :messages="$errors->get('examination_number_length')" class="mt-1" />
                 </div>
             </div>
         </div>

@@ -36,15 +36,15 @@ class PublicPortalTest extends TestCase
             'surname' => 'Johnson',
             'first_name' => 'Grace',
             'middle_name' => 'Ade',
-            'foundation_number' => 'PAAU/FS/PUB/001',
-            'examination_number' => 'PAAU-EXM-PUB-001',
+            'foundation_number' => 'PAAU/FS/PUB/01',
+            'examination_number' => 'EXMPUB001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
             'passport' => $this->fakePassport(),
         ])->assertRedirect();
 
-        $student = Student::where('foundation_number', 'PAAU/FS/PUB/001')->first();
+        $student = Student::where('foundation_number', 'PAAU/FS/PUB/01')->first();
 
         $this->assertNotNull($student);
         $this->assertSame(StudentStatus::Pending, $student->status);
@@ -62,7 +62,7 @@ class PublicPortalTest extends TestCase
             'surname' => 'Duplicate',
             'first_name' => 'Student',
             'foundation_number' => $existing->foundation_number,
-            'examination_number' => 'PAAU-EXM-DUP-001',
+            'examination_number' => 'EXMDUP001',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],
@@ -77,8 +77,8 @@ class PublicPortalTest extends TestCase
         $this->post(route('register.store'), [
             'surname' => 'Bad',
             'first_name' => 'Upload',
-            'foundation_number' => 'PAAU/FS/PUB/003',
-            'examination_number' => 'PAAU-EXM-PUB-003',
+            'foundation_number' => 'PAAU/FS/PUB/03',
+            'examination_number' => 'EXMPUB003',
             'subject_one_id' => $subjects[0],
             'subject_two_id' => $subjects[1],
             'subject_three_id' => $subjects[2],

@@ -76,6 +76,29 @@ class SettingsService
     }
 
     /**
+     * Required length of a Foundation Number, configurable in settings.
+     */
+    public function foundationNumberLength(): int
+    {
+        return $this->positiveInt('foundation_number_length', 14);
+    }
+
+    /**
+     * Required length of an Examination Number, configurable in settings.
+     */
+    public function examinationNumberLength(): int
+    {
+        return $this->positiveInt('examination_number_length', 9);
+    }
+
+    private function positiveInt(string $key, int $default): int
+    {
+        $value = $this->get($key);
+
+        return is_numeric($value) && (int) $value > 0 ? (int) $value : $default;
+    }
+
+    /**
      * Persist one or many settings and flush the cache.
      */
     public function set(array $values): void

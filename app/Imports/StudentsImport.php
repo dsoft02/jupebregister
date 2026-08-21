@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Actions\Students\CreateStudent;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Services\SettingsService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -87,10 +88,12 @@ class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wi
 
     public function rules(): array
     {
+        $foundationLength = app(SettingsService::class)->foundationNumberLength();
+
         return [
             'surname' => ['required', 'string'],
             'first_name' => ['required', 'string'],
-            'foundation_number' => ['required', 'string'],
+            'foundation_number' => ['required', 'string', 'size:'.$foundationLength],
             'subject_one' => ['required', 'string'],
             'subject_two' => ['required', 'string'],
             'subject_three' => ['required', 'string'],

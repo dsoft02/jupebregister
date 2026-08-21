@@ -16,16 +16,16 @@ class DemoDataSeeder extends Seeder
         $subjects = Subject::all()->keyBy('name');
 
         $students = [
-            ['surname' => 'Adeyemi', 'first_name' => 'Oluwaseun', 'middle_name' => 'Temitope', 'foundation_number' => 'PAAU/FS/2025/001', 'examination_number' => 'PAAU-EXM-0001'],
-            ['surname' => 'Okonkwo', 'first_name' => 'Chiamaka', 'middle_name' => 'Blessing', 'foundation_number' => 'PAAU/FS/2025/002', 'examination_number' => 'PAAU-EXM-0002'],
-            ['surname' => 'Bello', 'first_name' => 'Abdulrahman', 'middle_name' => 'Sodiq', 'foundation_number' => 'PAAU/FS/2025/003', 'examination_number' => 'PAAU-EXM-0003'],
-            ['surname' => 'Eze', 'first_name' => 'Ngozi', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/004', 'examination_number' => 'PAAU-EXM-0004'],
-            ['surname' => 'Okafor', 'first_name' => 'Ifeanyi', 'middle_name' => 'David', 'foundation_number' => 'PAAU/FS/2025/005', 'examination_number' => 'PAAU-EXM-0005'],
-            ['surname' => 'Mohammed', 'first_name' => 'Aisha', 'middle_name' => 'Fatima', 'foundation_number' => 'PAAU/FS/2025/006', 'examination_number' => 'PAAU-EXM-0006'],
-            ['surname' => 'Adeleke', 'first_name' => 'Kemi', 'middle_name' => 'Olajumoke', 'foundation_number' => 'PAAU/FS/2025/007', 'examination_number' => 'PAAU-EXM-0007'],
-            ['surname' => 'Ibrahim', 'first_name' => 'Musa', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/2025/008', 'examination_number' => 'PAAU-EXM-0008'],
-            ['surname' => 'Nwachukwu', 'first_name' => 'Adaeze', 'middle_name' => 'Chinenye', 'foundation_number' => 'PAAU/FS/2025/009', 'examination_number' => 'PAAU-EXM-0009'],
-            ['surname' => 'Yusuf', 'first_name' => 'Habiba', 'middle_name' => 'Amina', 'foundation_number' => 'PAAU/FS/2025/010', 'examination_number' => 'PAAU-EXM-0010'],
+            ['surname' => 'Adeyemi', 'first_name' => 'Oluwaseun', 'middle_name' => 'Temitope', 'foundation_number' => 'PAAU/FS/25/001', 'examination_number' => 'EXM000001'],
+            ['surname' => 'Okonkwo', 'first_name' => 'Chiamaka', 'middle_name' => 'Blessing', 'foundation_number' => 'PAAU/FS/25/002', 'examination_number' => 'EXM000002'],
+            ['surname' => 'Bello', 'first_name' => 'Abdulrahman', 'middle_name' => 'Sodiq', 'foundation_number' => 'PAAU/FS/25/003', 'examination_number' => 'EXM000003'],
+            ['surname' => 'Eze', 'first_name' => 'Ngozi', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/25/004', 'examination_number' => 'EXM000004'],
+            ['surname' => 'Okafor', 'first_name' => 'Ifeanyi', 'middle_name' => 'David', 'foundation_number' => 'PAAU/FS/25/005', 'examination_number' => 'EXM000005'],
+            ['surname' => 'Mohammed', 'first_name' => 'Aisha', 'middle_name' => 'Fatima', 'foundation_number' => 'PAAU/FS/25/006', 'examination_number' => 'EXM000006'],
+            ['surname' => 'Adeleke', 'first_name' => 'Kemi', 'middle_name' => 'Olajumoke', 'foundation_number' => 'PAAU/FS/25/007', 'examination_number' => 'EXM000007'],
+            ['surname' => 'Ibrahim', 'first_name' => 'Musa', 'middle_name' => null, 'foundation_number' => 'PAAU/FS/25/008', 'examination_number' => 'EXM000008'],
+            ['surname' => 'Nwachukwu', 'first_name' => 'Adaeze', 'middle_name' => 'Chinenye', 'foundation_number' => 'PAAU/FS/25/009', 'examination_number' => 'EXM000009'],
+            ['surname' => 'Yusuf', 'first_name' => 'Habiba', 'middle_name' => 'Amina', 'foundation_number' => 'PAAU/FS/25/010', 'examination_number' => 'EXM000010'],
         ];
 
         $subjectSets = [

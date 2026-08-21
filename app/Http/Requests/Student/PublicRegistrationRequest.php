@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Student;
 
+use App\Services\SettingsService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,14 +13,24 @@ class PublicRegistrationRequest extends FormRequest
         return true;
     }
 
+    private function foundationNumberLength(): int
+    {
+        return app(SettingsService::class)->foundationNumberLength();
+    }
+
+    private function examinationNumberLength(): int
+    {
+        return app(SettingsService::class)->examinationNumberLength();
+    }
+
     public function rules(): array
     {
         return [
             'surname' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
-            'foundation_number' => ['required', 'string', 'max:50', Rule::unique('students', 'foundation_number')],
-            'examination_number' => ['required', 'string', 'max:50', Rule::unique('students', 'examination_number')],
+            'foundation_number' => ['required', 'string', 'size:'.$this->foundationNumberLength(), Rule::unique('students', 'foundation_number')],
+            'examination_number' => ['required', 'string', 'size:'.$this->examinationNumberLength(), Rule::unique('students', 'examination_number')],
             'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id'],
             'subject_three_id' => ['required', 'exists:subjects,id'],
@@ -46,7 +57,9 @@ class PublicRegistrationRequest extends FormRequest
     {
         return [
             'foundation_number.unique' => 'This Foundation Number has already been registered.',
+            'foundation_number.size' => 'The Foundation Number must be exactly '.$this->foundationNumberLength().' characters.',
             'examination_number.unique' => 'This Examination Number has already been registered.',
+            'examination_number.size' => 'The Examination Number must be exactly '.$this->examinationNumberLength().' characters.',
             'passport.required' => 'Please upload a passport photo.',
             'passport.image' => 'The passport photo must be an image.',
             'passport.max' => 'The passport photo may not be larger than 500KB.',

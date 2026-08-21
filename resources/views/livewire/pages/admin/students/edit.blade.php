@@ -4,7 +4,7 @@ use App\Actions\Students\UpdateStudent;
 use App\Enums\StudentStatus;
 use App\Models\Student;
 use App\Models\Subject;
-use Illuminate\Validation\Rule;
+use App\Services\SettingsService;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -51,12 +51,14 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function rules(): array
     {
+        $settings = app(SettingsService::class);
+
         return [
             'surname' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
-            'foundation_number' => ['required', 'string', 'max:50', 'unique:students,foundation_number,'.$this->student->id],
-            'examination_number' => ['required', 'string', 'max:50', 'unique:students,examination_number,'.$this->student->id],
+            'foundation_number' => ['required', 'string', 'size:'.$settings->foundationNumberLength(), 'unique:students,foundation_number,'.$this->student->id],
+            'examination_number' => ['required', 'string', 'size:'.$settings->examinationNumberLength(), 'unique:students,examination_number,'.$this->student->id],
             'subject_one_id' => ['required', 'exists:subjects,id'],
             'subject_two_id' => ['required', 'exists:subjects,id', 'different:subject_one_id'],
             'subject_three_id' => ['required', 'exists:subjects,id', 'different:subject_one_id', 'different:subject_two_id'],

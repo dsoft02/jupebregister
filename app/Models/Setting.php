@@ -40,6 +40,8 @@ class Setting extends Model
             'verification_enabled',
             'show_stamp',
             'show_signature',
+            'foundation_number_length',
+            'examination_number_length',
         ];
     }
 
