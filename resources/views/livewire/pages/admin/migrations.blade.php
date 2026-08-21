@@ -25,55 +25,54 @@ new #[Layout('layouts.app')] class extends Component {
         $this->output = '';
         $this->ranSuccess = false;
 
-        $output = '';
-        Artisan::call('migrate:status', [], $output);
-        $raw = $output;
+        $migrator = app('migrator');
+
+        $files = $migrator->getMigrationFiles(database_path('migrations'));
+
+        $ranBatches = collect($migrator->getRepository()->getMigrationBatches());
 
         $this->pending = [];
         $this->ran = [];
 
-        foreach (explode("\n", $raw) as $line) {
-            $line = trim($line);
-            if (str_starts_with($line, '|') && preg_match('/\|\s*(\d+)\s*\|(.+)\|/', $line, $m)) {
-                $batch = $m[1];
-                $name = trim($m[2]);
-
-                if (str_contains($line, 'Yes')) {
-                    $this->ran[] = ['batch' => $batch, 'name' => $name];
-                } else {
-                    $this->pending[] = ['batch' => '-', 'name' => $name];
-                }
+        foreach ($files as $name => $path) {
+            if (($batch = $ranBatches->get($name)) !== null) {
+                $this->ran[] = ['batch' => (int) $batch, 'name' => $name];
+            } else {
+                $this->pending[] = ['batch' => null, 'name' => $name];
             }
         }
+
+        usort($this->ran, fn ($a, $b) => [$b['batch'], $b['name']] <=> [$a['batch'], $a['name']]);
 
         $this->hasPending = count($this->pending) > 0;
     }
 
     public function runMigrations(): void
     {
-        $this->output = '';
-        $this->ranSuccess = false;
-
-        Artisan::call('migrate', ['--force' => true], $output);
-        $this->output = $output;
-        $this->ranSuccess = true;
+        Artisan::call('migrate', ['--force' => true]);
+        $result = trim(Artisan::output());
 
         $this->refreshStatus();
 
-        if (! $this->hasPending) {
-            $this->output = $output ?: 'All migrations have been run successfully.';
-        }
+        $this->ranSuccess = true;
+        $this->output = $result !== ''
+            ? $result
+            : 'All migrations have been run successfully.';
 
         $this->dispatch('migration-complete');
     }
 
     public function runFresh(): void
     {
-        Artisan::call('migrate:fresh', ['--force' => true], $output);
-        $this->output = $output;
-        $this->ranSuccess = true;
+        Artisan::call('migrate:fresh', ['--force' => true]);
+        $result = trim(Artisan::output());
 
         $this->refreshStatus();
+
+        $this->ranSuccess = true;
+        $this->output = $result !== ''
+            ? $result
+            : 'Database has been refreshed successfully.';
 
         $this->dispatch('migration-complete');
     }
@@ -129,7 +128,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0 text-amber-600">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
                                 </svg>
-                                <span class="text-sm font-medium text-slate-700">{{ $migration['name'] }}</span>
+                                <span class="min-w-0 flex-1 break-all text-sm font-medium text-slate-700">{{ $migration['name'] }}</span>
                             </li>
                         @endforeach
                     </ul>
@@ -158,8 +157,8 @@ new #[Layout('layouts.app')] class extends Component {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0 text-emerald-500">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                                 </svg>
-                                <span class="text-sm text-slate-600">{{ $migration['name'] }}</span>
-                                <span class="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">Batch {{ $migration['batch'] }}</span>
+                                <span class="min-w-0 flex-1 break-all text-sm text-slate-600" title="{{ $migration['name'] }}">{{ $migration['name'] }}</span>
+                                <span class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">Batch {{ $migration['batch'] }}</span>
                             </li>
                         @endforeach
                     </ul>
