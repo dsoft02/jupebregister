@@ -68,6 +68,10 @@
                         Settings
                     </x-admin.nav-link>
 
+                    <x-admin.nav-link href="{{ route('admin.profile') }}" :active="request()->routeIs('admin.profile')" icon="user-circle">
+                        My Profile
+                    </x-admin.nav-link>
+
                     @can('users.manage')
                         <x-admin.nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')" icon="user-circle">
                             Users
