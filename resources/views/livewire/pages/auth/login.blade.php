@@ -16,6 +16,8 @@ new #[Layout('layouts.guest')] class extends Component
 
         if ($user && $user->hasAnyRole(['super_admin', 'programme_officer', 'director'])) {
             $this->redirect(route('admin.dashboard'), navigate: true);
+        } elseif ($user && $user->isStudent()) {
+            $this->redirect(route('student.dashboard'), navigate: true);
         }
     }
 
@@ -30,7 +32,12 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+        $user = Auth::user();
+        $default = $user->hasAnyRole(['super_admin', 'programme_officer', 'director'])
+            ? route('admin.dashboard', absolute: false)
+            : route('student.dashboard', absolute: false);
+
+        $this->redirectIntended(default: $default, navigate: true);
     }
 }; ?>
 
@@ -41,9 +48,10 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="space-y-2">
             <label for="email" class="flex items-center gap-2 text-sm font-medium text-slate-700">
                 <i data-lucide="user-round" class="h-4 w-4 text-slate-400"></i>
-                Email address
+                Email or Foundation Number
             </label>
-            <x-text-input wire:model="form.email" id="email" type="email" name="email" placeholder="admin@paau.edu.ng" required autofocus autocomplete="username" />
+            <x-text-input wire:model="form.email" id="email" type="text" name="email" placeholder="you@paau.edu.ng or your Foundation Number" required autofocus autocomplete="username" />
+            <p class="text-xs text-slate-400">Students: sign in with the Foundation Number used during registration.</p>
             <x-input-error :messages="$errors->get('form.email')" />
         </div>
 
@@ -60,7 +68,7 @@ new #[Layout('layouts.guest')] class extends Component
             type="submit"
             class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary-700 px-5 py-2.5 text-base font-semibold text-white shadow-soft transition-all duration-200 hover:bg-primary-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         >
-            Sign in to Dashboard
+            Sign in
         </button>
     </form>
 </div>

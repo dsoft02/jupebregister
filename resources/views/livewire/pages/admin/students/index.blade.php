@@ -251,7 +251,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 class="rounded border-slate-300 text-primary-700 focus:ring-primary-500">
                         </th>
                         <th class="th">Student</th>
-                        <th class="th">Foundation No.</th>
+                        <th class="th">Examination No.</th>
                         <th class="th hidden lg:table-cell">Subjects</th>
                         <th class="th">Status</th>
                         <th class="th text-right">Actions</th>
@@ -279,7 +279,7 @@ new #[Layout('layouts.app')] class extends Component {
                                     </div>
                                 </div>
                             </td>
-                            <td class="td font-mono text-xs">{{ $student->foundation_number }}</td>
+                            <td class="td font-mono text-xs">{{ $student->examination_number }}</td>
                             <td class="td hidden lg:table-cell">{{ implode(' / ', $student->chosenSubjectNames()) }}</td>
                             <td class="td">
                                 <x-admin.status-badge :status="$student->status->value">{{ $student->status->label() }}</x-admin.status-badge>

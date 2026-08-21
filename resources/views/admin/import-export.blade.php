@@ -5,10 +5,18 @@
             eyebrow="Data Management"
             description="Bulk import or export students and results from spreadsheets." />
 
-        @if (session('status'))
-            <div class="rounded-2xl border border-primary-200 bg-primary-50 p-4 text-sm font-medium text-primary-800">
-                {{ session('status') }}
-            </div>
+        @php
+            $flash = session('status') ? ['type' => 'success', 'message' => session('status')] : null;
+            $errorBag = $errors ?? new \Illuminate\Support\ViewErrorBag;
+            if (! $flash && $errorBag->any()) {
+                $flash = ['type' => 'error', 'message' => $errorBag->first()];
+            }
+        @endphp
+
+        @if ($flash)
+            <script>
+                window.__pageFlash = @js($flash);
+            </script>
         @endif
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -23,18 +31,11 @@
                 <form action="{{ route('admin.import.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5 p-6">
                     @csrf
 
-                    <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                        <p class="mt-3 text-sm font-medium text-slate-700">Drag &amp; drop your spreadsheet here, or</p>
-                        <label class="btn-secondary mt-3 cursor-pointer">
-                            Choose File
-                            <input type="file" name="file" accept=".csv,.xlsx,.xls,.txt" class="sr-only">
-                        </label>
-                        <p class="mt-2 text-xs text-slate-400">CSV, XLSX or XLS &middot; maximum 5MB</p>
-                        @error('file')
-                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-admin.import-dropzone name="students_file" />
+
+                    @error('students_file')
+                        <p class="-mt-3 text-sm font-medium text-red-600">{{ $message }}</p>
+                    @enderror
 
                     <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 p-4 text-sm">
                         <input type="checkbox" name="update_existing" value="1"
@@ -48,7 +49,7 @@
                     </label>
 
                     <div class="flex items-center justify-between">
-                        <a href="{{ route('admin.export', 'csv') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
+                        <a href="{{ route('admin.sample-template', 'students') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
                             Download sample template &rarr;
                         </a>
                         <button type="submit" class="btn-primary">Import Students</button>
@@ -123,18 +124,11 @@
                 <form action="{{ route('admin.results.import') }}" method="POST" enctype="multipart/form-data" class="space-y-5 p-6">
                     @csrf
 
-                    <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                        <p class="mt-3 text-sm font-medium text-slate-700">Drag & drop your spreadsheet here, or</p>
-                        <label class="btn-secondary mt-3 cursor-pointer">
-                            Choose File
-                            <input type="file" name="file" accept=".csv,.xlsx,.xls" class="sr-only">
-                        </label>
-                        <p class="mt-2 text-xs text-slate-400">CSV, XLSX or XLS &middot; maximum 5MB</p>
-                        @error('file')
-                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-admin.import-dropzone name="results_file" />
+
+                    @error('results_file')
+                        <p class="-mt-3 text-sm font-medium text-red-600">{{ $message }}</p>
+                    @enderror
 
                     <div class="flex items-center justify-between">
                         <a href="{{ route('admin.sample-template', 'results') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">
@@ -147,7 +141,7 @@
                 <div class="border-t border-slate-100 px-6 py-4">
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Required Columns</p>
                     <div class="mt-2 flex flex-wrap gap-2">
-                        @foreach (['foundation_number', 'grade_one', 'grade_two', 'grade_three'] as $column)
+                        @foreach (['examination_number', 'grade_one', 'grade_two', 'grade_three'] as $column)
                             <span class="rounded-lg bg-slate-100 px-2 py-1 font-mono text-[11px] text-slate-600">{{ $column }}</span>
                         @endforeach
                     </div>
@@ -211,18 +205,11 @@
                 <form action="{{ route('admin.subjects.import') }}" method="POST" enctype="multipart/form-data" class="space-y-5 p-6">
                     @csrf
 
-                    <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                        <p class="mt-3 text-sm font-medium text-slate-700">Drag & drop your spreadsheet here, or</p>
-                        <label class="btn-secondary mt-3 cursor-pointer">
-                            Choose File
-                            <input type="file" name="file" accept=".csv,.xlsx,.xls" class="sr-only">
-                        </label>
-                        <p class="mt-2 text-xs text-slate-400">CSV, XLSX or XLS &middot; maximum 5MB</p>
-                        @error('file')
-                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-admin.import-dropzone name="subjects_file" />
+
+                    @error('subjects_file')
+                        <p class="-mt-3 text-sm font-medium text-red-600">{{ $message }}</p>
+                    @enderror
 
                     <div class="flex items-center justify-between">
                         <a href="{{ route('admin.sample-template', 'subjects') }}" class="text-sm font-semibold text-secondary-700 hover:text-secondary-800">

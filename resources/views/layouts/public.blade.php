@@ -47,6 +47,22 @@
                                 Dashboard
                             </a>
                         @endhasanyrole
+                        @if (auth()->user()->isStudent())
+                            <a
+                                href="{{ route('student.dashboard') }}"
+                                class="rounded-full bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-soft transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lift"
+                            >
+                                My Dashboard
+                            </a>
+                        @endif
+                    @else
+                        <a
+                            href="{{ route('login') }}"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50"
+                        >
+                            <i data-lucide="log-in" class="h-4 w-4"></i>
+                            Sign In
+                        </a>
                     @endauth
                     <a
                         href="{{ route('register') }}"

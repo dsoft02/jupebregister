@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImportExportController extends Controller
 {
+    private const SPREADSHEET_RULE = ['required', 'file', 'extensions:csv,xlsx,xls', 'max:5120'];
+
     public function create(): \Illuminate\View\View
     {
         return view('admin.import-export', [
@@ -31,7 +33,9 @@ class ImportExportController extends Controller
 
         $importer = new StudentsImport($request->boolean('update_existing'));
 
-        Excel::import($importer, $request->file('file'));
+        if ($error = $this->runImport(fn () => Excel::import($importer, $request->file('students_file')))) {
+            return back()->withErrors(['students_file' => $error]);
+        }
 
         $log->run(
             action: 'students.imported',
@@ -40,7 +44,10 @@ class ImportExportController extends Controller
             properties: ['created' => $importer->created, 'updated' => $importer->updated, 'skipped' => $importer->skipped],
         );
 
-        return back()->with('status', "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped.");
+        return back()->with(
+            'status',
+            "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped."
+        );
     }
 
     public function export(Request $request, string $format): BinaryFileResponse
@@ -63,12 +70,17 @@ class ImportExportController extends Controller
         $this->authorize('enter', \App\Models\Result::class);
 
         $request->validate([
-            'file' => ['required', 'file', 'mimes:csv,xlsx,xls', 'max:5120'],
-        ]);
+            'results_file' => self::SPREADSHEET_RULE,
+        ], [
+            'results_file.required' => 'Please choose a spreadsheet to import.',
+            'results_file.extensions' => 'The file must be a CSV or Excel (xlsx/xls) document.',
+        ], ['results_file' => 'file']);
 
         $importer = new ResultsImport;
 
-        Excel::import($importer, $request->file('file'));
+        if ($error = $this->runImport(fn () => Excel::import($importer, $request->file('results_file')))) {
+            return back()->withErrors(['results_file' => $error]);
+        }
 
         $log->run(
             action: 'results.imported',
@@ -77,7 +89,10 @@ class ImportExportController extends Controller
             properties: ['created' => $importer->created, 'updated' => $importer->updated, 'skipped' => $importer->skipped],
         );
 
-        return back()->with('status', "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped.");
+        return back()->with(
+            'status',
+            "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped."
+        );
     }
 
     public function exportResults(Request $request, string $format): BinaryFileResponse
@@ -102,11 +117,23 @@ class ImportExportController extends Controller
         $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment'];
 
         return match ($type) {
+            'students' => response()->streamDownload(function () {
+                $handle = fopen('php://output', 'w');
+                fputcsv($handle, [
+                    'surname', 'first_name', 'middle_name', 'foundation_number',
+                    'examination_number', 'subject_one', 'subject_two', 'subject_three',
+                ]);
+                fputcsv($handle, [
+                    'Doe', 'John', '', 'PAAU/FS/2025/001', 'PAAU-EXM-0001',
+                    'Biology', 'Chemistry', 'Physics',
+                ]);
+                fclose($handle);
+            }, 'students-sample-template.csv', $headers),
+
             'results' => response()->streamDownload(function () {
                 $handle = fopen('php://output', 'w');
                 fputcsv($handle, ['examination_number', 'grade_one', 'grade_two', 'grade_three']);
-                fputcsv($handle, ['EXM001', 'A', 'B', 'C']);
-                fputcsv($handle, ['EXM002', 'B', 'C', 'D']);
+                fputcsv($handle, ['PAAU-EXM-0001', 'A', 'B', 'C']);
                 fclose($handle);
             }, 'results-sample-template.csv', $headers),
 
@@ -114,8 +141,6 @@ class ImportExportController extends Controller
                 $handle = fopen('php://output', 'w');
                 fputcsv($handle, ['name', 'is_active']);
                 fputcsv($handle, ['Mathematics', '1']);
-                fputcsv($handle, ['English Language', '1']);
-                fputcsv($handle, ['Physics', '1']);
                 fclose($handle);
             }, 'subjects-sample-template.csv', $headers),
 
@@ -128,12 +153,17 @@ class ImportExportController extends Controller
         $this->authorize('import', \App\Models\Student::class);
 
         $request->validate([
-            'file' => ['required', 'file', 'mimes:csv,xlsx,xls', 'max:5120'],
-        ]);
+            'subjects_file' => self::SPREADSHEET_RULE,
+        ], [
+            'subjects_file.required' => 'Please choose a spreadsheet to import.',
+            'subjects_file.extensions' => 'The file must be a CSV or Excel (xlsx/xls) document.',
+        ], ['subjects_file' => 'file']);
 
         $importer = new SubjectsImport;
 
-        Excel::import($importer, $request->file('file'));
+        if ($error = $this->runImport(fn () => Excel::import($importer, $request->file('subjects_file')))) {
+            return back()->withErrors(['subjects_file' => $error]);
+        }
 
         $log->run(
             action: 'subjects.imported',
@@ -142,6 +172,28 @@ class ImportExportController extends Controller
             properties: ['created' => $importer->created, 'updated' => $importer->updated, 'skipped' => $importer->skipped],
         );
 
-        return back()->with('status', "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped.");
+        return back()->with(
+            'status',
+            "Import complete: {$importer->created} created, {$importer->updated} updated, {$importer->skipped} skipped."
+        );
+    }
+
+    /**
+     * Run an import and convert any failure into a user-friendly message.
+     *
+     * @param  callable(): void  $callback
+     * @return string|null Error message, or null when the import succeeded.
+     */
+    private function runImport(callable $callback): ?string
+    {
+        try {
+            $callback();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return 'The spreadsheet could not be processed. Please use the sample template as a guide and try again.';
+        }
+
+        return null;
     }
 }

@@ -5,25 +5,15 @@ namespace App\Imports;
 use App\Actions\Students\CreateStudent;
 use App\Models\Student;
 use App\Models\Subject;
-use App\Services\SettingsService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 
-class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, WithValidation
+class StudentsImport implements SkipsEmptyRows, ToCollection, WithCustomCsvSettings, WithHeadingRow
 {
-    private const REQUIRED_COLUMNS = [
-        'surname',
-        'first_name',
-        'foundation_number',
-        'subject_one',
-        'subject_two',
-        'subject_three',
-    ];
-
     public function __construct(
         private readonly bool $updateExisting = false,
     ) {}
@@ -39,6 +29,20 @@ class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wi
         $action = app(CreateStudent::class);
 
         foreach ($rows as $row) {
+            if (blank($row['surname'] ?? null) || blank($row['first_name'] ?? null)) {
+                $this->skipped++;
+
+                continue;
+            }
+
+            $foundationNumber = $this->normalize($row['foundation_number'] ?? null);
+
+            if (blank($foundationNumber)) {
+                $this->skipped++;
+
+                continue;
+            }
+
             $subjectOne = $this->resolveSubject($row['subject_one'] ?? null);
             $subjectTwo = $this->resolveSubject($row['subject_two'] ?? null);
             $subjectThree = $this->resolveSubject($row['subject_three'] ?? null);
@@ -50,11 +54,15 @@ class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wi
             }
 
             $data = [
-                'surname' => Str::title($row['surname']),
-                'first_name' => Str::title($row['first_name']),
-                'middle_name' => isset($row['middle_name']) ? Str::title($row['middle_name']) : null,
-                'foundation_number' => trim($row['foundation_number']),
-                'examination_number' => isset($row['examination_number']) ? trim($row['examination_number']) : null,
+                'surname' => Str::title($this->normalize($row['surname'])),
+                'first_name' => Str::title($this->normalize($row['first_name'])),
+                'middle_name' => filled($row['middle_name'] ?? null)
+                    ? Str::title($this->normalize($row['middle_name']))
+                    : null,
+                'foundation_number' => $foundationNumber,
+                'examination_number' => filled($row['examination_number'] ?? null)
+                    ? $this->normalize($row['examination_number'])
+                    : null,
                 'subject_one_id' => $subjectOne->id,
                 'subject_two_id' => $subjectTwo->id,
                 'subject_three_id' => $subjectThree->id,
@@ -86,29 +94,25 @@ class StudentsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wi
         }
     }
 
-    public function rules(): array
-    {
-        $foundationLength = app(SettingsService::class)->foundationNumberLength();
-
-        return [
-            'surname' => ['required', 'string'],
-            'first_name' => ['required', 'string'],
-            'foundation_number' => ['required', 'string', 'size:'.$foundationLength],
-            'subject_one' => ['required', 'string'],
-            'subject_two' => ['required', 'string'],
-            'subject_three' => ['required', 'string'],
-        ];
-    }
-
-    private function resolveSubject(?string $name): ?Subject
+    private function resolveSubject(mixed $name): ?Subject
     {
         if (blank($name)) {
             return null;
         }
 
-        $name = trim($name);
+        $name = $this->normalize($name);
 
         return Subject::withTrashed()->where('name', $name)->first()
             ?? Subject::where('name', 'like', "%{$name}%")->first();
+    }
+
+    private function normalize(mixed $value): string
+    {
+        return trim(is_string($value) ? $value : (string) ($value ?? ''));
+    }
+
+    public function getCsvSettings(): array
+    {
+        return ['delimiter' => ','];
     }
 }

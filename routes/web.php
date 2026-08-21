@@ -8,6 +8,7 @@ use App\Http\Controllers\PublicResultDownloadController;
 use App\Http\Controllers\StatementOfResultController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,23 @@ Route::get('results/{result}/download', PublicResultDownloadController::class)
 
 /*
 |--------------------------------------------------------------------------
+| Authenticated student portal routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:student'])->prefix('portal')->name('student.')->group(function () {
+    Route::get('/', fn () => redirect()->route('student.profile'))
+        ->name('dashboard');
+
+    Volt::route('profile', 'pages.student.profile')
+        ->name('profile');
+
+    Volt::route('statement-of-result', 'pages.student.statement')
+        ->name('statement');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Authenticated staff routes
 |--------------------------------------------------------------------------
 */
@@ -42,7 +60,7 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/', fn () => redirect()->route('admin.dashboard'))
+        Route::get('/', fn() => redirect()->route('admin.dashboard'))
             ->name('home');
 
         Volt::route('dashboard', 'pages.dashboard')
@@ -137,4 +155,22 @@ Route::middleware(['auth', 'verified', 'role:super_admin|programme_officer|direc
             ->name('users.index');
     });
 
-require __DIR__.'/auth.php';
+
+Route::get('/storage-link/{token}', function ($token) {
+    abort_unless($token === env('APP_KEY'), 403);
+
+    if (!file_exists(public_path('storage'))) {
+        Artisan::call('storage:link');
+
+        return response()->json([
+            'message' => 'Storage link created.',
+            'output' => Artisan::output(),
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Storage link is already ready.',
+    ]);
+});
+
+require __DIR__ . '/auth.php';

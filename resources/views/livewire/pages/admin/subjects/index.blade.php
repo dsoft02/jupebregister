@@ -3,6 +3,7 @@
 use App\Actions\Logs\LogActivity;
 use App\Imports\SubjectsImport;
 use App\Models\Subject;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -98,13 +99,27 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function importSubjects(LogActivity $log): void
     {
-        $this->validate([
-            'importFile' => ['required', 'file', 'mimes:csv,xlsx,xls', 'max:2048'],
-        ]);
+        try {
+            $this->validate([
+                'importFile' => ['required', 'file', 'extensions:csv,xlsx,xls', 'max:2048'],
+            ]);
+        } catch (ValidationException $e) {
+            $this->dispatch('flash-message', type: 'error', message: $e->validator->errors()->first());
+
+            throw $e;
+        }
 
         $importer = new SubjectsImport();
 
-        Excel::import($importer, $this->importFile);
+        try {
+            Excel::import($importer, $this->importFile);
+        } catch (\Throwable $e) {
+            report($e);
+            $this->addError('importFile', 'The spreadsheet could not be processed. Please use the sample template as a guide and try again.');
+            $this->dispatch('flash-message', type: 'error', message: 'Import failed — the spreadsheet could not be processed.');
+
+            return;
+        }
 
         $log->run(
             action: 'subjects.imported',
@@ -159,19 +174,12 @@ new #[Layout('layouts.app')] class extends Component {
     @if ($showImportForm)
         <form wire:submit="importSubjects" class="card p-6">
             <h3 class="mb-5 text-sm font-bold uppercase tracking-wider text-slate-500">Import Subjects</h3>
-            <div class="space-y-4">
-                <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center transition hover:border-primary-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="mx-auto h-10 w-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                    <p class="mt-3 text-sm font-medium text-slate-700">Drag & drop your spreadsheet here, or</p>
-                    <label class="btn-secondary mt-3 cursor-pointer">
-                        Choose File
-                        <input type="file" wire:model="importFile" accept=".csv,.xlsx,.xls" class="sr-only">
-                    </label>
-                    <p class="mt-2 text-xs text-slate-400">CSV, XLSX or XLS &middot; maximum 2MB</p>
+                <div class="space-y-4">
+                    <x-admin.import-dropzone wireModel="importFile" hint="CSV, XLSX or XLS &middot; maximum 2MB" />
+
                     @error('importFile')
-                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                        <p class="-mt-3 text-sm font-medium text-red-600">{{ $message }}</p>
                     @enderror
-                </div>
                 <div class="rounded-xl border border-slate-200 p-4 text-sm">
                     <p class="font-semibold text-slate-700">Required Columns:</p>
                     <div class="mt-2 flex flex-wrap gap-2">

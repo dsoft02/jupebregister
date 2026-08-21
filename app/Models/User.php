@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'student_id',
     ];
 
     /**
@@ -63,6 +65,19 @@ class User extends Authenticatable
     public function createdResults(): HasMany
     {
         return $this->hasMany(Result::class, 'created_by');
+    }
+
+    /**
+     * @return BelongsTo<Student, $this>
+     */
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->hasRole('student');
     }
 
     public function isSuperAdmin(): bool

@@ -5,6 +5,7 @@ namespace App\Actions\Students;
 use App\Actions\Logs\LogActivity;
 use App\Enums\StudentStatus;
 use App\Models\Student;
+use App\Services\StudentAccountService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -37,6 +38,8 @@ class CreateStudent
                     'passport' => $passport->store('passports', 'public'),
                 ]);
             }
+
+            app(StudentAccountService::class)->ensureFor($student);
 
             $this->log->run(
                 action: $public ? 'student.registered' : 'student.created',

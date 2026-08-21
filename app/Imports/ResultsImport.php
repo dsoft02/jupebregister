@@ -5,14 +5,13 @@ namespace App\Imports;
 use App\Actions\Results\UpsertResult;
 use App\Enums\ResultGrade;
 use App\Models\Student;
-use App\Services\SettingsService;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, WithValidation
+class ResultsImport implements SkipsEmptyRows, ToCollection, WithCustomCsvSettings, WithHeadingRow
 {
     public int $created = 0;
 
@@ -25,7 +24,9 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
         $action = app(UpsertResult::class);
 
         foreach ($rows as $row) {
-            $examinationNumber = trim($row['examination_number'] ?? '');
+            $examinationNumber = is_string($row['examination_number'] ?? null)
+                ? trim($row['examination_number'])
+                : (string) ($row['examination_number'] ?? '');
 
             if (blank($examinationNumber)) {
                 $this->skipped++;
@@ -41,9 +42,9 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
                 continue;
             }
 
-            $gradeOne = strtoupper(trim($row['grade_one'] ?? ''));
-            $gradeTwo = strtoupper(trim($row['grade_two'] ?? ''));
-            $gradeThree = strtoupper(trim($row['grade_three'] ?? ''));
+            $gradeOne = $this->normalizeGrade($row['grade_one'] ?? null);
+            $gradeTwo = $this->normalizeGrade($row['grade_two'] ?? null);
+            $gradeThree = $this->normalizeGrade($row['grade_three'] ?? null);
 
             if (! ResultGrade::tryFrom($gradeOne) || ! ResultGrade::tryFrom($gradeTwo) || ! ResultGrade::tryFrom($gradeThree)) {
                 $this->skipped++;
@@ -72,15 +73,13 @@ class ResultsImport implements SkipsEmptyRows, ToCollection, WithHeadingRow, Wit
         }
     }
 
-    public function rules(): array
+    private function normalizeGrade(mixed $value): string
     {
-        $examLength = app(SettingsService::class)->examinationNumberLength();
+        return strtoupper(trim(is_string($value) ? $value : (string) ($value ?? '')));
+    }
 
-        return [
-            'examination_number' => ['required', 'string', 'size:'.$examLength],
-            'grade_one' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
-            'grade_two' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
-            'grade_three' => ['required', 'string', 'in:A,B,C,D,E,F,X,Q,W'],
-        ];
+    public function getCsvSettings(): array
+    {
+        return ['delimiter' => ','];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Actions\Students;
 
 use App\Actions\Logs\LogActivity;
 use App\Models\Student;
+use App\Services\StudentAccountService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +29,8 @@ class UpdateStudent
             }
 
             $student->update($data);
+
+            app(StudentAccountService::class)->syncIdentifier($student);
 
             $this->log->run(
                 action: 'student.updated',

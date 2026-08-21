@@ -89,6 +89,17 @@
                     <x-admin.nav-link href="{{ route('home') }}" icon="external-link" target="_blank">
                         Public Site &nearr;
                     </x-admin.nav-link>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition hover:bg-red-500/10 hover:text-red-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                            </svg>
+                            <span class="truncate">Log Out</span>
+                        </button>
+                    </form>
                 </nav>
 
                 <!-- User -->
@@ -116,14 +127,17 @@
         <x-admin.confirm-modal />
 
         {{-- Toast notification --}}
-        <div x-data="toast()" x-on:flash-message.window="show($event.detail.message)" x-cloak
-            class="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3.5 shadow-lg transition-all duration-300"
-            :class="visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 shrink-0 text-emerald-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <span class="text-sm font-medium text-emerald-800" x-text="message"></span>
-            <button x-on:click="visible = false" class="ml-2 shrink-0 rounded p-0.5 text-emerald-600 hover:text-emerald-800">
+        <div x-data="toast()" x-on:flash-message.window="show($event.detail)" x-cloak
+            class="fixed bottom-6 right-6 z-50 flex max-w-sm items-center gap-3 rounded-xl border px-5 py-3.5 shadow-lg transition-all duration-300"
+            :class="[visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none',
+                type === 'error' ? 'border-red-200 bg-red-50' : 'border-emerald-200 bg-emerald-50']">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                :class="type === 'error' ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'">
+                <svg x-show="type !== 'error'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg x-show="type === 'error'" x-cloak xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+            </span>
+            <span class="text-sm font-medium text-slate-800" x-text="message"></span>
+            <button x-on:click="visible = false" class="ml-2 shrink-0 rounded p-0.5 text-slate-400 hover:text-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -133,12 +147,20 @@
                 return {
                     visible: false,
                     message: '',
+                    type: 'success',
                     timeout: null,
-                    show(msg) {
+                    init() {
+                        if (window.__pageFlash) {
+                            this.show(window.__pageFlash);
+                            window.__pageFlash = null;
+                        }
+                    },
+                    show(detail) {
                         clearTimeout(this.timeout);
-                        this.message = msg;
+                        this.message = typeof detail === 'string' ? detail : detail.message;
+                        this.type = (typeof detail === 'object' && detail?.type) || 'success';
                         this.visible = true;
-                        this.timeout = setTimeout(() => { this.visible = false; }, 4000);
+                        this.timeout = setTimeout(() => { this.visible = false; }, 5000);
                     },
                 };
             }

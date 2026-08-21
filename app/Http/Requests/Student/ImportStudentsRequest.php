@@ -14,7 +14,7 @@ class ImportStudentsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'file', 'mimes:csv,xlsx,xls,txt', 'max:5120'],
+            'students_file' => ['required', 'file', 'extensions:csv,xlsx,xls', 'max:5120'],
             'update_existing' => ['nullable', 'boolean'],
         ];
     }
@@ -22,8 +22,15 @@ class ImportStudentsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'file.required' => 'Please choose a spreadsheet to import.',
-            'file.mimes' => 'The file must be a CSV or Excel (xlsx/xls) document.',
+            'students_file.required' => 'Please choose a spreadsheet to import.',
+            'students_file.extensions' => 'The file must be a CSV or Excel (xlsx/xls) document.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'students_file' => 'file',
         ];
     }
 }
